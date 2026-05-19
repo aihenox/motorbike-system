@@ -18,293 +18,323 @@ def generar_recibo_ingreso(
     hora
 ):
 
-    os.makedirs("recibos", exist_ok=True)
+    try:
 
-    ruta = f"recibos/recibo_{ticket}.pdf"
+        print("=== INICIANDO PDF INGRESO ===")
 
-    ancho = 226
-    alto = 600
-
-    c = canvas.Canvas(
-        ruta,
-        pagesize=(ancho, alto)
-    )
-
-    y = 560
-
-    # ==========================================
-    # LOGO
-    # ==========================================
-    logo_path = "app/static/img/logo.png"
-
-    if os.path.exists(logo_path):
-
-        logo = ImageReader(logo_path)
-
-        c.drawImage(
-            logo,
-            55,
-            y - 80,
-            width=120,
-            height=120,
-            preserveAspectRatio=True,
-            mask='auto'
+        os.makedirs(
+            "recibos",
+            exist_ok=True
         )
 
-    y -= 90
+        print("CARPETA RECIBOS OK")
 
-    # ==========================================
-    # INFO NEGOCIO
-    # ==========================================
-    c.setFont(
-        "Helvetica-Bold",
-        10
-    )
+        ruta = f"recibos/recibo_{ticket}.pdf"
 
-    c.drawCentredString(
-        ancho / 2,
-        y,
-        "Cra 11 Calle 22 Esquina"
-    )
+        print(f"RUTA PDF: {ruta}")
 
-    y -= 12
+        ancho = 226
+        alto = 600
 
-    c.drawCentredString(
-        ancho / 2,
-        y,
-        "3207081059 - 3217433167"
-    )
+        c = canvas.Canvas(
+            ruta,
+            pagesize=(ancho, alto)
+        )
 
-    y -= 12
+        y = 560
 
-    c.drawCentredString(
-        ancho / 2,
-        y,
-        "NIT: PENDIENTE"
-    )
+        # ==========================================
+        # LOGO
+        # ==========================================
+        logo_path = "app/static/img/logo.png"
 
-    y -= 15
+        print(f"LOGO PATH: {logo_path}")
 
-    c.line(10, y, 216, y)
+        if os.path.exists(logo_path):
 
-    y -= 30
+            print("LOGO ENCONTRADO")
 
-    # ==========================================
-    # HEADER
-    # ==========================================
-    c.setFillColorRGB(0, 0, 0)
+            logo = ImageReader(logo_path)
 
-    c.rect(
-        20,
-        y,
-        186,
-        22,
-        fill=1
-    )
+            c.drawImage(
+                logo,
+                55,
+                y - 80,
+                width=120,
+                height=120,
+                preserveAspectRatio=True,
+                mask='auto'
+            )
 
-    c.setFillColorRGB(1, 1, 1)
+        else:
 
-    c.setFont(
-        "Helvetica-Bold",
-        11
-    )
+            print("LOGO NO ENCONTRADO")
 
-    c.drawCentredString(
-        ancho / 2,
-        y + 6,
-        "RECIBO DE INGRESO"
-    )
+        y -= 90
 
-    c.setFillColorRGB(0, 0, 0)
+        # ==========================================
+        # INFO NEGOCIO
+        # ==========================================
+        c.setFont(
+            "Helvetica-Bold",
+            10
+        )
 
-    y -= 45
+        c.drawCentredString(
+            ancho / 2,
+            y,
+            "Cra 11 Calle 22 Esquina"
+        )
 
-    # ==========================================
-    # BARCODE
-    # ==========================================
-    barcode = crear_codigo_barras(ticket)
+        y -= 12
 
-    barcode.drawOn(
-        c,
-        63,
-        y
-    )
+        c.drawCentredString(
+            ancho / 2,
+            y,
+            "3207081059 - 3217433167"
+        )
 
-    y -= 25
+        y -= 12
 
-    # ==========================================
-    # TICKET
-    # ==========================================
-    c.setFont(
-        "Helvetica-Bold",
-        10
-    )
+        c.drawCentredString(
+            ancho / 2,
+            y,
+            "NIT: PENDIENTE"
+        )
 
-    c.drawString(
-        15,
-        y,
-        "RECIBO No:"
-    )
+        y -= 15
 
-    c.setFont(
-        "Helvetica-Bold",
-        18
-    )
+        c.line(10, y, 216, y)
 
-    c.drawRightString(
-        205,
-        y,
-        f"{int(ticket):06d}"
-    )
+        y -= 30
 
-    y -= 30
+        # ==========================================
+        # HEADER
+        # ==========================================
+        c.setFillColorRGB(0, 0, 0)
 
-    c.line(10, y, 216, y)
+        c.rect(
+            20,
+            y,
+            186,
+            22,
+            fill=1
+        )
 
-    y -= 30
+        c.setFillColorRGB(1, 1, 1)
 
-    # ==========================================
-    # DATOS
-    # ==========================================
-    c.setFont(
-        "Helvetica",
-        11
-    )
+        c.setFont(
+            "Helvetica-Bold",
+            11
+        )
 
-    c.drawString(
-        15,
-        y,
-        "Placa:"
-    )
+        c.drawCentredString(
+            ancho / 2,
+            y + 6,
+            "RECIBO DE INGRESO"
+        )
 
-    c.setFont(
-        "Helvetica-Bold",
-        14
-    )
+        c.setFillColorRGB(0, 0, 0)
 
-    c.drawRightString(
-        205,
-        y,
-        placa.upper()
-    )
+        y -= 45
 
-    y -= 28
+        # ==========================================
+        # BARCODE
+        # ==========================================
+        barcode = crear_codigo_barras(ticket)
 
-    c.setFont(
-        "Helvetica",
-        11
-    )
+        barcode.drawOn(
+            c,
+            63,
+            y
+        )
 
-    c.drawString(
-        15,
-        y,
-        "Tipo:"
-    )
+        y -= 25
 
-    c.setFont(
-        "Helvetica-Bold",
-        14
-    )
-
-    c.drawRightString(
-        205,
-        y,
-        tipo.upper()
-    )
-
-    y -= 28
-
-    c.setFont(
-        "Helvetica",
-        11
-    )
-
-    c.drawString(
-        15,
-        y,
-        "Entrada:"
-    )
-
-    c.setFont(
-        "Helvetica-Bold",
-        9
-    )
-
-    c.drawRightString(
-        205,
-        y,
-        hora.replace("T", " ")[:16]
-    )
-
-    y -= 25
-
-    c.line(10, y, 216, y)
-
-    y -= 35
-
-    # ==========================================
-    # REGLAMENTO
-    # ==========================================
-    c.setFillColorRGB(0, 0, 0)
-
-    c.rect(
-        40,
-        y,
-        140,
-        18,
-        fill=1
-    )
-
-    c.setFillColorRGB(1, 1, 1)
-
-    c.setFont(
-        "Helvetica-Bold",
-        9
-    )
-
-    c.drawCentredString(
-        ancho / 2,
-        y + 5,
-        "REGLAMENTO"
-    )
-
-    c.setFillColorRGB(0, 0, 0)
-
-    y -= 30
-
-    reglas = [
-
-        "• El vehículo se entrega al portador.",
-        "• No aceptamos órdenes telefónicas.",
-        "• No aceptamos reclamos posteriores.",
-        "• No respondemos por objetos.",
-        "• No respondemos por hurto.",
-        "• No respondemos por incendios.",
-        "• Asegure bien su vehículo."
-    ]
-
-    c.setFont(
-        "Helvetica",
-        6.5
-    )
-
-    for regla in reglas:
+        # ==========================================
+        # TICKET
+        # ==========================================
+        c.setFont(
+            "Helvetica-Bold",
+            10
+        )
 
         c.drawString(
-            10,
+            15,
             y,
-            regla
+            "RECIBO No:"
         )
 
-        y -= 14
+        c.setFont(
+            "Helvetica-Bold",
+            18
+        )
 
-    c.save()
+        c.drawRightString(
+            205,
+            y,
+            f"{int(ticket):06d}"
+        )
 
-    return ruta
+        y -= 30
+
+        c.line(10, y, 216, y)
+
+        y -= 30
+
+        # ==========================================
+        # DATOS
+        # ==========================================
+        c.setFont(
+            "Helvetica",
+            11
+        )
+
+        c.drawString(
+            15,
+            y,
+            "Placa:"
+        )
+
+        c.setFont(
+            "Helvetica-Bold",
+            14
+        )
+
+        c.drawRightString(
+            205,
+            y,
+            placa.upper()
+        )
+
+        y -= 28
+
+        c.setFont(
+            "Helvetica",
+            11
+        )
+
+        c.drawString(
+            15,
+            y,
+            "Tipo:"
+        )
+
+        c.setFont(
+            "Helvetica-Bold",
+            14
+        )
+
+        c.drawRightString(
+            205,
+            y,
+            tipo.upper()
+        )
+
+        y -= 28
+
+        c.setFont(
+            "Helvetica",
+            11
+        )
+
+        c.drawString(
+            15,
+            y,
+            "Entrada:"
+        )
+
+        c.setFont(
+            "Helvetica-Bold",
+            9
+        )
+
+        c.drawRightString(
+            205,
+            y,
+            hora.replace("T", " ")[:16]
+        )
+
+        y -= 25
+
+        c.line(10, y, 216, y)
+
+        y -= 35
+
+        # ==========================================
+        # REGLAMENTO
+        # ==========================================
+        c.setFillColorRGB(0, 0, 0)
+
+        c.rect(
+            40,
+            y,
+            140,
+            18,
+            fill=1
+        )
+
+        c.setFillColorRGB(1, 1, 1)
+
+        c.setFont(
+            "Helvetica-Bold",
+            9
+        )
+
+        c.drawCentredString(
+            ancho / 2,
+            y + 5,
+            "REGLAMENTO"
+        )
+
+        c.setFillColorRGB(0, 0, 0)
+
+        y -= 30
+
+        reglas = [
+
+            "• El vehículo se entrega al portador.",
+            "• No aceptamos órdenes telefónicas.",
+            "• No aceptamos reclamos posteriores.",
+            "• No respondemos por objetos.",
+            "• No respondemos por hurto.",
+            "• No respondemos por incendios.",
+            "• Asegure bien su vehículo."
+
+        ]
+
+        c.setFont(
+            "Helvetica",
+            6.5
+        )
+
+        for regla in reglas:
+
+            c.drawString(
+                10,
+                y,
+                regla
+            )
+
+            y -= 14
+
+        print("ANTES DE SAVE")
+
+        c.save()
+
+        print(f"PDF INGRESO GENERADO OK: {ruta}")
+
+        return ruta
+
+    except Exception as e:
+
+        print(f"ERROR PDF INGRESO: {e}")
+
+        raise
 
 
 # ==========================================
-# RECIBO SALIDA POS COMPACTO
+# RECIBO SALIDA
 # ==========================================
 def generar_recibo_salida(
     ticket,
@@ -316,325 +346,327 @@ def generar_recibo_salida(
     valor
 ):
 
-    import os
+    try:
 
-    from reportlab.pdfgen import canvas
-    from reportlab.lib.utils import ImageReader
+        print("=== INICIANDO PDF SALIDA ===")
 
-    from app.services.pdf.barcode_service import (
-        crear_codigo_barras
-    )
-
-    os.makedirs(
-        "recibos",
-        exist_ok=True
-    )
-
-    ruta = f"recibos/salida_{ticket}.pdf"
-
-    # ==========================================
-    # TAMAÑO PAPEL MÁS LARGO
-    # ==========================================
-    ancho = 226
-    alto = 620
-
-    c = canvas.Canvas(
-        ruta,
-        pagesize=(ancho, alto)
-    )
-
-    y = 565
-
-    # ==========================================
-    # LOGO
-    # ==========================================
-    logo_path = "app/static/img/logo.png"
-
-    if os.path.exists(logo_path):
-
-        logo = ImageReader(
-            logo_path
+        os.makedirs(
+            "recibos",
+            exist_ok=True
         )
 
-        c.drawImage(
+        print("CARPETA RECIBOS OK")
 
-            logo,
+        ruta = f"recibos/salida_{ticket}.pdf"
 
-            38,
+        print(f"RUTA PDF: {ruta}")
 
-            y - 60,
+        ancho = 226
+        alto = 620
 
-            width=150,
-
-            height=110,
-
-            preserveAspectRatio=True,
-
-            mask='auto'
+        c = canvas.Canvas(
+            ruta,
+            pagesize=(ancho, alto)
         )
 
-    y -= 85
+        y = 565
 
-    # ==========================================
-    # HEADER NEGRO
-    # ==========================================
-    c.setFillColorRGB(0, 0, 0)
+        # ==========================================
+        # LOGO
+        # ==========================================
+        logo_path = "app/static/img/logo.png"
 
-    c.roundRect(
-        12,
-        y,
-        202,
-        24,
-        4,
-        fill=1
-    )
+        print(f"LOGO PATH: {logo_path}")
 
-    c.setFillColorRGB(1, 1, 1)
+        if os.path.exists(logo_path):
 
-    c.setFont(
-        "Helvetica-Bold",
-        11
-    )
+            print("LOGO ENCONTRADO")
 
-    c.drawCentredString(
-        ancho / 2,
-        y + 7,
-        "RECIBO DE SALIDA"
-    )
+            logo = ImageReader(
+                logo_path
+            )
 
-    c.setFillColorRGB(0, 0, 0)
+            c.drawImage(
 
-    y -= 45
+                logo,
 
-    # ==========================================
-    # BARCODE
-    # ==========================================
-    barcode = crear_codigo_barras(
-        ticket
-    )
+                38,
 
-    barcode.drawOn(
-        c,
-        60,
-        y
-    )
+                y - 60,
 
-    y -= 10
+                width=150,
 
-    # ==========================================
-    # SEPARADOR
-    # ==========================================
-    c.setDash(3, 2)
+                height=110,
 
-    c.line(
-        5,
-        y,
-        220,
-        y
-    )
+                preserveAspectRatio=True,
 
-    c.setDash()
+                mask='auto'
+            )
 
-    y -= 35
+        else:
 
-    # ==========================================
-    # RECIBO
-    # ==========================================
-    c.setFont(
-        "Helvetica-Bold",
-        12
-    )
+            print("LOGO NO ENCONTRADO")
 
-    c.drawString(
-        15,
-        y,
-        "RECIBO No:"
-    )
+        y -= 85
 
-    c.setFont(
-        "Helvetica-Bold",
-        22
-    )
+        # ==========================================
+        # HEADER NEGRO
+        # ==========================================
+        c.setFillColorRGB(0, 0, 0)
 
-    c.drawRightString(
-        205,
-        y + 2,
-        f"{int(ticket):05d}"
-    )
+        c.roundRect(
+            12,
+            y,
+            202,
+            24,
+            4,
+            fill=1
+        )
 
-    y -= 15
+        c.setFillColorRGB(1, 1, 1)
 
-    # ==========================================
-    # LINEA
-    # ==========================================
-    c.line(
-        15,
-        y,
-        205,
-        y
-    )
+        c.setFont(
+            "Helvetica-Bold",
+            11
+        )
 
-    y -= 35
+        c.drawCentredString(
+            ancho / 2,
+            y + 7,
+            "RECIBO DE SALIDA"
+        )
 
-    # ==========================================
-    # DATOS
-    # ==========================================
-    datos = [
+        c.setFillColorRGB(0, 0, 0)
 
-        ("PLACA:", placa.upper()),
+        y -= 45
 
-        ("TIPO:", tipo.upper()),
+        # ==========================================
+        # BARCODE
+        # ==========================================
+        barcode = crear_codigo_barras(
+            ticket
+        )
 
-        ("FECHA INGRESO:", hora_ingreso),
+        barcode.drawOn(
+            c,
+            60,
+            y
+        )
 
-        ("FECHA SALIDA:", hora_salida),
+        y -= 10
 
-        ("TIEMPO TRANSCURRIDO:", tiempo)
-    ]
+        # ==========================================
+        # SEPARADOR
+        # ==========================================
+        c.setDash(3, 2)
 
-    for titulo, dato in datos:
+        c.line(
+            5,
+            y,
+            220,
+            y
+        )
+
+        c.setDash()
+
+        y -= 35
+
+        # ==========================================
+        # RECIBO
+        # ==========================================
+        c.setFont(
+            "Helvetica-Bold",
+            12
+        )
+
+        c.drawString(
+            15,
+            y,
+            "RECIBO No:"
+        )
+
+        c.setFont(
+            "Helvetica-Bold",
+            22
+        )
+
+        c.drawRightString(
+            205,
+            y + 2,
+            f"{int(ticket):05d}"
+        )
+
+        y -= 15
+
+        c.line(
+            15,
+            y,
+            205,
+            y
+        )
+
+        y -= 35
+
+        # ==========================================
+        # DATOS
+        # ==========================================
+        datos = [
+
+            ("PLACA:", placa.upper()),
+
+            ("TIPO:", tipo.upper()),
+
+            ("FECHA INGRESO:", hora_ingreso),
+
+            ("FECHA SALIDA:", hora_salida),
+
+            ("TIEMPO TRANSCURRIDO:", tiempo)
+        ]
+
+        for titulo, dato in datos:
+
+            c.setFont(
+                "Helvetica-Bold",
+                10
+            )
+
+            c.drawString(
+                10,
+                y,
+                titulo
+            )
+
+            c.drawRightString(
+                205,
+                y,
+                dato
+            )
+
+            y -= 18
+
+            c.setDash(1, 2)
+
+            c.line(
+                10,
+                y + 8,
+                205,
+                y + 8
+            )
+
+            c.setDash()
+
+            y -= 12
+
+        y -= 80
+
+        # ==========================================
+        # TOTAL
+        # ==========================================
+        c.setFillColorRGB(0, 0, 0)
+
+        c.roundRect(
+            12,
+            y - 5,
+            202,
+            95,
+            10,
+            fill=1
+        )
+
+        c.setFillColorRGB(1, 1, 1)
+
+        c.setFont(
+            "Helvetica-Bold",
+            14
+        )
+
+        c.drawCentredString(
+            ancho / 2,
+            y + 62,
+            "TOTAL PAGADO"
+        )
+
+        c.setFont(
+            "Helvetica-Bold",
+            34
+        )
+
+        c.drawCentredString(
+            ancho / 2,
+            y + 22,
+            f"${valor:,}"
+        )
+
+        c.setFillColorRGB(0, 0, 0)
+
+        y -= 20
+
+        # ==========================================
+        # SEPARADOR FINAL
+        # ==========================================
+        c.setDash(3, 2)
+
+        c.line(
+            5,
+            y,
+            220,
+            y
+        )
+
+        c.setDash()
+
+        y -= 30
+
+        # ==========================================
+        # MENSAJE FINAL
+        # ==========================================
+        c.setFont(
+            "Helvetica-Bold",
+            15
+        )
+
+        c.drawCentredString(
+            ancho / 2,
+            y,
+            "¡Gracias por su visita!"
+        )
+
+        y -= 15
 
         c.setFont(
             "Helvetica-Bold",
             10
         )
 
-        c.drawString(
-            10,
+        c.drawCentredString(
+            ancho / 2,
             y,
-            titulo
+            "ESPUMOSO MOTORBIKE WASH"
         )
 
-        c.drawRightString(
-            205,
+        y -= 10
+
+        c.setFont(
+            "Helvetica",
+            9
+        )
+
+        c.drawCentredString(
+            ancho / 2,
             y,
-            dato
+            "Vuelve pronto"
         )
 
-        y -= 18
+        print("ANTES DE SAVE")
 
-        c.setDash(1, 2)
+        c.save()
 
-        c.line(
-            10,
-            y + 8,
-            205,
-            y + 8
-        )
+        print(f"PDF SALIDA GENERADO OK: {ruta}")
 
-        c.setDash()
+        return ruta
 
-        y -= 12
+    except Exception as e:
 
-    # ==========================================
-    # BAJAR MÁS EL TOTAL
-    # ==========================================
-    y -= 80
+        print(f"ERROR PDF SALIDA: {e}")
 
-    # ==========================================
-    # TOTAL NEGRO
-    # ==========================================
-    c.setFillColorRGB(0, 0, 0)
-
-    c.roundRect(
-        12,
-        y - 5,
-        202,
-        95,
-        10,
-        fill=1
-    )
-
-    c.setFillColorRGB(1, 1, 1)
-
-    c.setFont(
-        "Helvetica-Bold",
-        14
-    )
-
-    c.drawCentredString(
-        ancho / 2,
-        y + 62,
-        "TOTAL PAGADO"
-    )
-
-    c.setFont(
-        "Helvetica-Bold",
-        34
-    )
-
-    c.drawCentredString(
-        ancho / 2,
-        y + 22,
-        f"${valor:,}"
-    )
-
-    c.setFillColorRGB(0, 0, 0)
-
-    # ==========================================
-    # ESPACIO DESPUÉS DEL TOTAL
-    # ==========================================
-    y -= 20
-
-    # ==========================================
-    # SEPARADOR FINAL
-    # ==========================================
-    c.setDash(3, 2)
-
-    c.line(
-        5,
-        y,
-        220,
-        y
-    )
-
-    c.setDash()
-
-    y -= 30
-
-    # ==========================================
-    # MENSAJE FINAL
-    # ==========================================
-    c.setFont(
-        "Helvetica-Bold",
-        15
-    )
-
-    c.drawCentredString(
-        ancho / 2,
-        y,
-        "¡Gracias por su visita!"
-    )
-
-    y -= 15
-
-    c.setFont(
-        "Helvetica-Bold",
-        10
-    )
-
-    c.drawCentredString(
-        ancho / 2,
-        y,
-        "ESPUMOSO MOTORBIKE WASH"
-    )
-
-    y -= 10
-
-    c.setFont(
-        "Helvetica",
-        9
-    )
-
-    c.drawCentredString(
-        ancho / 2,
-        y,
-        "Vuelve pronto"
-    )
-
-    # ==========================================
-    # GUARDAR
-    # ==========================================
-    c.save()
-
-    return ruta
+        raise
