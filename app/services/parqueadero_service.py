@@ -95,7 +95,7 @@ def registrar_ingreso(
 
         "ticket": ticket,
 
-        "pdf": f"recibo_ingreso_{ticket}.pdf"
+        "pdf": f"recibo_{ticket}.pdf"
     }
 
 

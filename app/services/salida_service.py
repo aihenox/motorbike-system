@@ -142,5 +142,5 @@ def procesar_salida(ticket):
 
         "valor": valor,
 
-        "pdf": f"recibo_salida_{ticket}.pdf"
+        "pdf": f"salida_{ticket}.pdf"
     }
