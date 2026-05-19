@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import threading
+
 from app.repositories.ingreso_repository import (
     placa_activa_db,
     insertar_ingreso_db,
@@ -21,9 +23,38 @@ from app.services.pdf.pdf_generator import (
 
 
 # ==========================================
+# GENERAR PDF ASYNC
+# ==========================================
+def generar_pdf_background(
+    ticket,
+    placa,
+    tipo,
+    hora
+):
+
+    try:
+
+        generar_recibo_ingreso(
+            ticket,
+            placa,
+            tipo,
+            hora
+        )
+
+    except Exception as e:
+
+        print(
+            f"Error generando PDF ingreso: {e}"
+        )
+
+
+# ==========================================
 # REGISTRAR INGRESO
 # ==========================================
-def registrar_ingreso(placa, tipo):
+def registrar_ingreso(
+    placa,
+    tipo
+):
 
     placa = placa.upper().strip()
 
@@ -42,17 +73,29 @@ def registrar_ingreso(placa, tipo):
         hora
     )
 
-    ruta_pdf = generar_recibo_ingreso(
-        ticket,
-        placa,
-        tipo,
-        hora
-    )
+    # ==========================================
+    # PDF SEGUNDO PLANO
+    # ==========================================
+    threading.Thread(
+
+        target=generar_pdf_background,
+
+        args=(
+            ticket,
+            placa,
+            tipo,
+            hora
+        )
+
+    ).start()
 
     return {
+
         "success": True,
+
         "ticket": ticket,
-        "pdf": ruta_pdf
+
+        "pdf": f"recibo_ingreso_{ticket}.pdf"
     }
 
 

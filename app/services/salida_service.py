@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import threading
+
 from app.repositories.ingreso_repository import (
     obtener_ticket_activo_db,
     cerrar_ticket_db
@@ -10,6 +12,46 @@ from app.utils.calculos import calcular_valor
 from app.services.pdf.pdf_generator import (
     generar_recibo_salida
 )
+
+
+# ==========================================
+# PDF SEGUNDO PLANO
+# ==========================================
+def generar_pdf_salida_background(
+
+    ticket,
+    placa,
+    tipo,
+    hora_ingreso,
+    hora_salida,
+    tiempo,
+    valor
+):
+
+    try:
+
+        generar_recibo_salida(
+
+            ticket=ticket,
+
+            placa=placa,
+
+            tipo=tipo,
+
+            hora_ingreso=hora_ingreso,
+
+            hora_salida=hora_salida,
+
+            tiempo=tiempo,
+
+            valor=valor
+        )
+
+    except Exception as e:
+
+        print(
+            f"Error generando PDF salida: {e}"
+        )
 
 
 # ==========================================
@@ -37,9 +79,6 @@ def procesar_salida(ticket):
         hora_ingreso
     )
 
-    # ==========================================
-    # CALCULAR TIEMPO
-    # ==========================================
     ingreso_dt = datetime.fromisoformat(
         hora_ingreso
     )
@@ -54,16 +93,10 @@ def procesar_salida(ticket):
 
     tiempo = f"{horas:02d}:{minutos:02d}"
 
-    # ==========================================
-    # FORMATO FECHA SALIDA
-    # ==========================================
     hora_salida_texto = hora_salida.strftime(
         "%d/%m/%Y %H:%M:%S"
     )
 
-    # ==========================================
-    # CERRAR TICKET
-    # ==========================================
     cerrar_ticket_db(
 
         ticket,
@@ -74,28 +107,34 @@ def procesar_salida(ticket):
     )
 
     # ==========================================
-    # GENERAR PDF
+    # PDF SEGUNDO PLANO
     # ==========================================
-    ruta_pdf = generar_recibo_salida(
+    threading.Thread(
 
-        ticket=ticket,
+        target=generar_pdf_salida_background,
 
-        placa=placa,
+        args=(
 
-        tipo=tipo,
+            ticket,
 
-        hora_ingreso=ingreso_dt.strftime(
-            "%d/%m/%Y %I:%M %p"
-        ),
+            placa,
 
-        hora_salida=hora_salida.strftime(
-            "%d/%m/%Y %I:%M %p"
-        ),
+            tipo,
 
-        tiempo=tiempo,
+            ingreso_dt.strftime(
+                "%d/%m/%Y %I:%M %p"
+            ),
 
-        valor=valor
-    )
+            hora_salida.strftime(
+                "%d/%m/%Y %I:%M %p"
+            ),
+
+            tiempo,
+
+            valor
+        )
+
+    ).start()
 
     return {
 
@@ -103,5 +142,5 @@ def procesar_salida(ticket):
 
         "valor": valor,
 
-        "pdf": ruta_pdf
+        "pdf": f"recibo_salida_{ticket}.pdf"
     }
