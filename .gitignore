@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual env
+venv/
+.env
+
+# Flask
+instance/
+
+# SQLite
+*.db
+*.sqlite3
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# PDFs temporales
+recibos/
+
+# Sistema
+.DS_Store
+Thumbs.db
