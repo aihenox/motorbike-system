@@ -5,8 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
         Salida Vehículo
@@ -21,73 +23,75 @@
 
 <body class="bg-dark">
 
-<div class="container mt-5">
+    <div class="container mt-5">
 
-    <div class="row justify-content-center">
+        <div class="row justify-content-center">
 
-        <div class="col-md-5">
+            <div class="col-md-5">
 
-            <div class="card shadow-lg border-0">
+                <div class="card shadow-lg border-0">
 
-                <div class="card-header bg-danger text-white text-center">
+                    <div class="card-header bg-danger text-white text-center">
 
-                    <h3>
-                        Registrar Salida
-                    </h3>
+                        <h3>
+                            Registrar Salida
+                        </h3>
 
-                </div>
+                    </div>
 
-                <div class="card-body">
+                    <div class="card-body">
 
-                    <div
-                        id="alerta"
-                        style="display:none;"
-                    ></div>
+                        <div
+                            id="alerta"
+                            style="display:none;"
+                        ></div>
 
-                    <form id="formSalida">
+                        <form id="formSalida">
 
-                        <div class="mb-3">
+                            <div class="mb-3">
 
-                            <label class="form-label">
+                                <label class="form-label">
 
-                                Ticket
+                                    Ticket
 
-                            </label>
+                                </label>
 
-                            <input
-                                type="number"
-                                name="ticket"
-                                id="ticket"
-                                class="form-control"
-                                required
-                                autofocus
-                            >
+                                <input
+                                    type="number"
+                                    name="ticket"
+                                    id="ticket"
+                                    class="form-control"
+                                    required
+                                    autofocus
+                                >
 
-                        </div>
+                            </div>
 
-                        <div class="d-grid gap-2">
+                            <div class="d-grid gap-2">
 
-                            <button
-                                type="submit"
-                                class="btn btn-danger"
-                            >
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger"
+                                >
 
-                                Registrar Salida
+                                    Registrar Salida
 
-                            </button>
+                                </button>
 
-                            <a
-                                href="/dashboard/parqueadero"
-                                class="btn btn-dark"
-                            >
+                                <a
+                                    href="/dashboard/parqueadero"
+                                    class="btn btn-dark"
+                                >
 
-                                Volver
+                                    Volver
 
-                            </a>
+                                </a>
 
-                        </div>
+                            </div>
 
-                    </form>
+                        </form>
+
+                    </div>
 
                 </div>
 
@@ -97,73 +101,87 @@
 
     </div>
 
-</div>
+    <script>
 
-<script>
+        const form = document.getElementById(
+            "formSalida"
+        );
 
-const form = document.getElementById(
-    "formSalida"
-);
+        form.addEventListener(
+            "submit",
+            async function(e){
 
-form.addEventListener(
-    "submit",
-    async function(e){
+                e.preventDefault();
 
-        e.preventDefault();
+                const formData = new FormData(form);
 
-        const formData = new FormData(form);
+                const response = await fetch(
+                    "/procesar_salida",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
 
-        const response = await fetch(
-            "/procesar_salida",
-            {
-                method: "POST",
-                body: formData
+                const data = await response.json();
+
+                const alerta = document.getElementById(
+                    "alerta"
+                );
+
+                // ==========================================
+                // ERROR
+                // ==========================================
+                if(!data.success){
+
+                    alerta.style.display = "block";
+
+                    alerta.className =
+                        "alert alert-danger";
+
+                    alerta.innerHTML =
+                        data.message;
+
+                    return;
+                }
+
+                // ==========================================
+                // MENSAJE OK
+                // ==========================================
+                alerta.style.display = "block";
+
+                alerta.className =
+                    "alert alert-success";
+
+                alerta.innerHTML =
+                    "Salida registrada correctamente";
+
+                // ==========================================
+                // LIMPIAR
+                // ==========================================
+                form.reset();
+
+                document.getElementById(
+                    "ticket"
+                ).focus();
+
+                // ==========================================
+                // ESPERAR PDF
+                // ==========================================
+                setTimeout(() => {
+
+                    window.open(
+                        data.pdf_url,
+                        "_blank"
+                    );
+
+                }, 1500);
+
             }
         );
 
-        const data = await response.json();
-
-        const alerta = document.getElementById(
-            "alerta"
-        );
-
-        if(!data.success){
-
-            alerta.style.display = "block";
-
-            alerta.className =
-                "alert alert-danger";
-
-            alerta.innerHTML =
-                data.message;
-
-            return;
-        }
-
-        // ABRIR PDF
-        window.open(
-            data.pdf_url,
-            "_blank"
-        );
-
-        // LIMPIAR
-        form.reset();
-
-        document.getElementById(
-            "ticket"
-        ).focus();
-
-        alerta.style.display = "block";
-
-        alerta.className =
-            "alert alert-success";
-
-        alerta.innerHTML =
-            "Salida registrada correctamente";
-    }
-);
-
-</script>
+    </script>
 
 </body>
+
 </html>

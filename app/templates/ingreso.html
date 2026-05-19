@@ -5,9 +5,14 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>Ingreso Vehículo</title>
+    <title>
+        Ingreso Vehículo
+    </title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -120,56 +125,82 @@
 
     <script>
 
-        const form = document.getElementById("formIngreso");
+        const form = document.getElementById(
+            "formIngreso"
+        );
 
-        form.addEventListener("submit", async function(e) {
+        form.addEventListener(
+            "submit",
+            async function(e) {
 
-            e.preventDefault();
+                e.preventDefault();
 
-            const formData = new FormData(form);
+                const formData = new FormData(form);
 
-            const response = await fetch(
-                "/registrar_ingreso",
-                {
-                    method: "POST",
-                    body: formData
+                const response = await fetch(
+                    "/registrar_ingreso",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+                const data = await response.json();
+
+                const alerta = document.getElementById(
+                    "alerta"
+                );
+
+                // ==========================================
+                // ERROR
+                // ==========================================
+                if (!data.success) {
+
+                    alerta.style.display = "block";
+
+                    alerta.className =
+                        "alert alert-danger";
+
+                    alerta.innerHTML =
+                        data.message;
+
+                    return;
                 }
-            );
 
-            const data = await response.json();
-
-            const alerta = document.getElementById("alerta");
-
-            if (!data.success) {
-
+                // ==========================================
+                // MENSAJE OK
+                // ==========================================
                 alerta.style.display = "block";
 
-                alerta.className = "alert alert-danger";
+                alerta.className =
+                    "alert alert-success";
 
-                alerta.innerHTML = data.message;
+                alerta.innerHTML =
+                    "Vehículo registrado correctamente";
 
-                return;
+                // ==========================================
+                // LIMPIAR
+                // ==========================================
+                form.reset();
+
+                document.getElementById(
+                    "placa"
+                ).focus();
+
+                // ==========================================
+                // ESPERAR PDF
+                // ==========================================
+                setTimeout(() => {
+
+                    window.open(
+                        data.pdf_url,
+                        "_blank"
+                    );
+
+                }, 1500);
+
             }
-
-            // ABRIR PDF
-            window.open(
-                data.pdf_url,
-                "_blank"
-            );
-
-            // LIMPIAR FORMULARIO
-            form.reset();
-
-            // ENFOCAR PLACA
-            document.getElementById("placa").focus();
-
-            alerta.style.display = "block";
-
-            alerta.className = "alert alert-success";
-
-            alerta.innerHTML = "Vehículo registrado correctamente";
-
-        });
+        );
 
     </script>
 
