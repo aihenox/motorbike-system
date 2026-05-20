@@ -5,6 +5,12 @@ from app.repositories.ingreso_repository import (
     insertar_ingreso_db
 )
 
+from app.repositories.activos_repository import (
+    obtener_vehiculo_db,
+    actualizar_vehiculo_db,
+    eliminar_vehiculo_db
+)
+
 
 # ==========================================
 # REGISTRAR INGRESO
@@ -50,3 +56,43 @@ def registrar_ingreso(
 
         "hora": hora
     }
+
+
+# ==========================================
+# OBTENER VEHÍCULO
+# ==========================================
+def obtener_vehiculo(id):
+
+    return obtener_vehiculo_db(id)
+
+
+# ==========================================
+# EDITAR VEHÍCULO
+# ==========================================
+def editar_vehiculo(
+    id,
+    placa,
+    tipo
+):
+
+    actualizar_vehiculo_db(
+        id,
+        placa,
+        tipo
+    )
+
+
+# ==========================================
+# ELIMINAR VEHÍCULO
+# ==========================================
+def eliminar_vehiculo(id):
+
+    eliminar_vehiculo_db(id)
+
+
+# ==========================================
+# COMPATIBILIDAD LEGACY
+# ==========================================
+def borrar_vehiculo(id):
+
+    eliminar_vehiculo(id)
