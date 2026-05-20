@@ -45,15 +45,37 @@ def calcular_valor(
 
     diferencia = ahora - hora_ingreso
 
-    horas = diferencia.total_seconds() / 3600
-
-    # ==========================================
-    # COBRO POR HORA O FRACCIÓN
-    # ==========================================
-    horas_cobro = math.ceil(
-        horas
+    total_segundos = int(
+        diferencia.total_seconds()
     )
 
+    horas = total_segundos // 3600
+
+    minutos = (
+        total_segundos % 3600
+    ) // 60
+
+    # ==========================================
+    # REGLA COBRO
+    # SOLO COBRA SIGUIENTE HORA
+    # SI SUPERA 10 MINUTOS
+    # ==========================================
+    horas_cobro = horas
+
+    if minutos >= 10:
+
+        horas_cobro += 1
+
+    # ==========================================
+    # MÍNIMO 1 HORA
+    # ==========================================
+    if horas_cobro <= 0:
+
+        horas_cobro = 1
+
+    # ==========================================
+    # TARIFAS
+    # ==========================================
     if tipo == "Moto":
 
         tarifa = 1500

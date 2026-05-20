@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 
 # ==========================================
@@ -14,9 +15,22 @@ def formatear_fecha(
 
     try:
 
-        fecha = datetime.fromisoformat(
-            fecha_str
-        )
+        # ==========================================
+        # SQLITE = STRING
+        # POSTGRES = DATETIME
+        # ==========================================
+        if isinstance(
+            fecha_str,
+            str
+        ):
+
+            fecha = datetime.fromisoformat(
+                fecha_str
+            )
+
+        else:
+
+            fecha = fecha_str
 
         return fecha.strftime(
             "%d/%m/%Y %H:%M"
@@ -24,14 +38,16 @@ def formatear_fecha(
 
     except:
 
-        return fecha_str
+        return str(fecha_str)
 
 
 # ==========================================
 # TIEMPO TRANSCURRIDO
 # ==========================================
 def calcular_tiempo_transcurrido(
+
     hora_ingreso,
+
     hora_salida=None
 ):
 
@@ -41,19 +57,66 @@ def calcular_tiempo_transcurrido(
 
     try:
 
-        ingreso = datetime.fromisoformat(
-            hora_ingreso
-        )
+        # ==========================================
+        # INGRESO
+        # ==========================================
+        if isinstance(
+            hora_ingreso,
+            str
+        ):
 
-        if hora_salida:
-
-            salida = datetime.fromisoformat(
-                hora_salida
+            ingreso = datetime.fromisoformat(
+                hora_ingreso
             )
 
         else:
 
-            salida = datetime.now()
+            ingreso = hora_ingreso
+
+        # ==========================================
+        # SALIDA
+        # ==========================================
+        if hora_salida:
+
+            if isinstance(
+                hora_salida,
+                str
+            ):
+
+                salida = datetime.fromisoformat(
+                    hora_salida
+                )
+
+            else:
+
+                salida = hora_salida
+
+        else:
+
+            salida = datetime.now(
+                ZoneInfo(
+                    "America/Bogota"
+                )
+            )
+
+        # ==========================================
+        # TIMEZONE
+        # ==========================================
+        if ingreso.tzinfo is None:
+
+            ingreso = ingreso.replace(
+                tzinfo=ZoneInfo(
+                    "America/Bogota"
+                )
+            )
+
+        if salida.tzinfo is None:
+
+            salida = salida.replace(
+                tzinfo=ZoneInfo(
+                    "America/Bogota"
+                )
+            )
 
         diferencia = salida - ingreso
 
@@ -67,7 +130,10 @@ def calcular_tiempo_transcurrido(
             total_segundos % 3600
         ) // 60
 
-        return f"{horas:02d}:{minutos:02d}"
+        # ==========================================
+        # FORMATO
+        # ==========================================
+        return f"{horas}h {minutos}m"
 
     except:
 
