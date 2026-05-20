@@ -133,9 +133,7 @@ def lavadero():
             "responsable"
         ]
 
-        fecha = datetime.now().strftime(
-            "%d/%m/%Y %H:%M:%S"
-        )
+        fecha = datetime.now().isoformat()
 
         registrar_lavado(
 

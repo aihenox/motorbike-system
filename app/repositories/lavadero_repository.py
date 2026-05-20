@@ -203,9 +203,17 @@ def obtener_historial_lavados_db(
             condiciones.append(
                 f"fecha LIKE {operador}"
             )
+            
+            fecha_iso = datetime.strptime(
+
+                fecha,
+
+                "%Y-%m-%d"
+
+            ).strftime("%Y-%m-%d")
 
             valores.append(
-                f"{fecha}%"
+                f"{fecha_iso}%"
             )
 
         # ==========================================
@@ -259,7 +267,7 @@ def obtener_metricas_lavadero_db():
         c = conn.cursor()
 
         hoy = datetime.now().strftime(
-            "%d/%m/%Y"
+            "%Y-%m-%d"
         )
 
         operador = "%s" if POSTGRES else "?"
@@ -297,9 +305,6 @@ def obtener_metricas_lavadero_db():
 
         row = c.fetchone()
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
         if POSTGRES:
 
             motos = row["motos"]
@@ -308,9 +313,6 @@ def obtener_metricas_lavadero_db():
 
             total = row["total"]
 
-        # ==========================================
-        # SQLITE
-        # ==========================================
         else:
 
             motos = row[0]
@@ -369,7 +371,7 @@ def obtener_estadisticas_responsables_db():
         c = conn.cursor()
 
         hoy = datetime.now().strftime(
-            "%d/%m/%Y"
+            "%Y-%m-%d"
         )
 
         operador = "%s" if POSTGRES else "?"
@@ -405,9 +407,6 @@ def obtener_estadisticas_responsables_db():
 
         for row in rows:
 
-            # ==========================================
-            # POSTGRESQL
-            # ==========================================
             if POSTGRES:
 
                 resultado.append({
@@ -422,9 +421,6 @@ def obtener_estadisticas_responsables_db():
                         row["total"]
                 })
 
-            # ==========================================
-            # SQLITE
-            # ==========================================
             else:
 
                 resultado.append({
@@ -440,7 +436,7 @@ def obtener_estadisticas_responsables_db():
                 })
 
         return resultado
-
+    
 
 # ==========================================
 # OBTENER LAVADO POR ID
