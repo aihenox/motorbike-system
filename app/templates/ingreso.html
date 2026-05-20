@@ -11,7 +11,7 @@
     >
 
     <title>
-        Ingreso Vehículo
+        Registrar Ingreso
     </title>
 
     <link
@@ -19,99 +19,345 @@
         rel="stylesheet"
     >
 
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+
+        body{
+
+            background:#16a34a;
+
+            min-height:100vh;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-family:'Segoe UI';
+        }
+
+        .card-ingreso{
+
+            border:none;
+
+            border-radius:28px;
+
+            overflow:hidden;
+
+            box-shadow:0 18px 45px rgba(0,0,0,.18);
+
+            width:100%;
+
+            max-width:520px;
+        }
+
+        .header-card{
+
+            background:#15803d;
+
+            color:white;
+
+            padding:28px;
+
+            text-align:center;
+        }
+
+        .header-card h2{
+
+            margin:0;
+
+            font-weight:700;
+        }
+
+        .header-card p{
+
+            margin-top:8px;
+
+            margin-bottom:0;
+
+            opacity:.9;
+        }
+
+        .body-card{
+
+            padding:35px;
+        }
+
+        .form-label{
+
+            font-weight:600;
+
+            color:#334155;
+        }
+
+        .form-control,
+        .form-select{
+
+            border-radius:16px;
+
+            padding:14px;
+
+            border:2px solid #e2e8f0;
+
+            font-size:17px;
+        }
+
+        .form-control:focus,
+        .form-select:focus{
+
+            border-color:#16a34a;
+
+            box-shadow:0 0 0 .2rem rgba(22,163,74,.15);
+        }
+
+        .btn-custom{
+
+            border:none;
+
+            border-radius:16px;
+
+            padding:14px;
+
+            font-weight:600;
+
+            font-size:16px;
+
+            transition:.2s;
+        }
+
+        .btn-custom:hover{
+
+            transform:translateY(-2px);
+        }
+
+        .btn-success-custom{
+
+            background:#16a34a;
+
+            color:white;
+        }
+
+        .btn-success-custom:hover{
+
+            background:#15803d;
+
+            color:white;
+        }
+
+        .btn-dark-custom{
+
+            background:#0f172a;
+
+            color:white;
+        }
+
+        .btn-dark-custom:hover{
+
+            background:#020617;
+
+            color:white;
+        }
+
+        .logo{
+
+            width:120px;
+
+            margin-bottom:18px;
+        }
+
+        .tip{
+
+            background:#f0fdf4;
+
+            border:1px solid #bbf7d0;
+
+            color:#166534;
+
+            padding:12px;
+
+            border-radius:14px;
+
+            font-size:14px;
+
+            margin-top:20px;
+        }
+
+        .is-valid{
+
+            border-color:#16a34a !important;
+        }
+
+        .reloj{
+
+            position:absolute;
+
+            top:20px;
+
+            right:20px;
+
+            background:white;
+
+            padding:12px 18px;
+
+            border-radius:14px;
+
+            font-weight:600;
+
+            box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+            color:#0f172a;
+        }
+
+    </style>
+
 </head>
 
-<body class="bg-dark">
+<body>
 
-    <div class="container mt-5">
+<!-- RELOJ -->
+<div class="reloj">
 
-        <div class="row justify-content-center">
+    <i class="bi bi-clock"></i>
 
-            <div class="col-md-5">
+    <span id="fechaHora"></span>
 
-                <div class="card shadow-lg border-0">
+</div>
 
-                    <div class="card-header bg-danger text-white text-center">
+<div class="container">
 
-                        <h3>
-                            Registrar Ingreso
-                        </h3>
+    <div class="row justify-content-center">
 
-                    </div>
+        <div class="col-lg-5 col-md-7">
 
-                    <div class="card-body">
+            <div class="card card-ingreso">
 
-                        <div
-                            id="alerta"
-                            style="display:none;"
-                        ></div>
+                <!-- HEADER -->
+                <div class="header-card">
 
-                        <form id="formIngreso">
+                    <img
+                        src="/static/img/logo.png"
+                        class="logo"
+                    >
 
-                            <div class="mb-3">
+                    <h2>
 
-                                <label class="form-label">
-                                    Placa
-                                </label>
+                        Registrar Ingreso
 
-                                <input
-                                    type="text"
-                                    name="placa"
-                                    id="placa"
-                                    class="form-control"
-                                    required
-                                    autofocus
-                                    autocomplete="off"
-                                >
+                    </h2>
 
-                            </div>
+                    <p>
 
-                            <div class="mb-3">
+                        Sistema Parqueadero Motorbike
 
-                                <label class="form-label">
-                                    Tipo Vehículo
-                                </label>
+                    </p>
 
-                                <select
-                                    name="tipo"
-                                    class="form-select"
-                                >
+                </div>
 
-                                    <option value="Moto">
-                                        Moto
-                                    </option>
+                <!-- BODY -->
+                <div class="body-card">
 
-                                    <option value="Carro">
-                                        Carro
-                                    </option>
+                    <!-- ALERTA -->
+                    <div
+                        id="alerta"
+                        style="display:none;"
+                    ></div>
 
-                                </select>
+                    <!-- FORM -->
+                    <form id="formIngreso">
 
-                            </div>
+                        <!-- PLACA -->
+                        <div class="mb-4">
 
-                            <div class="d-grid gap-2">
+                            <label class="form-label">
 
-                                <button
-                                    type="submit"
-                                    class="btn btn-danger"
-                                >
+                                Placa
 
-                                    Registrar
+                            </label>
 
-                                </button>
+                            <input
+                                type="text"
+                                name="placa"
+                                id="placa"
+                                class="form-control"
+                                required
+                                autofocus
+                                autocomplete="off"
+                                maxlength="10"
+                                placeholder="Ej: ABC123"
+                            >
 
-                                <a
-                                    href="/dashboard/parqueadero"
-                                    class="btn btn-dark"
-                                >
+                        </div>
 
-                                    Volver
+                        <!-- TIPO -->
+                        <div class="mb-4">
 
-                                </a>
+                            <label class="form-label">
 
-                            </div>
+                                Tipo Vehículo
 
-                        </form>
+                            </label>
+
+                            <select
+                                name="tipo"
+                                class="form-select"
+                            >
+
+                                <option value="Moto">
+
+                                    Moto
+
+                                </option>
+
+                                <option value="Carro">
+
+                                    Carro
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- BOTONES -->
+                        <div class="d-grid gap-3">
+
+                            <button
+                                type="submit"
+                                class="btn btn-custom btn-success-custom"
+                            >
+
+                                <i class="bi bi-plus-circle"></i>
+
+                                Registrar ingreso
+
+                            </button>
+
+                            <a
+                                href="/dashboard/parqueadero"
+                                class="btn btn-custom btn-dark-custom"
+                            >
+
+                                <i class="bi bi-arrow-left"></i>
+
+                                Volver al dashboard
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                    <!-- TIP -->
+                    <div class="tip">
+
+                        <i class="bi bi-lightbulb"></i>
+
+                        Puedes escanear o escribir la placa y presionar ENTER para registrar rápidamente.
 
                     </div>
 
@@ -123,216 +369,344 @@
 
     </div>
 
-    <script>
+</div>
 
-        const form = document.getElementById(
-            "formIngreso"
-        );
+<script>
 
-        form.addEventListener(
-            "submit",
-            async function(e) {
+// ==========================================
+// RELOJ
+// ==========================================
+function actualizarFechaHora(){
 
-                e.preventDefault();
+    const ahora = new Date();
 
-                const formData = new FormData(form);
+    const dia = String(
+        ahora.getDate()
+    ).padStart(2, "0");
 
-                const response = await fetch(
-                    "/registrar_ingreso",
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
+    const mes = String(
+        ahora.getMonth() + 1
+    ).padStart(2, "0");
 
-                const data = await response.json();
+    const anio = ahora.getFullYear();
 
-                const alerta = document.getElementById(
-                    "alerta"
-                );
+    const horas = String(
+        ahora.getHours()
+    ).padStart(2, "0");
 
-                // ==========================================
-                // ERROR
-                // ==========================================
-                if (!data.success) {
+    const minutos = String(
+        ahora.getMinutes()
+    ).padStart(2, "0");
 
-                    alerta.style.display = "block";
+    const segundos = String(
+        ahora.getSeconds()
+    ).padStart(2, "0");
 
-                    alerta.className =
-                        "alert alert-danger";
+    document.getElementById(
+        "fechaHora"
+    ).innerHTML =
 
-                    alerta.innerHTML =
-                        data.message;
+        `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+}
 
-                    return;
-                }
+actualizarFechaHora();
 
-                // ==========================================
-                // TICKET HTML
-                // ==========================================
-                const ticketHTML = `
+setInterval(
+    actualizarFechaHora,
+    1000
+);
 
-                    <html>
 
-                    <head>
+// ==========================================
+// FORMULARIO
+// ==========================================
+const form = document.getElementById(
+    "formIngreso"
+);
 
-                        <title>
-                            Ticket Ingreso
-                        </title>
+const placaInput = document.getElementById(
+    "placa"
+);
 
-                        <style>
 
-                            body {
+// ==========================================
+// VALIDAR PLACA
+// ==========================================
+placaInput.addEventListener(
+    "input",
+    function(){
 
-                                font-family: Arial;
+        this.value = this.value
+            .toUpperCase()
+            .replace(/[^A-Z0-9]/g, "");
 
-                                width: 300px;
+        if(this.value.length >= 5){
 
-                                margin: auto;
+            this.classList.remove(
+                "is-invalid"
+            );
 
-                                text-align: center;
-                            }
+            this.classList.add(
+                "is-valid"
+            );
 
-                            .logo {
+        }else{
 
-                                width: 120px;
+            this.classList.remove(
+                "is-valid"
+            );
+        }
+    }
+);
 
-                                margin-bottom: 10px;
-                            }
 
-                            .ticket {
+// ==========================================
+// ENTER REGISTRAR
+// ==========================================
+placaInput.addEventListener(
+    "keypress",
+    function(e){
 
-                                font-size: 28px;
+        if(e.key === "Enter"){
 
-                                font-weight: bold;
+            e.preventDefault();
 
-                                margin: 15px 0;
-                            }
+            form.requestSubmit();
+        }
+    }
+);
 
-                            .linea {
 
-                                border-top: 1px dashed #000;
+// ==========================================
+// REGISTRAR INGRESO
+// ==========================================
+form.addEventListener(
+    "submit",
+    async function(e) {
 
-                                margin: 12px 0;
-                            }
+        e.preventDefault();
 
-                            .dato {
+        const formData = new FormData(form);
 
-                                display: flex;
-
-                                justify-content: space-between;
-
-                                margin: 8px 0;
-                            }
-
-                        </style>
-
-                    </head>
-
-                    <body onload="window.print()">
-
-                        <img
-                            src="/static/img/logo.png"
-                            class="logo"
-                        >
-
-                        <h2>
-                            RECIBO INGRESO
-                        </h2>
-
-                        <div class="linea"></div>
-
-                        <div class="ticket">
-
-                            #${data.ticket}
-
-                        </div>
-
-                        <div class="linea"></div>
-
-                        <div class="dato">
-
-                            <span>
-                                PLACA
-                            </span>
-
-                            <strong>
-                                ${data.placa}
-                            </strong>
-
-                        </div>
-
-                        <div class="dato">
-
-                            <span>
-                                TIPO
-                            </span>
-
-                            <strong>
-                                ${data.tipo}
-                            </strong>
-
-                        </div>
-
-                        <div class="dato">
-
-                            <span>
-                                INGRESO
-                            </span>
-
-                            <strong>
-                                ${data.hora}
-                            </strong>
-
-                        </div>
-
-                        <div class="linea"></div>
-
-                        <p>
-
-                            ESPUMOSO MOTORBIKE WASH
-
-                        </p>
-
-                    </body>
-
-                    </html>
-
-                `;
-
-                const ventana = window.open(
-                    "",
-                    "_blank",
-                    "width=400,height=700"
-                );
-
-                ventana.document.write(
-                    ticketHTML
-                );
-
-                ventana.document.close();
-
-                // ==========================================
-                // LIMPIAR
-                // ==========================================
-                form.reset();
-
-                document.getElementById(
-                    "placa"
-                ).focus();
-
-                alerta.style.display = "block";
-
-                alerta.className =
-                    "alert alert-success";
-
-                alerta.innerHTML =
-                    "Vehículo registrado correctamente";
-
+        const response = await fetch(
+            "/registrar_ingreso",
+            {
+                method: "POST",
+                body: formData
             }
         );
 
-    </script>
+        const data = await response.json();
+
+        const alerta = document.getElementById(
+            "alerta"
+        );
+
+        // ERROR
+        if (!data.success) {
+
+            alerta.style.display = "block";
+
+            alerta.className =
+                "alert alert-danger";
+
+            alerta.innerHTML =
+                data.message;
+
+            return;
+        }
+
+        // SONIDO
+        const audio = new Audio(
+            "/static/audio/success.mp3"
+        );
+
+        audio.play();
+
+        // ==========================================
+        // TICKET HTML
+        // ==========================================
+        const ticketHTML = `
+
+            <html>
+
+            <head>
+
+                <title>
+                    Ticket Ingreso
+                </title>
+
+                <style>
+
+                    body {
+
+                        font-family: Arial;
+
+                        width: 300px;
+
+                        margin: auto;
+
+                        text-align: center;
+
+                        color:#000;
+                    }
+
+                    .logo {
+
+                        width: 120px;
+
+                        margin-bottom: 10px;
+                    }
+
+                    .ticket {
+
+                        font-size: 32px;
+
+                        font-weight: bold;
+
+                        margin: 18px 0;
+                    }
+
+                    .linea {
+
+                        border-top: 1px dashed #000;
+
+                        margin: 12px 0;
+                    }
+
+                    .dato {
+
+                        display:flex;
+
+                        justify-content:space-between;
+
+                        margin:10px 0;
+
+                        font-size:15px;
+                    }
+
+                    .footer{
+
+                        margin-top:20px;
+
+                        font-size:12px;
+                    }
+
+                </style>
+
+            </head>
+
+            <body onload="window.print()">
+
+                <img
+                    src="/static/img/logo.png"
+                    class="logo"
+                >
+
+                <h2>
+
+                    RECIBO INGRESO
+
+                </h2>
+
+                <div class="linea"></div>
+
+                <div class="ticket">
+
+                    #${data.ticket}
+
+                </div>
+
+                <div class="linea"></div>
+
+                <div class="dato">
+
+                    <span>
+                        PLACA
+                    </span>
+
+                    <strong>
+                        ${data.placa}
+                    </strong>
+
+                </div>
+
+                <div class="dato">
+
+                    <span>
+                        TIPO
+                    </span>
+
+                    <strong>
+                        ${data.tipo}
+                    </strong>
+
+                </div>
+
+                <div class="dato">
+
+                    <span>
+                        INGRESO
+                    </span>
+
+                    <strong>
+                        ${data.hora}
+                    </strong>
+
+                </div>
+
+                <div class="linea"></div>
+
+                <div class="footer">
+
+                    ESPUMOSO MOTORBIKE WASH
+
+                    <br>
+
+                    Cra 11 Calle 22 Esquina
+
+                </div>
+
+            </body>
+
+            </html>
+
+        `;
+
+        const ventana = window.open(
+            "",
+            "_blank",
+            "width=400,height=700"
+        );
+
+        ventana.document.write(
+            ticketHTML
+        );
+
+        ventana.document.close();
+
+        // LIMPIAR
+        form.reset();
+
+        placaInput.focus();
+
+        placaInput.classList.remove(
+            "is-valid"
+        );
+
+        // ALERTA
+        alerta.style.display = "block";
+
+        alerta.className =
+            "alert alert-success";
+
+        alerta.innerHTML =
+            "Vehículo registrado correctamente";
+
+    }
+);
+
+</script>
 
 </body>
 
