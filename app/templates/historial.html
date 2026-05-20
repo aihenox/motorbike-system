@@ -5,11 +5,13 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
-        Historial
+        Historial Parqueadero
     </title>
 
     <link
@@ -17,44 +19,194 @@
         rel="stylesheet"
     >
 
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
     <style>
 
         body{
-            background:#f4f6f9;
+
+            background:#f1f5f9;
+
             font-family:'Segoe UI';
         }
 
+        .navbar{
+
+            box-shadow:0 4px 15px rgba(0,0,0,.08);
+        }
+
         .card-custom{
+
             border:none;
+
+            border-radius:24px;
+
+            box-shadow:0 12px 30px rgba(0,0,0,.06);
+
+            overflow:hidden;
+        }
+
+        .header-card{
+
+            background:#0f172a;
+
+            color:white;
+
+            padding:28px;
+        }
+
+        .header-card h2{
+
+            margin:0;
+
+            font-weight:700;
+        }
+
+        .subtitulo{
+
+            opacity:.8;
+
+            margin-top:5px;
+        }
+
+        .card-metric{
+
+            border:none;
+
+            border-radius:20px;
+
+            padding:25px;
+
+            background:white;
+
+            box-shadow:0 10px 25px rgba(0,0,0,.05);
+
+            height:100%;
+        }
+
+        .metric-icon{
+
+            width:60px;
+
+            height:60px;
+
             border-radius:18px;
-            box-shadow:0 10px 25px rgba(0,0,0,.06);
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-size:28px;
+
+            margin-bottom:15px;
         }
 
-        th{
-            cursor:pointer;
-            user-select:none;
-            white-space:nowrap;
+        .icon-total{
+
+            background:#dcfce7;
+
+            color:#16a34a;
         }
 
-        th:hover{
-            background:#212529 !important;
-            opacity:.9;
+        .metric-title{
+
+            color:#64748b;
+
+            font-size:15px;
+        }
+
+        .metric-value{
+
+            font-size:32px;
+
+            font-weight:700;
+
+            color:#0f172a;
+        }
+
+        .search-box,
+        .form-select,
+        .form-control{
+
+            border-radius:16px;
+
+            border:2px solid #e2e8f0;
+
+            padding:12px;
+        }
+
+        .search-box:focus,
+        .form-control:focus{
+
+            border-color:#2563eb;
+
+            box-shadow:0 0 0 .2rem rgba(37,99,235,.15);
         }
 
         .badge-activo{
-            background:#198754;
+
+            background:#16a34a;
+
+            padding:9px 14px;
+
+            border-radius:12px;
         }
 
         .badge-finalizado{
-            background:#6c757d;
+
+            background:#64748b;
+
+            padding:9px 14px;
+
+            border-radius:12px;
         }
 
-        .top-controls{
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:10px;
-            flex-wrap:wrap;
+        .badge-tiempo{
+
+            background:#dbeafe;
+
+            color:#1d4ed8;
+
+            padding:9px 14px;
+
+            border-radius:12px;
+        }
+
+        .table thead th{
+
+            white-space:nowrap;
+
+            cursor:pointer;
+        }
+
+        .table tbody tr{
+
+            transition:.15s;
+        }
+
+        .table tbody tr:hover{
+
+            background:#f8fafc;
+        }
+
+        .reloj{
+
+            background:white;
+
+            padding:12px 18px;
+
+            border-radius:14px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+            font-weight:600;
+
+            color:#334155;
         }
 
     </style>
@@ -64,10 +216,12 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-dark bg-dark px-4">
+<nav class="navbar navbar-dark bg-dark px-4 py-3">
 
-    <span class="navbar-brand fw-bold">
+    <span class="navbar-brand fw-bold fs-4">
+
         Historial Parqueadero
+
     </span>
 
     <a
@@ -75,38 +229,124 @@
         class="btn btn-outline-light"
     >
 
-        Volver
+        Dashboard
 
     </a>
 
 </nav>
 
-<!-- CONTENIDO -->
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
 
-    <!-- BUSCADOR -->
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                Historial general
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Movimientos y auditoría del parqueadero
+
+            </p>
+
+        </div>
+
+        <div class="reloj">
+
+            <i class="bi bi-clock"></i>
+
+            <span id="fechaHora"></span>
+
+        </div>
+
+    </div>
+
+    <!-- MÉTRICAS -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card-metric">
+
+                <div class="metric-icon icon-total">
+
+                    <i class="bi bi-cash-stack"></i>
+
+                </div>
+
+                <div class="metric-title">
+
+                    Total generado
+
+                </div>
+
+                <div class="metric-value text-success">
+
+                    $ {{ "{:,}".format(total) }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card-metric">
+
+                <div class="metric-icon icon-total">
+
+                    <i class="bi bi-clock-history"></i>
+
+                </div>
+
+                <div class="metric-title">
+
+                    Registros encontrados
+
+                </div>
+
+                <div class="metric-value text-primary">
+
+                    {{ historial|length }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FILTROS -->
     <div class="card card-custom mb-4">
 
         <div class="card-body">
 
             <form method="GET">
 
-                <div class="row g-2">
+                <div class="row g-3">
 
-                    <!-- BUSCAR PLACA -->
+                    <!-- PLACA -->
                     <div class="col-md-4">
 
                         <input
                             type="text"
                             name="placa"
-                            class="form-control"
+                            id="buscador"
+                            class="form-control search-box"
                             placeholder="Buscar placa..."
                             value="{{ placa }}"
                         >
 
                     </div>
 
-                    <!-- FILTRAR FECHA -->
+                    <!-- FECHA -->
                     <div class="col-md-3">
 
                         <input
@@ -118,12 +358,14 @@
 
                     </div>
 
-                    <!-- BOTON FILTRAR -->
+                    <!-- FILTRAR -->
                     <div class="col-md-2">
 
                         <button
-                            class="btn btn-dark w-100"
+                            class="btn btn-dark w-100 h-100"
                         >
+
+                            <i class="bi bi-search"></i>
 
                             Filtrar
 
@@ -136,10 +378,12 @@
 
                         <a
                             href="/historial"
-                            class="btn btn-secondary w-100"
+                            class="btn btn-secondary w-100 h-100"
                         >
 
-                            Limpiar búsqueda
+                            <i class="bi bi-x-circle"></i>
+
+                            Limpiar
 
                         </a>
 
@@ -153,76 +397,82 @@
 
     </div>
 
-    <!-- CONTROLES -->
-    <div class="top-controls mb-3">
-
-        <!-- TOTAL -->
-        <div class="alert alert-success shadow-sm mb-0">
-
-            <strong>
-                Total generado:
-            </strong>
-
-            $ {{ "{:,}".format(total) }}
-
-        </div>
-
-        <!-- BOTON EXCEL -->
-        <a
-            href="/historial/excel?placa={{ placa }}&fecha={{ fecha }}"
-            class="btn btn-success"
-        >
-
-            Descargar Excel
-
-        </a>
-
-        <!-- CANTIDAD -->
-        <div>
-
-            <label class="me-2 fw-bold">
-
-                Mostrar:
-
-            </label>
-
-            <select
-                id="cantidadFilas"
-                class="form-select d-inline-block"
-                style="width:auto;"
-                onchange="mostrarFilas()"
-            >
-
-                <option value="10">
-                    10
-                </option>
-
-                <option value="25">
-                    25
-                </option>
-
-                <option value="50">
-                    50
-                </option>
-
-                <option value="100">
-                    100
-                </option>
-
-                <option value="999999">
-                    Todas
-                </option>
-
-            </select>
-
-        </div>
-
-    </div>
-
     <!-- TABLA -->
     <div class="card card-custom">
 
-        <div class="card-body">
+        <!-- HEADER -->
+        <div class="header-card">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                <div>
+
+                    <h2>
+
+                        Historial movimientos
+
+                    </h2>
+
+                    <div class="subtitulo">
+
+                        Registro completo del sistema
+
+                    </div>
+
+                </div>
+
+                <div class="d-flex gap-3 flex-wrap">
+
+                    <!-- EXCEL -->
+                    <a
+                        href="/historial/excel?placa={{ placa }}&fecha={{ fecha }}"
+                        class="btn btn-success"
+                    >
+
+                        <i class="bi bi-file-earmark-excel"></i>
+
+                        Descargar Excel
+
+                    </a>
+
+                    <!-- FILAS -->
+                    <select
+                        id="cantidadFilas"
+                        class="form-select"
+                        style="width:150px;"
+                        onchange="mostrarFilas()"
+                    >
+
+                        <option value="10">
+                            Últimos 10
+                        </option>
+
+                        <option value="25">
+                            Últimos 25
+                        </option>
+
+                        <option value="50">
+                            Últimos 50
+                        </option>
+
+                        <option value="100">
+                            Últimos 100
+                        </option>
+
+                        <option value="999999">
+                            Todos
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- BODY -->
+        <div class="card-body p-4">
 
             <div class="table-responsive">
 
@@ -244,7 +494,7 @@
                             </th>
 
                             <th onclick="ordenarTabla(2)">
-                                Vehículo ↕
+                                Tipo ↕
                             </th>
 
                             <th onclick="ordenarTabla(3)">
@@ -252,11 +502,11 @@
                             </th>
 
                             <th onclick="ordenarTabla(4)">
-                                Hora entrada ↕
+                                Entrada ↕
                             </th>
 
                             <th onclick="ordenarTabla(5)">
-                                Hora salida ↕
+                                Salida ↕
                             </th>
 
                             <th onclick="ordenarTabla(6)">
@@ -281,33 +531,46 @@
 
                         <tr>
 
-                            <!-- ID -->
                             <td>
+
                                 {{ item.id }}
+
                             </td>
 
-                            <!-- FECHA -->
                             <td>
 
                                 {{ item.hora_ingreso.split(" ")[0] }}
 
                             </td>
 
-                            <!-- VEHICULO -->
-                            <td class="fw-bold">
+                            <td>
 
-                                {{ item.tipo }}
+                                {% if item.tipo == "Moto" %}
+
+                                    <span class="badge bg-success">
+
+                                        Moto
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        Carro
+
+                                    </span>
+
+                                {% endif %}
 
                             </td>
 
-                            <!-- PLACA -->
-                            <td class="fw-bold text-uppercase">
+                            <td class="fw-bold">
 
                                 {{ item.placa }}
 
                             </td>
 
-                            <!-- HORA ENTRADA -->
                             <td>
 
                                 {% if item.hora_ingreso != "-" %}
@@ -322,7 +585,6 @@
 
                             </td>
 
-                            <!-- HORA SALIDA -->
                             <td>
 
                                 {% if item.hora_salida != "-" %}
@@ -337,33 +599,38 @@
 
                             </td>
 
-                            <!-- TIEMPO -->
-                            <td class="fw-bold text-primary">
+                            <td>
 
-                                {{ item.tiempo_transcurrido }}
+                                <span class="badge badge-tiempo">
+
+                                    {{ item.tiempo_transcurrido }}
+
+                                </span>
 
                             </td>
 
-                            <!-- TOTAL -->
-                            <td class="text-success fw-bold">
+                            <td class="fw-bold text-success">
 
                                 $ {{ "{:,}".format(item.valor or 0) }}
 
                             </td>
 
-                            <!-- ESTADO -->
                             <td>
 
                                 {% if item.estado == "Dentro" %}
 
                                     <span class="badge badge-activo">
+
                                         Dentro
+
                                     </span>
 
                                 {% else %}
 
                                     <span class="badge badge-finalizado">
+
                                         Fuera
+
                                     </span>
 
                                 {% endif %}
@@ -388,8 +655,83 @@
 
 <script>
 
-let direccionOrden = {};
+// ==========================================
+// RELOJ
+// ==========================================
+function actualizarFechaHora(){
 
+    const ahora = new Date();
+
+    const dia = String(
+        ahora.getDate()
+    ).padStart(2, "0");
+
+    const mes = String(
+        ahora.getMonth() + 1
+    ).padStart(2, "0");
+
+    const anio = ahora.getFullYear();
+
+    const horas = String(
+        ahora.getHours()
+    ).padStart(2, "0");
+
+    const minutos = String(
+        ahora.getMinutes()
+    ).padStart(2, "0");
+
+    const segundos = String(
+        ahora.getSeconds()
+    ).padStart(2, "0");
+
+    document.getElementById(
+        "fechaHora"
+    ).innerHTML =
+
+        `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+}
+
+actualizarFechaHora();
+
+setInterval(
+    actualizarFechaHora,
+    1000
+);
+
+
+// ==========================================
+// BUSCADOR INSTANTÁNEO
+// ==========================================
+const buscador = document.getElementById(
+    "buscador"
+);
+
+buscador.addEventListener(
+    "keyup",
+    function(){
+
+        const valor = this.value.toLowerCase();
+
+        const filas = document.querySelectorAll(
+            "#tablaHistorial tbody tr"
+        );
+
+        filas.forEach(fila => {
+
+            const texto = fila.innerText.toLowerCase();
+
+            fila.style.display = texto.includes(valor)
+                ? ""
+                : "none";
+        });
+    }
+);
+
+
+// ==========================================
+// ORDENAR TABLA
+// ==========================================
+let direccionOrden = {};
 
 function obtenerValorCelda(texto){
 
@@ -402,18 +744,8 @@ function obtenerValorCelda(texto){
         return Number(texto);
     }
 
-    if(texto.includes("/")){
-
-        const fecha = texto.split("/");
-
-        return new Date(
-            `${fecha[2]}-${fecha[1]}-${fecha[0]}`
-        ).getTime();
-    }
-
     return texto.toLowerCase();
 }
-
 
 function ordenarTabla(columna){
 
@@ -500,11 +832,10 @@ function mostrarFilas(){
     });
 }
 
-
-// INICIAR
 mostrarFilas();
 
 </script>
 
 </body>
+
 </html>

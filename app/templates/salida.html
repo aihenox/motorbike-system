@@ -11,7 +11,7 @@
     >
 
     <title>
-        Salida Vehículo
+        Registrar Salida
     </title>
 
     <link
@@ -19,40 +19,261 @@
         rel="stylesheet"
     >
 
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+
+        body{
+
+            background:#dc2626;
+
+            min-height:100vh;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-family:'Segoe UI';
+        }
+
+        .card-salida{
+
+            border:none;
+
+            border-radius:28px;
+
+            overflow:hidden;
+
+            box-shadow:0 18px 45px rgba(0,0,0,.18);
+
+            width:100%;
+
+            max-width:520px;
+        }
+
+        .header-card{
+
+            background:#991b1b;
+
+            color:white;
+
+            padding:28px;
+
+            text-align:center;
+        }
+
+        .header-card h2{
+
+            margin:0;
+
+            font-weight:700;
+        }
+
+        .header-card p{
+
+            margin-top:8px;
+
+            margin-bottom:0;
+
+            opacity:.9;
+        }
+
+        .body-card{
+
+            padding:35px;
+        }
+
+        .form-label{
+
+            font-weight:600;
+
+            color:#334155;
+        }
+
+        .form-control{
+
+            border-radius:16px;
+
+            padding:14px;
+
+            border:2px solid #e2e8f0;
+
+            font-size:18px;
+        }
+
+        .form-control:focus{
+
+            border-color:#dc2626;
+
+            box-shadow:0 0 0 .2rem rgba(220,38,38,.15);
+        }
+
+        .btn-custom{
+
+            border:none;
+
+            border-radius:16px;
+
+            padding:14px;
+
+            font-weight:600;
+
+            font-size:16px;
+
+            transition:.2s;
+        }
+
+        .btn-custom:hover{
+
+            transform:translateY(-2px);
+        }
+
+        .btn-danger-custom{
+
+            background:#dc2626;
+
+            color:white;
+        }
+
+        .btn-danger-custom:hover{
+
+            background:#b91c1c;
+
+            color:white;
+        }
+
+        .btn-dark-custom{
+
+            background:#0f172a;
+
+            color:white;
+        }
+
+        .btn-dark-custom:hover{
+
+            background:#020617;
+
+            color:white;
+        }
+
+        .logo{
+
+            width:120px;
+
+            margin-bottom:18px;
+        }
+
+        .tip{
+
+            background:#fef2f2;
+
+            border:1px solid #fecaca;
+
+            color:#991b1b;
+
+            padding:12px;
+
+            border-radius:14px;
+
+            font-size:14px;
+
+            margin-top:20px;
+        }
+
+        .is-valid{
+
+            border-color:#16a34a !important;
+        }
+
+        .reloj{
+
+            position:absolute;
+
+            top:20px;
+
+            right:20px;
+
+            background:white;
+
+            padding:12px 18px;
+
+            border-radius:14px;
+
+            font-weight:600;
+
+            box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+            color:#0f172a;
+        }
+
+    </style>
+
 </head>
 
-<body class="bg-dark">
+<body>
 
-<div class="container mt-5">
+<!-- RELOJ -->
+<div class="reloj">
+
+    <i class="bi bi-clock"></i>
+
+    <span id="fechaHora"></span>
+
+</div>
+
+<div class="container">
 
     <div class="row justify-content-center">
 
-        <div class="col-md-5">
+        <div class="col-lg-5 col-md-7">
 
-            <div class="card shadow-lg border-0">
+            <div class="card card-salida">
 
-                <div class="card-header bg-danger text-white text-center">
+                <!-- HEADER -->
+                <div class="header-card">
 
-                    <h3>
+                    <img
+                        src="/static/img/logo.png"
+                        class="logo"
+                    >
+
+                    <h2>
+
                         Registrar Salida
-                    </h3>
+
+                    </h2>
+
+                    <p>
+
+                        Sistema Parqueadero Motorbike
+
+                    </p>
 
                 </div>
 
-                <div class="card-body">
+                <!-- BODY -->
+                <div class="body-card">
 
+                    <!-- ALERTA -->
                     <div
                         id="alerta"
                         style="display:none;"
                     ></div>
 
+                    <!-- FORM -->
                     <form id="formSalida">
 
-                        <div class="mb-3">
+                        <!-- TICKET -->
+                        <div class="mb-4">
 
                             <label class="form-label">
 
-                                Ticket
+                                Número Ticket
 
                             </label>
 
@@ -63,33 +284,48 @@
                                 class="form-control"
                                 required
                                 autofocus
+                                placeholder="Ej: 125"
                             >
 
                         </div>
 
-                        <div class="d-grid gap-2">
+                        <!-- BOTONES -->
+                        <div class="d-grid gap-3">
 
                             <button
                                 type="submit"
-                                class="btn btn-danger"
+                                class="btn btn-custom btn-danger-custom"
                             >
 
-                                Registrar Salida
+                                <i class="bi bi-box-arrow-right"></i>
+
+                                Registrar salida
 
                             </button>
 
                             <a
                                 href="/dashboard/parqueadero"
-                                class="btn btn-dark"
+                                class="btn btn-custom btn-dark-custom"
                             >
 
-                                Volver
+                                <i class="bi bi-arrow-left"></i>
+
+                                Volver al dashboard
 
                             </a>
 
                         </div>
 
                     </form>
+
+                    <!-- TIP -->
+                    <div class="tip">
+
+                        <i class="bi bi-lightbulb"></i>
+
+                        Puedes escanear o escribir el ticket y presionar ENTER para registrar rápidamente.
+
+                    </div>
 
                 </div>
 
@@ -103,10 +339,82 @@
 
 <script>
 
+// ==========================================
+// RELOJ
+// ==========================================
+function actualizarFechaHora(){
+
+    const ahora = new Date();
+
+    const dia = String(
+        ahora.getDate()
+    ).padStart(2, "0");
+
+    const mes = String(
+        ahora.getMonth() + 1
+    ).padStart(2, "0");
+
+    const anio = ahora.getFullYear();
+
+    const horas = String(
+        ahora.getHours()
+    ).padStart(2, "0");
+
+    const minutos = String(
+        ahora.getMinutes()
+    ).padStart(2, "0");
+
+    const segundos = String(
+        ahora.getSeconds()
+    ).padStart(2, "0");
+
+    document.getElementById(
+        "fechaHora"
+    ).innerHTML =
+
+        `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+}
+
+actualizarFechaHora();
+
+setInterval(
+    actualizarFechaHora,
+    1000
+);
+
+
+// ==========================================
+// FORMULARIO
+// ==========================================
 const form = document.getElementById(
     "formSalida"
 );
 
+const ticketInput = document.getElementById(
+    "ticket"
+);
+
+
+// ==========================================
+// ENTER REGISTRAR
+// ==========================================
+ticketInput.addEventListener(
+    "keypress",
+    function(e){
+
+        if(e.key === "Enter"){
+
+            e.preventDefault();
+
+            form.requestSubmit();
+        }
+    }
+);
+
+
+// ==========================================
+// REGISTRAR SALIDA
+// ==========================================
 form.addEventListener(
     "submit",
     async function(e){
@@ -129,6 +437,7 @@ form.addEventListener(
             "alerta"
         );
 
+        // ERROR
         if(!data.success){
 
             alerta.style.display = "block";
@@ -141,6 +450,13 @@ form.addEventListener(
 
             return;
         }
+
+        // SONIDO
+        const audio = new Audio(
+            "/static/audio/success.mp3"
+        );
+
+        audio.play();
 
         // ==========================================
         // TICKET HTML
@@ -166,6 +482,8 @@ form.addEventListener(
                         margin: auto;
 
                         text-align: center;
+
+                        color:#000;
                     }
 
                     .logo {
@@ -177,11 +495,11 @@ form.addEventListener(
 
                     .ticket {
 
-                        font-size: 28px;
+                        font-size: 32px;
 
                         font-weight: bold;
 
-                        margin: 15px 0;
+                        margin: 18px 0;
                     }
 
                     .linea {
@@ -193,20 +511,29 @@ form.addEventListener(
 
                     .dato {
 
-                        display: flex;
+                        display:flex;
 
-                        justify-content: space-between;
+                        justify-content:space-between;
 
-                        margin: 8px 0;
+                        margin:10px 0;
+
+                        font-size:15px;
                     }
 
-                    .total {
+                    .total{
 
-                        font-size: 32px;
+                        font-size:36px;
 
-                        font-weight: bold;
+                        font-weight:bold;
 
-                        margin-top: 20px;
+                        margin-top:20px;
+                    }
+
+                    .footer{
+
+                        margin-top:20px;
+
+                        font-size:12px;
                     }
 
                 </style>
@@ -221,7 +548,9 @@ form.addEventListener(
                 >
 
                 <h2>
+
                     RECIBO SALIDA
+
                 </h2>
 
                 <div class="linea"></div>
@@ -261,6 +590,30 @@ form.addEventListener(
                 <div class="dato">
 
                     <span>
+                        INGRESO
+                    </span>
+
+                    <strong>
+                        ${data.hora_ingreso}
+                    </strong>
+
+                </div>
+
+                <div class="dato">
+
+                    <span>
+                        SALIDA
+                    </span>
+
+                    <strong>
+                        ${data.hora_salida}
+                    </strong>
+
+                </div>
+
+                <div class="dato">
+
+                    <span>
                         TIEMPO
                     </span>
 
@@ -280,11 +633,15 @@ form.addEventListener(
 
                 <div class="linea"></div>
 
-                <p>
+                <div class="footer">
 
                     ¡Gracias por su visita!
 
-                </p>
+                    <br>
+
+                    ESPUMOSO MOTORBIKE WASH
+
+                </div>
 
             </body>
 
@@ -304,15 +661,12 @@ form.addEventListener(
 
         ventana.document.close();
 
-        // ==========================================
         // LIMPIAR
-        // ==========================================
         form.reset();
 
-        document.getElementById(
-            "ticket"
-        ).focus();
+        ticketInput.focus();
 
+        // ALERTA
         alerta.style.display = "block";
 
         alerta.className =
