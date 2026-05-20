@@ -480,12 +480,14 @@ function generarTicketSalida(data){
 
         <div class="linea"></div>
 
+        <!-- TITULO -->
         <div class="titulo">
 
             RECIBO DE SALIDA
 
         </div>
 
+        <!-- TICKET -->
         <div class="ticket">
 
             #${String(data.ticket).padStart(6, "0")}
@@ -494,6 +496,7 @@ function generarTicketSalida(data){
 
         <div class="linea"></div>
 
+        <!-- DATOS -->
         <div class="dato">
 
             <span>
@@ -556,30 +559,23 @@ function generarTicketSalida(data){
 
         <div class="linea"></div>
 
+        <!-- TOTAL -->
         <div class="total">
 
             $ ${data.valor}
 
         </div>
 
+        <!-- PAGADO -->
         <div class="pagado">
 
-            PAGADO
+            ✓ PAGO REALIZADO
 
         </div>
 
         <div class="linea"></div>
 
-        <div class="barcode">
-
-            <svg id="barcode"></svg>
-
-        </div>
-
-        ${generarTerminos()}
-
-        <div class="linea"></div>
-
+        <!-- FOOTER -->
         <div class="footer">
 
             ¡Gracias por su visita!

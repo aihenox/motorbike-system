@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from app.repositories.ingreso_repository import (
     placa_activa_db,
@@ -31,7 +32,11 @@ def registrar_ingreso(
             "message": "Vehículo ya está dentro"
         }
 
-    hora = datetime.now().strftime(
+    hora_actual = datetime.now(
+        ZoneInfo("America/Bogota")
+    )
+
+    hora = hora_actual.strftime(
         "%d/%m/%Y %I:%M %p"
     )
 
@@ -41,7 +46,7 @@ def registrar_ingreso(
 
         tipo,
 
-        datetime.now().isoformat()
+        hora_actual.isoformat()
     )
 
     return {
