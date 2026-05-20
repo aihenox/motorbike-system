@@ -1,7 +1,8 @@
 import os
 
-from app.repositories.connection import conectar
 from datetime import datetime
+
+from app.repositories.connection import conectar
 
 
 # ==========================================
@@ -13,64 +14,15 @@ POSTGRES = os.getenv(
 
 
 # ==========================================
-# HELPER ROW
-# ==========================================
-def convertir_row_lavado(row):
-
-    if not row:
-        return None
-
-    # PostgreSQL
-    if POSTGRES:
-
-        return {
-
-            "id": row["id"],
-
-            "placa": row["placa"],
-
-            "vehiculo": row["vehiculo"],
-
-            "tipo_lavado": row["tipo_lavado"],
-
-            "valor": row["valor"],
-
-            "responsable": row["responsable"],
-
-            "fecha": row["fecha"]
-        }
-
-    # SQLite
-    return {
-
-        "id": row[0],
-
-        "placa": row[1],
-
-        "vehiculo": row[2],
-
-        "tipo_lavado": row[3],
-
-        "valor": row[4],
-
-        "responsable": row[5],
-
-        "fecha": row[6]
-    }
-
-
-# ==========================================
 # HELPER VALOR
 # ==========================================
 def obtener_valor(row):
 
-    if not row:
-        return 0
-
     if POSTGRES:
-        return list(row.values())[0] or 0
 
-    return row[0] or 0
+        return list(row.values())[0]
+
+    return row[0]
 
 
 # ==========================================
@@ -79,10 +31,15 @@ def obtener_valor(row):
 def registrar_lavado_db(
 
     placa,
+
     vehiculo,
+
     tipo_lavado,
+
     valor,
+
     responsable,
+
     fecha
 ):
 
@@ -90,6 +47,9 @@ def registrar_lavado_db(
 
         c = conn.cursor()
 
+        # ==========================================
+        # POSTGRESQL
+        # ==========================================
         if POSTGRES:
 
             c.execute("""
@@ -105,18 +65,35 @@ def registrar_lavado_db(
 
                 )
 
-                VALUES (%s, %s, %s, %s, %s, %s)
+                VALUES (
+
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s
+
+                )
 
             """, (
 
-                placa,
+                placa.upper(),
+
                 vehiculo,
+
                 tipo_lavado,
+
                 valor,
+
                 responsable,
+
                 fecha
             ))
 
+        # ==========================================
+        # SQLITE
+        # ==========================================
         else:
 
             c.execute("""
@@ -132,15 +109,29 @@ def registrar_lavado_db(
 
                 )
 
-                VALUES (?, ?, ?, ?, ?, ?)
+                VALUES (
+
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    ?
+
+                )
 
             """, (
 
-                placa,
+                placa.upper(),
+
                 vehiculo,
+
                 tipo_lavado,
+
                 valor,
+
                 responsable,
+
                 fecha
             ))
 
@@ -148,7 +139,7 @@ def registrar_lavado_db(
 
 
 # ==========================================
-# OBTENER TODOS LOS LAVADOS
+# OBTENER LAVADOS
 # ==========================================
 def obtener_lavados_db():
 
@@ -166,17 +157,7 @@ def obtener_lavados_db():
 
         """)
 
-        rows = c.fetchall()
-
-        resultado = []
-
-        for row in rows:
-
-            resultado.append(
-                convertir_row_lavado(row)
-            )
-
-        return resultado
+        return c.fetchall()
 
 
 # ==========================================
@@ -185,7 +166,9 @@ def obtener_lavados_db():
 def obtener_historial_lavados_db(
 
     placa="",
+
     fecha="",
+
     responsable=""
 ):
 
@@ -193,82 +176,63 @@ def obtener_historial_lavados_db(
 
         c = conn.cursor()
 
+        condiciones = []
+
+        valores = []
+
+        operador = "%s" if POSTGRES else "?"
+
+        # ==========================================
+        # FILTRO PLACA
+        # ==========================================
+        if placa:
+
+            condiciones.append(
+                f"placa LIKE {operador}"
+            )
+
+            valores.append(
+                f"%{placa.upper()}%"
+            )
+
+        # ==========================================
+        # FILTRO FECHA
+        # ==========================================
+        if fecha:
+
+            condiciones.append(
+                f"fecha LIKE {operador}"
+            )
+
+            valores.append(
+                f"{fecha}%"
+            )
+
+        # ==========================================
+        # FILTRO RESPONSABLE
+        # ==========================================
+        if responsable:
+
+            condiciones.append(
+                f"responsable = {operador}"
+            )
+
+            valores.append(
+                responsable
+            )
+
         query = """
 
             SELECT *
 
             FROM lavados
 
-            WHERE 1=1
-
         """
 
-        parametros = []
+        if condiciones:
 
-        if placa:
-
-            if POSTGRES:
-
-                query += """
-
-                    AND placa LIKE %s
-
-                """
-
-            else:
-
-                query += """
-
-                    AND placa LIKE ?
-
-                """
-
-            parametros.append(
-                f"%{placa}%"
-            )
-
-        if fecha:
-
-            if POSTGRES:
-
-                query += """
-
-                    AND fecha LIKE %s
-
-                """
-
-            else:
-
-                query += """
-
-                    AND fecha LIKE ?
-
-                """
-
-            parametros.append(
-                f"%{fecha}%"
-            )
-
-        if responsable:
-
-            if POSTGRES:
-
-                query += """
-
-                    AND responsable = %s
-
-                """
-
-            else:
-
-                query += """
-
-                    AND responsable = ?
-
-                """
-
-            parametros.append(
-                responsable
+            query += " WHERE " + " AND ".join(
+                condiciones
             )
 
         query += """
@@ -279,24 +243,14 @@ def obtener_historial_lavados_db(
 
         c.execute(
             query,
-            tuple(parametros)
+            tuple(valores)
         )
 
-        rows = c.fetchall()
-
-        resultado = []
-
-        for row in rows:
-
-            resultado.append(
-                convertir_row_lavado(row)
-            )
-
-        return resultado
+        return c.fetchall()
 
 
 # ==========================================
-# MÉTRICAS LAVADERO
+# METRICAS LAVADERO
 # ==========================================
 def obtener_metricas_lavadero_db():
 
@@ -308,40 +262,24 @@ def obtener_metricas_lavadero_db():
             "%d/%m/%Y"
         )
 
+        operador = "%s" if POSTGRES else "?"
+
         # ==========================================
         # MOTOS HOY
         # ==========================================
-        if POSTGRES:
+        c.execute(f"""
 
-            c.execute("""
+            SELECT COUNT(*)
 
-                SELECT COUNT(*)
+            FROM lavados
 
-                FROM lavados
+            WHERE vehiculo = 'Moto'
 
-                WHERE vehiculo = 'Moto'
+            AND fecha LIKE {operador}
 
-                AND fecha LIKE %s
-
-            """, (
-                f"{hoy}%",
-            ))
-
-        else:
-
-            c.execute("""
-
-                SELECT COUNT(*)
-
-                FROM lavados
-
-                WHERE vehiculo = 'Moto'
-
-                AND fecha LIKE ?
-
-            """, (
-                f"{hoy}%",
-            ))
+        """, (
+            f"{hoy}%",
+        ))
 
         lavados_motos = obtener_valor(
             c.fetchone()
@@ -350,85 +288,41 @@ def obtener_metricas_lavadero_db():
         # ==========================================
         # CARROS HOY
         # ==========================================
-        if POSTGRES:
+        c.execute(f"""
 
-            c.execute("""
+            SELECT COUNT(*)
 
-                SELECT COUNT(*)
+            FROM lavados
 
-                FROM lavados
+            WHERE vehiculo = 'Carro'
 
-                WHERE vehiculo = 'Carro'
+            AND fecha LIKE {operador}
 
-                AND fecha LIKE %s
-
-            """, (
-                f"{hoy}%",
-            ))
-
-        else:
-
-            c.execute("""
-
-                SELECT COUNT(*)
-
-                FROM lavados
-
-                WHERE vehiculo = 'Carro'
-
-                AND fecha LIKE ?
-
-            """, (
-                f"{hoy}%",
-            ))
+        """, (
+            f"{hoy}%",
+        ))
 
         lavados_carros = obtener_valor(
             c.fetchone()
         )
 
-        total_lavados = (
-
-            lavados_motos
-            +
-            lavados_carros
-        )
-
         # ==========================================
-        # TOTAL HOY
+        # TOTAL GENERADO HOY
         # ==========================================
-        if POSTGRES:
+        c.execute(f"""
 
-            c.execute("""
+            SELECT COALESCE(
+                SUM(valor),
+                0
+            )
 
-                SELECT COALESCE(
-                    SUM(valor),
-                    0
-                )
+            FROM lavados
 
-                FROM lavados
+            WHERE fecha LIKE {operador}
 
-                WHERE fecha LIKE %s
-
-            """, (
-                f"{hoy}%",
-            ))
-
-        else:
-
-            c.execute("""
-
-                SELECT COALESCE(
-                    SUM(valor),
-                    0
-                )
-
-                FROM lavados
-
-                WHERE fecha LIKE ?
-
-            """, (
-                f"{hoy}%",
-            ))
+        """, (
+            f"{hoy}%",
+        ))
 
         dinero_generado = obtener_valor(
             c.fetchone()
@@ -443,19 +337,37 @@ def obtener_metricas_lavadero_db():
                 lavados_carros,
 
             "total_lavados":
-                total_lavados,
+                lavados_motos
+                +
+                lavados_carros,
 
             "dinero_generado":
                 dinero_generado
         }
-    
+
 
 # ==========================================
-# ÚLTIMOS LAVADOS
+# ULTIMOS LAVADOS
 # ==========================================
 def obtener_ultimos_lavados_db():
 
-    return obtener_lavados_db()[:10]
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        c.execute("""
+
+            SELECT *
+
+            FROM lavados
+
+            ORDER BY id DESC
+
+            LIMIT 10
+
+        """)
+
+        return c.fetchall()
 
 
 # ==========================================
@@ -471,66 +383,32 @@ def obtener_estadisticas_responsables_db():
             "%d/%m/%Y"
         )
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
-        if POSTGRES:
+        operador = "%s" if POSTGRES else "?"
 
-            c.execute("""
+        c.execute(f"""
 
-                SELECT
+            SELECT
 
-                    responsable,
+                responsable,
 
-                    COUNT(*) as cantidad,
+                COUNT(*) as cantidad,
 
-                    COALESCE(
-                        SUM(valor),
-                        0
-                    ) as total
+                COALESCE(
+                    SUM(valor),
+                    0
+                ) as total
 
-                FROM lavados
+            FROM lavados
 
-                WHERE fecha LIKE %s
+            WHERE fecha LIKE {operador}
 
-                GROUP BY responsable
+            GROUP BY responsable
 
-                ORDER BY total DESC
+            ORDER BY total DESC
 
-            """, (
-                f"{hoy}%",
-            ))
-
-        # ==========================================
-        # SQLITE
-        # ==========================================
-        else:
-
-            c.execute("""
-
-                SELECT
-
-                    responsable,
-
-                    COUNT(*) as cantidad,
-
-                    COALESCE(
-                        SUM(valor),
-                        0
-                    ) as total
-
-                FROM lavados
-
-                WHERE fecha LIKE ?
-
-                
-                GROUP BY responsable
-
-                ORDER BY total DESC
-
-            """, (
-                f"{hoy}%",
-            ))
+        """, (
+            f"{hoy}%",
+        ))
 
         rows = c.fetchall()
 
@@ -538,33 +416,70 @@ def obtener_estadisticas_responsables_db():
 
         for row in rows:
 
-            # PostgreSQL
+            # ==========================================
+            # POSTGRESQL
+            # ==========================================
             if POSTGRES:
 
                 resultado.append({
 
-                    "responsable": row["responsable"],
+                    "responsable":
+                        row["responsable"],
 
-                    "cantidad": row["cantidad"],
+                    "cantidad":
+                        row["cantidad"],
 
-                    "total": row["total"]
+                    "total":
+                        row["total"]
                 })
 
-            # SQLite
+            # ==========================================
+            # SQLITE
+            # ==========================================
             else:
 
                 resultado.append({
 
-                    "responsable": row[0],
+                    "responsable":
+                        row[0],
 
-                    "cantidad": row[1],
+                    "cantidad":
+                        row[1],
 
-                    "total": row[2]
+                    "total":
+                        row[2]
                 })
 
         return resultado
-    
-    
+
+
+# ==========================================
+# OBTENER LAVADO POR ID
+# ==========================================
+def obtener_lavado_por_id_db(
+    lavado_id
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        operador = "%s" if POSTGRES else "?"
+
+        c.execute(f"""
+
+            SELECT *
+
+            FROM lavados
+
+            WHERE id = {operador}
+
+        """, (
+            lavado_id,
+        ))
+
+        return c.fetchone()
+
 
 # ==========================================
 # ACTUALIZAR LAVADO
@@ -588,74 +503,35 @@ def actualizar_lavado_db(
 
         c = conn.cursor()
 
-        if POSTGRES:
+        operador = "%s" if POSTGRES else "?"
 
-            c.execute("""
+        c.execute(f"""
 
-                UPDATE lavados
+            UPDATE lavados
 
-                SET
+            SET
 
-                    placa = %s,
+                placa = {operador},
+                vehiculo = {operador},
+                tipo_lavado = {operador},
+                valor = {operador},
+                responsable = {operador}
 
-                    vehiculo = %s,
+            WHERE id = {operador}
 
-                    tipo_lavado = %s,
+        """, (
 
-                    valor = %s,
+            placa.upper(),
 
-                    responsable = %s
+            vehiculo,
 
-                WHERE id = %s
+            tipo_lavado,
 
-            """, (
+            valor,
 
-                placa,
+            responsable,
 
-                vehiculo,
-
-                tipo_lavado,
-
-                valor,
-
-                responsable,
-
-                lavado_id
-            ))
-
-        else:
-
-            c.execute("""
-
-                UPDATE lavados
-
-                SET
-
-                    placa = ?,
-
-                    vehiculo = ?,
-
-                    tipo_lavado = ?,
-
-                    valor = ?,
-
-                    responsable = ?
-
-                WHERE id = ?
-
-            """, (
-
-                placa,
-
-                vehiculo,
-
-                tipo_lavado,
-
-                valor,
-
-                responsable,
-
-                lavado_id
-            ))
+            lavado_id
+        ))
 
         conn.commit()
