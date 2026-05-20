@@ -23,75 +23,73 @@
 
 <body class="bg-dark">
 
-    <div class="container mt-5">
+<div class="container mt-5">
 
-        <div class="row justify-content-center">
+    <div class="row justify-content-center">
 
-            <div class="col-md-5">
+        <div class="col-md-5">
 
-                <div class="card shadow-lg border-0">
+            <div class="card shadow-lg border-0">
 
-                    <div class="card-header bg-danger text-white text-center">
+                <div class="card-header bg-danger text-white text-center">
 
-                        <h3>
-                            Registrar Salida
-                        </h3>
+                    <h3>
+                        Registrar Salida
+                    </h3>
 
-                    </div>
+                </div>
 
-                    <div class="card-body">
+                <div class="card-body">
 
-                        <div
-                            id="alerta"
-                            style="display:none;"
-                        ></div>
+                    <div
+                        id="alerta"
+                        style="display:none;"
+                    ></div>
 
-                        <form id="formSalida">
+                    <form id="formSalida">
 
-                            <div class="mb-3">
+                        <div class="mb-3">
 
-                                <label class="form-label">
+                            <label class="form-label">
 
-                                    Ticket
+                                Ticket
 
-                                </label>
+                            </label>
 
-                                <input
-                                    type="number"
-                                    name="ticket"
-                                    id="ticket"
-                                    class="form-control"
-                                    required
-                                    autofocus
-                                >
+                            <input
+                                type="number"
+                                name="ticket"
+                                id="ticket"
+                                class="form-control"
+                                required
+                                autofocus
+                            >
 
-                            </div>
+                        </div>
 
-                            <div class="d-grid gap-2">
+                        <div class="d-grid gap-2">
 
-                                <button
-                                    type="submit"
-                                    class="btn btn-danger"
-                                >
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
 
-                                    Registrar Salida
+                                Registrar Salida
 
-                                </button>
+                            </button>
 
-                                <a
-                                    href="/dashboard/parqueadero"
-                                    class="btn btn-dark"
-                                >
+                            <a
+                                href="/dashboard/parqueadero"
+                                class="btn btn-dark"
+                            >
 
-                                    Volver
+                                Volver
 
-                                </a>
+                            </a>
 
-                            </div>
+                        </div>
 
-                        </form>
-
-                    </div>
+                    </form>
 
                 </div>
 
@@ -101,86 +99,232 @@
 
     </div>
 
-    <script>
+</div>
 
-        const form = document.getElementById(
-            "formSalida"
-        );
+<script>
 
-        form.addEventListener(
-            "submit",
-            async function(e){
+const form = document.getElementById(
+    "formSalida"
+);
 
-                e.preventDefault();
+form.addEventListener(
+    "submit",
+    async function(e){
 
-                const formData = new FormData(form);
+        e.preventDefault();
 
-                const response = await fetch(
-                    "/procesar_salida",
-                    {
-                        method: "POST",
-                        body: formData
-                    }
-                );
+        const formData = new FormData(form);
 
-                const data = await response.json();
-
-                const alerta = document.getElementById(
-                    "alerta"
-                );
-
-                // ==========================================
-                // ERROR
-                // ==========================================
-                if(!data.success){
-
-                    alerta.style.display = "block";
-
-                    alerta.className =
-                        "alert alert-danger";
-
-                    alerta.innerHTML =
-                        data.message;
-
-                    return;
-                }
-
-                // ==========================================
-                // MENSAJE OK
-                // ==========================================
-                alerta.style.display = "block";
-
-                alerta.className =
-                    "alert alert-success";
-
-                alerta.innerHTML =
-                    "Salida registrada correctamente";
-
-                // ==========================================
-                // LIMPIAR
-                // ==========================================
-                form.reset();
-
-                document.getElementById(
-                    "ticket"
-                ).focus();
-
-                // ==========================================
-                // ESPERAR PDF
-                // ==========================================
-                setTimeout(() => {
-
-                    window.open(
-                        data.pdf_url,
-                        "_blank"
-                    );
-
-                }, 1500);
-
+        const response = await fetch(
+            "/procesar_salida",
+            {
+                method: "POST",
+                body: formData
             }
         );
 
-    </script>
+        const data = await response.json();
+
+        const alerta = document.getElementById(
+            "alerta"
+        );
+
+        if(!data.success){
+
+            alerta.style.display = "block";
+
+            alerta.className =
+                "alert alert-danger";
+
+            alerta.innerHTML =
+                data.message;
+
+            return;
+        }
+
+        // ==========================================
+        // TICKET HTML
+        // ==========================================
+        const ticketHTML = `
+
+            <html>
+
+            <head>
+
+                <title>
+                    Ticket Salida
+                </title>
+
+                <style>
+
+                    body {
+
+                        font-family: Arial;
+
+                        width: 300px;
+
+                        margin: auto;
+
+                        text-align: center;
+                    }
+
+                    .logo {
+
+                        width: 120px;
+
+                        margin-bottom: 10px;
+                    }
+
+                    .ticket {
+
+                        font-size: 28px;
+
+                        font-weight: bold;
+
+                        margin: 15px 0;
+                    }
+
+                    .linea {
+
+                        border-top: 1px dashed #000;
+
+                        margin: 12px 0;
+                    }
+
+                    .dato {
+
+                        display: flex;
+
+                        justify-content: space-between;
+
+                        margin: 8px 0;
+                    }
+
+                    .total {
+
+                        font-size: 32px;
+
+                        font-weight: bold;
+
+                        margin-top: 20px;
+                    }
+
+                </style>
+
+            </head>
+
+            <body onload="window.print()">
+
+                <img
+                    src="/static/img/logo.png"
+                    class="logo"
+                >
+
+                <h2>
+                    RECIBO SALIDA
+                </h2>
+
+                <div class="linea"></div>
+
+                <div class="ticket">
+
+                    #${data.ticket}
+
+                </div>
+
+                <div class="linea"></div>
+
+                <div class="dato">
+
+                    <span>
+                        PLACA
+                    </span>
+
+                    <strong>
+                        ${data.placa}
+                    </strong>
+
+                </div>
+
+                <div class="dato">
+
+                    <span>
+                        TIPO
+                    </span>
+
+                    <strong>
+                        ${data.tipo}
+                    </strong>
+
+                </div>
+
+                <div class="dato">
+
+                    <span>
+                        TIEMPO
+                    </span>
+
+                    <strong>
+                        ${data.tiempo}
+                    </strong>
+
+                </div>
+
+                <div class="linea"></div>
+
+                <div class="total">
+
+                    $ ${data.valor}
+
+                </div>
+
+                <div class="linea"></div>
+
+                <p>
+
+                    ¡Gracias por su visita!
+
+                </p>
+
+            </body>
+
+            </html>
+
+        `;
+
+        const ventana = window.open(
+            "",
+            "_blank",
+            "width=400,height=700"
+        );
+
+        ventana.document.write(
+            ticketHTML
+        );
+
+        ventana.document.close();
+
+        // ==========================================
+        // LIMPIAR
+        // ==========================================
+        form.reset();
+
+        document.getElementById(
+            "ticket"
+        ).focus();
+
+        alerta.style.display = "block";
+
+        alerta.className =
+            "alert alert-success";
+
+        alerta.innerHTML =
+            "Salida registrada correctamente";
+
+    }
+);
+
+</script>
 
 </body>
 

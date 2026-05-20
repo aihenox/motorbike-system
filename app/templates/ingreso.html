@@ -168,15 +168,149 @@
                 }
 
                 // ==========================================
-                // MENSAJE OK
+                // TICKET HTML
                 // ==========================================
-                alerta.style.display = "block";
+                const ticketHTML = `
 
-                alerta.className =
-                    "alert alert-success";
+                    <html>
 
-                alerta.innerHTML =
-                    "Vehículo registrado correctamente";
+                    <head>
+
+                        <title>
+                            Ticket Ingreso
+                        </title>
+
+                        <style>
+
+                            body {
+
+                                font-family: Arial;
+
+                                width: 300px;
+
+                                margin: auto;
+
+                                text-align: center;
+                            }
+
+                            .logo {
+
+                                width: 120px;
+
+                                margin-bottom: 10px;
+                            }
+
+                            .ticket {
+
+                                font-size: 28px;
+
+                                font-weight: bold;
+
+                                margin: 15px 0;
+                            }
+
+                            .linea {
+
+                                border-top: 1px dashed #000;
+
+                                margin: 12px 0;
+                            }
+
+                            .dato {
+
+                                display: flex;
+
+                                justify-content: space-between;
+
+                                margin: 8px 0;
+                            }
+
+                        </style>
+
+                    </head>
+
+                    <body onload="window.print()">
+
+                        <img
+                            src="/static/img/logo.png"
+                            class="logo"
+                        >
+
+                        <h2>
+                            RECIBO INGRESO
+                        </h2>
+
+                        <div class="linea"></div>
+
+                        <div class="ticket">
+
+                            #${data.ticket}
+
+                        </div>
+
+                        <div class="linea"></div>
+
+                        <div class="dato">
+
+                            <span>
+                                PLACA
+                            </span>
+
+                            <strong>
+                                ${data.placa}
+                            </strong>
+
+                        </div>
+
+                        <div class="dato">
+
+                            <span>
+                                TIPO
+                            </span>
+
+                            <strong>
+                                ${data.tipo}
+                            </strong>
+
+                        </div>
+
+                        <div class="dato">
+
+                            <span>
+                                INGRESO
+                            </span>
+
+                            <strong>
+                                ${data.hora}
+                            </strong>
+
+                        </div>
+
+                        <div class="linea"></div>
+
+                        <p>
+
+                            ESPUMOSO MOTORBIKE WASH
+
+                        </p>
+
+                    </body>
+
+                    </html>
+
+                `;
+
+                const ventana = window.open(
+                    "",
+                    "_blank",
+                    "width=400,height=700"
+                );
+
+                ventana.document.write(
+                    ticketHTML
+                );
+
+                ventana.document.close();
 
                 // ==========================================
                 // LIMPIAR
@@ -187,17 +321,13 @@
                     "placa"
                 ).focus();
 
-                // ==========================================
-                // ESPERAR PDF
-                // ==========================================
-                setTimeout(() => {
+                alerta.style.display = "block";
 
-                    window.open(
-                        data.pdf_url,
-                        "_blank"
-                    );
+                alerta.className =
+                    "alert alert-success";
 
-                }, 1500);
+                alerta.innerHTML =
+                    "Vehículo registrado correctamente";
 
             }
         );

@@ -70,8 +70,6 @@ def create_app():
 
     from app.routes.eliminar import eliminar_bp
 
-    from app.routes.recibos import recibos_bp
-
     from app.routes.historial import historial_bp
 
     from app.routes.lavadero import lavadero_bp
@@ -96,8 +94,6 @@ def create_app():
     app.register_blueprint(editar_bp)
 
     app.register_blueprint(eliminar_bp)
-
-    app.register_blueprint(recibos_bp)
 
     app.register_blueprint(historial_bp)
 

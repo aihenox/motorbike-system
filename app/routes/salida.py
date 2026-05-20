@@ -1,14 +1,15 @@
-from flask import Blueprint
-from flask import render_template
-from flask import request
-from flask import jsonify
-from flask import url_for
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    jsonify
+)
 
 from flask_login import login_required
 
-from app.services.salida_service import procesar_salida
-
-import os
+from app.services.salida_service import (
+    procesar_salida
+)
 
 
 salida_bp = Blueprint(
@@ -50,32 +51,9 @@ def procesar_salida_ajax():
             ticket
         )
 
-        if not resultado["success"]:
-
-            return jsonify({
-
-                "success": False,
-
-                "message": resultado["message"]
-
-            })
-
-        archivo = os.path.basename(
-            resultado["pdf"]
+        return jsonify(
+            resultado
         )
-
-        pdf_url = url_for(
-            "recibos.ver_recibo",
-            archivo=archivo
-        )
-
-        return jsonify({
-
-            "success": True,
-
-            "pdf_url": pdf_url
-
-        })
 
     except Exception as e:
 
