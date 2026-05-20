@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from app.repositories.ingreso_repository import (
     obtener_ticket_activo_db,
@@ -34,18 +35,61 @@ def procesar_salida(ticket):
 
     hora_ingreso = data["hora_ingreso"]
 
+    # ==========================================
+    # SQLITE = STRING
+    # POSTGRES = DATETIME
+    # ==========================================
+    if isinstance(
+        hora_ingreso,
+        str
+    ):
+
+        ingreso_dt = datetime.fromisoformat(
+            hora_ingreso
+        )
+
+    else:
+
+        ingreso_dt = hora_ingreso
+
+    # ==========================================
+    # AGREGAR TZ SI NO EXISTE
+    # ==========================================
+    if ingreso_dt.tzinfo is None:
+
+        ingreso_dt = ingreso_dt.replace(
+            tzinfo=ZoneInfo(
+                "America/Bogota"
+            )
+        )
+
+    # ==========================================
+    # CALCULAR VALOR
+    # ==========================================
     valor, hora_salida = calcular_valor(
 
         tipo,
 
-        hora_ingreso
+        ingreso_dt.isoformat()
     )
 
-    ingreso_dt = datetime.fromisoformat(
-        hora_ingreso
-    )
+    # ==========================================
+    # ASEGURAR TZ EN SALIDA
+    # ==========================================
+    if hora_salida.tzinfo is None:
 
+        hora_salida = hora_salida.replace(
+            tzinfo=ZoneInfo(
+                "America/Bogota"
+            )
+        )
+
+    # ==========================================
+    # DIFERENCIA TIEMPO
+    # ==========================================
     diferencia = hora_salida - ingreso_dt
+
+    dias = diferencia.days
 
     horas = diferencia.seconds // 3600
 
@@ -53,8 +97,17 @@ def procesar_salida(ticket):
         diferencia.seconds % 3600
     ) // 60
 
-    tiempo = f"{horas:02d}:{minutos:02d}"
+    tiempo = ""
 
+    if dias > 0:
+
+        tiempo += f"{dias}d "
+
+    tiempo += f"{horas:02d}:{minutos:02d}"
+
+    # ==========================================
+    # CERRAR TICKET
+    # ==========================================
     cerrar_ticket_db(
 
         ticket,
