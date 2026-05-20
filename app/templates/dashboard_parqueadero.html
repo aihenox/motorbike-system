@@ -5,8 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
         Dashboard Parqueadero
@@ -25,115 +27,183 @@
     <style>
 
         body{
-            background:#eef2f7;
+
+            background:#f1f5f9;
+
             font-family:'Segoe UI';
         }
 
         .navbar{
+
             box-shadow:0 3px 15px rgba(0,0,0,.08);
         }
 
         .titulo{
+
             font-weight:700;
-            color:#1e293b;
+
+            color:#0f172a;
         }
 
         .subtitulo{
+
             color:#64748b;
         }
 
         .menu-btn{
+
             border:none;
+
             border-radius:18px;
+
             padding:18px;
+
             font-weight:600;
+
             transition:.2s;
+
             box-shadow:0 8px 20px rgba(0,0,0,.08);
+
             font-size:16px;
         }
 
         .menu-btn:hover{
+
             transform:translateY(-3px);
         }
 
         .card-dashboard{
+
             border:none;
+
             border-radius:22px;
+
             padding:25px;
+
             background:white;
+
             box-shadow:0 12px 30px rgba(0,0,0,.06);
+
             transition:.2s;
+
             height:100%;
         }
 
         .card-dashboard:hover{
+
             transform:translateY(-4px);
         }
 
         .card-icon{
+
             width:60px;
+
             height:60px;
+
             border-radius:18px;
+
             display:flex;
+
             align-items:center;
+
             justify-content:center;
+
             font-size:28px;
+
             margin-bottom:18px;
         }
 
         .icon-moto{
+
             background:#dcfce7;
+
             color:#16a34a;
         }
 
         .icon-carro{
+
             background:#fee2e2;
+
             color:#dc2626;
         }
 
         .icon-total{
+
             background:#dbeafe;
+
             color:#2563eb;
         }
 
         .icon-dinero{
+
             background:#ede9fe;
+
             color:#7c3aed;
         }
 
         .card-title{
+
             color:#64748b;
+
             font-size:15px;
+
             margin-bottom:6px;
         }
 
         .card-value{
+
             font-size:34px;
+
             font-weight:700;
+
             color:#0f172a;
         }
 
         .reloj{
+
             background:white;
+
             padding:12px 18px;
+
             border-radius:14px;
+
             box-shadow:0 8px 20px rgba(0,0,0,.06);
+
             font-weight:600;
+
             color:#334155;
         }
 
         .tabla-card{
+
             border:none;
+
             border-radius:22px;
+
             background:white;
+
             box-shadow:0 12px 30px rgba(0,0,0,.06);
+
             overflow:hidden;
         }
 
         .badge-custom{
+
             padding:8px 14px;
+
             border-radius:12px;
+
             font-size:13px;
+        }
+
+        .table thead th{
+
+            white-space:nowrap;
+        }
+
+        .selector{
+
+            width:160px;
         }
 
     </style>
@@ -146,11 +216,15 @@
 <nav class="navbar navbar-dark bg-dark px-4 py-3">
 
     <span class="navbar-brand fw-bold fs-4">
+
         Módulo Parqueadero
+
     </span>
 
-    <a href="/dashboard"
-       class="btn btn-outline-light">
+    <a
+        href="/dashboard"
+        class="btn btn-outline-light"
+    >
 
         Dashboard General
 
@@ -167,11 +241,15 @@
         <div>
 
             <h2 class="titulo mb-1">
+
                 Dashboard Parqueadero
+
             </h2>
 
             <p class="subtitulo mb-0">
+
                 Gestión operativa del parqueadero
+
             </p>
 
         </div>
@@ -190,27 +268,17 @@
     <!-- MENU -->
     <div class="row mb-4">
 
-        <!-- NUEVO INGRESO -->
+        <!-- INGRESO -->
         <div class="col-md-3 mb-3">
 
-            <a href="/ingreso"
-               class="btn btn-danger w-100 menu-btn">
+            <a
+                href="/ingreso"
+                class="btn btn-success w-100 menu-btn"
+            >
 
                 <i class="bi bi-plus-circle"></i>
-                Nuevo ingreso
 
-            </a>
-
-        </div>
-
-        <!-- ACTIVOS -->
-        <div class="col-md-3 mb-3">
-
-            <a href="/activos"
-               class="btn btn-dark w-100 menu-btn">
-
-                <i class="bi bi-car-front"></i>
-                Vehículos activos
+                Registrar ingreso
 
             </a>
 
@@ -219,11 +287,30 @@
         <!-- SALIDA -->
         <div class="col-md-3 mb-3">
 
-            <a href="/salida"
-               class="btn btn-success w-100 menu-btn">
+            <a
+                href="/salida"
+                class="btn btn-danger w-100 menu-btn"
+            >
 
                 <i class="bi bi-box-arrow-right"></i>
+
                 Registrar salida
+
+            </a>
+
+        </div>
+
+        <!-- ACTIVOS -->
+        <div class="col-md-3 mb-3">
+
+            <a
+                href="/activos"
+                class="btn btn-dark w-100 menu-btn"
+            >
+
+                <i class="bi bi-car-front"></i>
+
+                Vehículos activos
 
             </a>
 
@@ -232,10 +319,13 @@
         <!-- HISTORIAL -->
         <div class="col-md-3 mb-3">
 
-            <a href="/historial"
-               class="btn btn-primary w-100 menu-btn">
+            <a
+                href="/historial"
+                class="btn btn-primary w-100 menu-btn"
+            >
 
                 <i class="bi bi-clock-history"></i>
+
                 Historial
 
             </a>
@@ -259,11 +349,15 @@
                 </div>
 
                 <div class="card-title">
+
                     Motos activas
+
                 </div>
 
                 <div class="card-value text-success">
+
                     {{ motos or 0 }}
+
                 </div>
 
             </div>
@@ -282,11 +376,15 @@
                 </div>
 
                 <div class="card-title">
+
                     Carros activos
+
                 </div>
 
                 <div class="card-value text-danger">
+
                     {{ carros or 0 }}
+
                 </div>
 
             </div>
@@ -305,11 +403,15 @@
                 </div>
 
                 <div class="card-title">
+
                     Total activos
+
                 </div>
 
                 <div class="card-value text-primary">
+
                     {{ total or 0 }}
+
                 </div>
 
             </div>
@@ -328,11 +430,15 @@
                 </div>
 
                 <div class="card-title">
+
                     Generado parqueadero
+
                 </div>
 
                 <div class="card-value text-primary">
+
                     $ {{ "{:,}".format(dinero or 0) }}
+
                 </div>
 
             </div>
@@ -346,12 +452,63 @@
 
         <div class="p-4">
 
-            <h4 class="fw-bold mb-4">
+            <!-- HEADER TABLA -->
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
 
-                Últimos movimientos
+                <h4 class="fw-bold mb-0">
 
-            </h4>
+                    Últimos movimientos
 
+                </h4>
+
+                <!-- SELECTOR -->
+                <form method="GET">
+
+                    <select
+                        name="limite"
+                        class="form-select selector"
+                        onchange="this.form.submit()"
+                    >
+
+                        <option value="10"
+                            {% if limite == 10 %}selected{% endif %}
+                        >
+
+                            Últimos 10
+
+                        </option>
+
+                        <option value="25"
+                            {% if limite == 25 %}selected{% endif %}
+                        >
+
+                            Últimos 25
+
+                        </option>
+
+                        <option value="50"
+                            {% if limite == 50 %}selected{% endif %}
+                        >
+
+                            Últimos 50
+
+                        </option>
+
+                        <option value="100"
+                            {% if limite == 100 %}selected{% endif %}
+                        >
+
+                            Últimos 100
+
+                        </option>
+
+                    </select>
+
+                </form>
+
+            </div>
+
+            <!-- TABLA -->
             <div class="table-responsive">
 
                 <table class="table table-hover align-middle">
@@ -369,7 +526,11 @@
                             </th>
 
                             <th>
-                                Hora ingreso
+                                Ingreso
+                            </th>
+
+                            <th>
+                                Salida
                             </th>
 
                             <th>
@@ -401,6 +562,12 @@
                             <td>
 
                                 {{ item.hora_ingreso }}
+
+                            </td>
+
+                            <td>
+
+                                {{ item.hora_salida }}
 
                             </td>
 
@@ -445,7 +612,7 @@
 <script>
 
 // ==========================================
-// RELOJ TIEMPO REAL
+// RELOJ
 // ==========================================
 function actualizarFechaHora(){
 
@@ -480,12 +647,8 @@ function actualizarFechaHora(){
         `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
 }
 
-
-// INICIAR
 actualizarFechaHora();
 
-
-// ACTUALIZAR
 setInterval(
     actualizarFechaHora,
     1000
@@ -494,4 +657,5 @@ setInterval(
 </script>
 
 </body>
+
 </html>

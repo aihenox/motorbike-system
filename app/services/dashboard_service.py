@@ -15,6 +15,10 @@ def obtener_metricas_dashboard():
 # ==========================================
 # ÚLTIMOS MOVIMIENTOS
 # ==========================================
-def obtener_ultimos_ingresos():
+def obtener_ultimos_ingresos(
+    limite=10
+):
 
-    return obtener_ultimos_ingresos_db()
+    return obtener_ultimos_ingresos_db(
+        limite
+    )

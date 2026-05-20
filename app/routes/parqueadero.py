@@ -1,6 +1,7 @@
 from flask import (
     Blueprint,
-    render_template
+    render_template,
+    request
 )
 
 from flask_login import login_required
@@ -26,9 +27,17 @@ parqueadero_bp = Blueprint(
 @login_required
 def dashboard_parqueadero():
 
+    limite = request.args.get(
+        "limite",
+        10,
+        type=int
+    )
+
     metricas = obtener_metricas_dashboard()
 
-    movimientos = obtener_ultimos_ingresos()
+    movimientos = obtener_ultimos_ingresos(
+        limite
+    )
 
     return render_template(
 
@@ -54,5 +63,7 @@ def dashboard_parqueadero():
             0
         ),
 
-        movimientos=movimientos
+        movimientos=movimientos,
+
+        limite=limite
     )
