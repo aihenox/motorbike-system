@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from app.repositories.activos_repository import (
     obtener_activos_db
@@ -16,11 +17,38 @@ def listar_activos():
 
     for item in activos_db:
 
-        hora_ingreso = datetime.fromisoformat(
-            item["hora_ingreso"]
+        # ==========================================
+        # SQLITE = STRING
+        # POSTGRES = DATETIME
+        # ==========================================
+        hora_ingreso = item["hora_ingreso"]
+
+        if isinstance(
+            hora_ingreso,
+            str
+        ):
+
+            hora_ingreso = datetime.fromisoformat(
+                hora_ingreso
+            )
+
+        # ==========================================
+        # HORA ACTUAL COLOMBIA
+        # ==========================================
+        ahora = datetime.now(
+            ZoneInfo("America/Bogota")
         )
 
-        ahora = datetime.now()
+        # ==========================================
+        # CONVERTIR SI NO TIENE TZ
+        # ==========================================
+        if hora_ingreso.tzinfo is None:
+
+            hora_ingreso = hora_ingreso.replace(
+                tzinfo=ZoneInfo(
+                    "America/Bogota"
+                )
+            )
 
         diferencia = ahora - hora_ingreso
 
