@@ -264,57 +264,28 @@ def obtener_metricas_lavadero_db():
 
         operador = "%s" if POSTGRES else "?"
 
-        # ==========================================
-        # MOTOS HOY
-        # ==========================================
         c.execute(f"""
 
-            SELECT COUNT(*)
+            SELECT
 
-            FROM lavados
+                COUNT(
+                    CASE
+                        WHEN vehiculo = 'Moto'
+                        THEN 1
+                    END
+                ) as motos,
 
-            WHERE vehiculo = 'Moto'
+                COUNT(
+                    CASE
+                        WHEN vehiculo = 'Carro'
+                        THEN 1
+                    END
+                ) as carros,
 
-            AND fecha LIKE {operador}
-
-        """, (
-            f"{hoy}%",
-        ))
-
-        lavados_motos = obtener_valor(
-            c.fetchone()
-        )
-
-        # ==========================================
-        # CARROS HOY
-        # ==========================================
-        c.execute(f"""
-
-            SELECT COUNT(*)
-
-            FROM lavados
-
-            WHERE vehiculo = 'Carro'
-
-            AND fecha LIKE {operador}
-
-        """, (
-            f"{hoy}%",
-        ))
-
-        lavados_carros = obtener_valor(
-            c.fetchone()
-        )
-
-        # ==========================================
-        # TOTAL GENERADO HOY
-        # ==========================================
-        c.execute(f"""
-
-            SELECT COALESCE(
-                SUM(valor),
-                0
-            )
+                COALESCE(
+                    SUM(valor),
+                    0
+                ) as total
 
             FROM lavados
 
@@ -324,28 +295,46 @@ def obtener_metricas_lavadero_db():
             f"{hoy}%",
         ))
 
-        dinero_generado = obtener_valor(
-            c.fetchone()
-        )
+        row = c.fetchone()
+
+        # ==========================================
+        # POSTGRESQL
+        # ==========================================
+        if POSTGRES:
+
+            motos = row["motos"]
+
+            carros = row["carros"]
+
+            total = row["total"]
+
+        # ==========================================
+        # SQLITE
+        # ==========================================
+        else:
+
+            motos = row[0]
+
+            carros = row[1]
+
+            total = row[2]
 
         return {
 
             "lavados_motos":
-                lavados_motos,
+                motos,
 
             "lavados_carros":
-                lavados_carros,
+                carros,
 
             "total_lavados":
-                lavados_motos
-                +
-                lavados_carros,
+                motos + carros,
 
             "dinero_generado":
-                dinero_generado
+                total
         }
-
-
+    
+    
 # ==========================================
 # ULTIMOS LAVADOS
 # ==========================================
