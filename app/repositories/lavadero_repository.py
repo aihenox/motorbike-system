@@ -1,6 +1,7 @@
 import os
 
 from app.repositories.connection import conectar
+from datetime import datetime
 
 
 # ==========================================
@@ -303,29 +304,83 @@ def obtener_metricas_lavadero_db():
 
         c = conn.cursor()
 
-        c.execute("""
+        hoy = datetime.now().strftime(
+            "%d/%m/%Y"
+        )
 
-            SELECT COUNT(*)
+        # ==========================================
+        # MOTOS HOY
+        # ==========================================
+        if POSTGRES:
 
-            FROM lavados
+            c.execute("""
 
-            WHERE vehiculo = 'Moto'
+                SELECT COUNT(*)
 
-        """)
+                FROM lavados
+
+                WHERE vehiculo = 'Moto'
+
+                AND fecha LIKE %s
+
+            """, (
+                f"{hoy}%",
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT COUNT(*)
+
+                FROM lavados
+
+                WHERE vehiculo = 'Moto'
+
+                AND fecha LIKE ?
+
+            """, (
+                f"{hoy}%",
+            ))
 
         lavados_motos = obtener_valor(
             c.fetchone()
         )
 
-        c.execute("""
+        # ==========================================
+        # CARROS HOY
+        # ==========================================
+        if POSTGRES:
 
-            SELECT COUNT(*)
+            c.execute("""
 
-            FROM lavados
+                SELECT COUNT(*)
 
-            WHERE vehiculo = 'Carro'
+                FROM lavados
 
-        """)
+                WHERE vehiculo = 'Carro'
+
+                AND fecha LIKE %s
+
+            """, (
+                f"{hoy}%",
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT COUNT(*)
+
+                FROM lavados
+
+                WHERE vehiculo = 'Carro'
+
+                AND fecha LIKE ?
+
+            """, (
+                f"{hoy}%",
+            ))
 
         lavados_carros = obtener_valor(
             c.fetchone()
@@ -338,16 +393,42 @@ def obtener_metricas_lavadero_db():
             lavados_carros
         )
 
-        c.execute("""
+        # ==========================================
+        # TOTAL HOY
+        # ==========================================
+        if POSTGRES:
 
-            SELECT COALESCE(
-                SUM(valor),
-                0
-            )
+            c.execute("""
 
-            FROM lavados
+                SELECT COALESCE(
+                    SUM(valor),
+                    0
+                )
 
-        """)
+                FROM lavados
+
+                WHERE fecha LIKE %s
+
+            """, (
+                f"{hoy}%",
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT COALESCE(
+                    SUM(valor),
+                    0
+                )
+
+                FROM lavados
+
+                WHERE fecha LIKE ?
+
+            """, (
+                f"{hoy}%",
+            ))
 
         dinero_generado = obtener_valor(
             c.fetchone()
@@ -367,7 +448,7 @@ def obtener_metricas_lavadero_db():
             "dinero_generado":
                 dinero_generado
         }
-
+    
 
 # ==========================================
 # ÚLTIMOS LAVADOS
@@ -386,26 +467,70 @@ def obtener_estadisticas_responsables_db():
 
         c = conn.cursor()
 
-        c.execute("""
+        hoy = datetime.now().strftime(
+            "%d/%m/%Y"
+        )
 
-            SELECT
+        # ==========================================
+        # POSTGRESQL
+        # ==========================================
+        if POSTGRES:
 
-                responsable,
+            c.execute("""
 
-                COUNT(*) as cantidad,
+                SELECT
 
-                COALESCE(
-                    SUM(valor),
-                    0
-                ) as total
+                    responsable,
 
-            FROM lavados
+                    COUNT(*) as cantidad,
 
-            GROUP BY responsable
+                    COALESCE(
+                        SUM(valor),
+                        0
+                    ) as total
 
-            ORDER BY total DESC
+                FROM lavados
 
-        """)
+                WHERE fecha LIKE %s
+
+                GROUP BY responsable
+
+                ORDER BY total DESC
+
+            """, (
+                f"{hoy}%",
+            ))
+
+        # ==========================================
+        # SQLITE
+        # ==========================================
+        else:
+
+            c.execute("""
+
+                SELECT
+
+                    responsable,
+
+                    COUNT(*) as cantidad,
+
+                    COALESCE(
+                        SUM(valor),
+                        0
+                    ) as total
+
+                FROM lavados
+
+                WHERE fecha LIKE ?
+
+                
+                GROUP BY responsable
+
+                ORDER BY total DESC
+
+            """, (
+                f"{hoy}%",
+            ))
 
         rows = c.fetchall()
 
@@ -438,55 +563,8 @@ def obtener_estadisticas_responsables_db():
                 })
 
         return resultado
-
-
-# ==========================================
-# OBTENER LAVADO POR ID
-# ==========================================
-def obtener_lavado_por_id_db(
-    lavado_id
-):
-
-    with conectar() as conn:
-
-        c = conn.cursor()
-
-        if POSTGRES:
-
-            c.execute("""
-
-                SELECT *
-
-                FROM lavados
-
-                WHERE id = %s
-
-            """, (
-
-                lavado_id,
-
-            ))
-
-        else:
-
-            c.execute("""
-
-                SELECT *
-
-                FROM lavados
-
-                WHERE id = ?
-
-            """, (
-
-                lavado_id,
-
-            ))
-
-        row = c.fetchone()
-
-        return convertir_row_lavado(row)
-
+    
+    
 
 # ==========================================
 # ACTUALIZAR LAVADO

@@ -36,8 +36,8 @@ from app.services.lavadero_service import (
     actualizar_lavado
 )
 
-from app.services.dashboard_service import (
-    obtener_metricas_dashboard
+from app.services.lavadero_service import (
+    obtener_metricas_lavadero
 )
 
 from app.services.historial_lavadero_service import (
@@ -63,7 +63,7 @@ lavadero_bp = Blueprint(
 @login_required
 def dashboard_lavadero():
 
-    metricas = obtener_metricas_dashboard()
+    metricas = obtener_metricas_lavadero()
 
     lavados = listar_lavados()
 
