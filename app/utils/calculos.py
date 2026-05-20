@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import math
 
@@ -6,20 +7,52 @@ import math
 # ==========================================
 # CALCULAR VALOR PARQUEADERO
 # ==========================================
-def calcular_valor(tipo, hora_ingreso):
+def calcular_valor(
+    tipo,
+    hora_ingreso
+):
 
-    hora_ingreso = datetime.fromisoformat(
-        hora_ingreso
+    # ==========================================
+    # SQLITE = STRING
+    # POSTGRES = DATETIME
+    # ==========================================
+    if isinstance(
+        hora_ingreso,
+        str
+    ):
+
+        hora_ingreso = datetime.fromisoformat(
+            hora_ingreso
+        )
+
+    # ==========================================
+    # AGREGAR TZ SI NO EXISTE
+    # ==========================================
+    if hora_ingreso.tzinfo is None:
+
+        hora_ingreso = hora_ingreso.replace(
+            tzinfo=ZoneInfo(
+                "America/Bogota"
+            )
+        )
+
+    # ==========================================
+    # HORA ACTUAL COLOMBIA
+    # ==========================================
+    ahora = datetime.now(
+        ZoneInfo("America/Bogota")
     )
-
-    ahora = datetime.now()
 
     diferencia = ahora - hora_ingreso
 
     horas = diferencia.total_seconds() / 3600
 
-    # Cobro por hora o fracción
-    horas_cobro = math.ceil(horas)
+    # ==========================================
+    # COBRO POR HORA O FRACCIÓN
+    # ==========================================
+    horas_cobro = math.ceil(
+        horas
+    )
 
     if tipo == "Moto":
 
