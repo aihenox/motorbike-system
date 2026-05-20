@@ -459,207 +459,21 @@ form.addEventListener(
         audio.play();
 
         // ==========================================
-        // TICKET HTML
+        // GENERAR TICKET
         // ==========================================
-        const ticketHTML = `
+        const ticketHTML =
+            generarTicketSalida(data);
 
-            <html>
 
-            <head>
+        // ==========================================
+        // ABRIR TICKET
+        // ==========================================
+        abrirTicket(
 
-                <title>
-                    Ticket Salida
-                </title>
+            ticketHTML,
 
-                <style>
-
-                    body {
-
-                        font-family: Arial;
-
-                        width: 300px;
-
-                        margin: auto;
-
-                        text-align: center;
-
-                        color:#000;
-                    }
-
-                    .logo {
-
-                        width: 120px;
-
-                        margin-bottom: 10px;
-                    }
-
-                    .ticket {
-
-                        font-size: 32px;
-
-                        font-weight: bold;
-
-                        margin: 18px 0;
-                    }
-
-                    .linea {
-
-                        border-top: 1px dashed #000;
-
-                        margin: 12px 0;
-                    }
-
-                    .dato {
-
-                        display:flex;
-
-                        justify-content:space-between;
-
-                        margin:10px 0;
-
-                        font-size:15px;
-                    }
-
-                    .total{
-
-                        font-size:36px;
-
-                        font-weight:bold;
-
-                        margin-top:20px;
-                    }
-
-                    .footer{
-
-                        margin-top:20px;
-
-                        font-size:12px;
-                    }
-
-                </style>
-
-            </head>
-
-            <body onload="window.print()">
-
-                <img
-                    src="/static/img/logo.png"
-                    class="logo"
-                >
-
-                <h2>
-
-                    RECIBO SALIDA
-
-                </h2>
-
-                <div class="linea"></div>
-
-                <div class="ticket">
-
-                    #${data.ticket}
-
-                </div>
-
-                <div class="linea"></div>
-
-                <div class="dato">
-
-                    <span>
-                        PLACA
-                    </span>
-
-                    <strong>
-                        ${data.placa}
-                    </strong>
-
-                </div>
-
-                <div class="dato">
-
-                    <span>
-                        TIPO
-                    </span>
-
-                    <strong>
-                        ${data.tipo}
-                    </strong>
-
-                </div>
-
-                <div class="dato">
-
-                    <span>
-                        INGRESO
-                    </span>
-
-                    <strong>
-                        ${data.hora_ingreso}
-                    </strong>
-
-                </div>
-
-                <div class="dato">
-
-                    <span>
-                        SALIDA
-                    </span>
-
-                    <strong>
-                        ${data.hora_salida}
-                    </strong>
-
-                </div>
-
-                <div class="dato">
-
-                    <span>
-                        TIEMPO
-                    </span>
-
-                    <strong>
-                        ${data.tiempo}
-                    </strong>
-
-                </div>
-
-                <div class="linea"></div>
-
-                <div class="total">
-
-                    $ ${data.valor}
-
-                </div>
-
-                <div class="linea"></div>
-
-                <div class="footer">
-
-                    ¡Gracias por su visita!
-
-                    <br>
-
-                    ESPUMOSO MOTORBIKE WASH
-
-                </div>
-
-            </body>
-
-            </html>
-
-        `;
-
-        const ventana = window.open(
-            "",
-            "_blank",
-            "width=400,height=700"
+            data.ticket
         );
-
-        ventana.document.write(
-            ticketHTML
-        );
-
-        ventana.document.close();
 
         // LIMPIAR
         form.reset();

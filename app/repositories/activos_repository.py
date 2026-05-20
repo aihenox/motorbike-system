@@ -1,4 +1,14 @@
+import os
+
 from app.repositories.connection import conectar
+
+
+# ==========================================
+# MOTOR DATABASE
+# ==========================================
+POSTGRES = os.getenv(
+    "DATABASE_URL"
+)
 
 
 # ==========================================
@@ -11,18 +21,20 @@ def obtener_activos_db():
         c = conn.cursor()
 
         c.execute("""
-        SELECT
 
-            id,
-            placa,
-            tipo,
-            hora_ingreso
+            SELECT
 
-        FROM ingresos
+                id,
+                placa,
+                tipo,
+                hora_ingreso
 
-        WHERE estado = 'Dentro'
+            FROM ingresos
 
-        ORDER BY hora_ingreso DESC
+            WHERE estado = 'Dentro'
+
+            ORDER BY hora_ingreso DESC
+
         """)
 
         return c.fetchall()
@@ -37,15 +49,39 @@ def obtener_vehiculo_db(id):
 
         c = conn.cursor()
 
-        c.execute("""
-        SELECT *
+        # ==========================================
+        # POSTGRESQL
+        # ==========================================
+        if POSTGRES:
 
-        FROM ingresos
+            c.execute("""
 
-        WHERE id = ?
-        """, (
-            id,
-        ))
+                SELECT *
+
+                FROM ingresos
+
+                WHERE id = %s
+
+            """, (
+                id,
+            ))
+
+        # ==========================================
+        # SQLITE
+        # ==========================================
+        else:
+
+            c.execute("""
+
+                SELECT *
+
+                FROM ingresos
+
+                WHERE id = ?
+
+            """, (
+                id,
+            ))
 
         return c.fetchone()
 
@@ -53,26 +89,65 @@ def obtener_vehiculo_db(id):
 # ==========================================
 # ACTUALIZAR VEHÍCULO
 # ==========================================
-def actualizar_vehiculo_db(id, placa, tipo):
+def actualizar_vehiculo_db(
+    id,
+    placa,
+    tipo
+):
 
     with conectar() as conn:
 
         c = conn.cursor()
 
-        c.execute("""
-        UPDATE ingresos
+        # ==========================================
+        # POSTGRESQL
+        # ==========================================
+        if POSTGRES:
 
-        SET
+            c.execute("""
 
-            placa = ?,
-            tipo = ?
+                UPDATE ingresos
 
-        WHERE id = ?
-        """, (
-            placa.upper(),
-            tipo,
-            id
-        ))
+                SET
+
+                    placa = %s,
+                    tipo = %s
+
+                WHERE id = %s
+
+            """, (
+
+                placa.upper(),
+
+                tipo,
+
+                id
+            ))
+
+        # ==========================================
+        # SQLITE
+        # ==========================================
+        else:
+
+            c.execute("""
+
+                UPDATE ingresos
+
+                SET
+
+                    placa = ?,
+                    tipo = ?
+
+                WHERE id = ?
+
+            """, (
+
+                placa.upper(),
+
+                tipo,
+
+                id
+            ))
 
         conn.commit()
 
@@ -86,12 +161,34 @@ def eliminar_vehiculo_db(id):
 
         c = conn.cursor()
 
-        c.execute("""
-        DELETE FROM ingresos
+        # ==========================================
+        # POSTGRESQL
+        # ==========================================
+        if POSTGRES:
 
-        WHERE id = ?
-        """, (
-            id,
-        ))
+            c.execute("""
+
+                DELETE FROM ingresos
+
+                WHERE id = %s
+
+            """, (
+                id,
+            ))
+
+        # ==========================================
+        # SQLITE
+        # ==========================================
+        else:
+
+            c.execute("""
+
+                DELETE FROM ingresos
+
+                WHERE id = ?
+
+            """, (
+                id,
+            ))
 
         conn.commit()
