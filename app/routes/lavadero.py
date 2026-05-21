@@ -126,8 +126,19 @@ def dashboard_lavadero():
 
     methods=["GET", "POST"]
 )
+# ==========================================
+# REGISTRO LAVADOS
+# ==========================================
+@lavadero_bp.route(
+
+    "/lavadero",
+
+    methods=["GET", "POST"]
+)
 @login_required
 def lavadero():
+
+    ticket_data = None
 
     if request.method == "POST":
 
@@ -151,10 +162,7 @@ def lavadero():
             "responsable"
         ]
 
-        # ==========================================
-        # HORA COLOMBIA UTC-5
-        # ==========================================
-        fecha = (
+        fecha_db = (
             datetime.utcnow()
             - timedelta(hours=5)
         ).strftime(
@@ -173,22 +181,45 @@ def lavadero():
 
             responsable,
 
-            fecha
+            fecha_db
         )
 
-        return redirect(
-            url_for(
-                "lavadero.lavadero"
-            )
+        fecha_ticket = (
+            datetime.utcnow()
+            - timedelta(hours=5)
+        ).strftime(
+            "%d/%m/%Y %H:%M"
         )
+
+        ticket_data = {
+
+            "placa": placa,
+
+            "vehiculo": vehiculo,
+
+            "tipo_lavado": tipo_lavado,
+
+            "responsable": responsable,
+
+            "valor": f"{valor:,}",
+
+            "fecha": fecha_ticket
+        }
 
     lavados = listar_lavados()
+
+    print(
+        "TICKET_DATA:",
+        ticket_data
+    )
 
     return render_template(
 
         "lavadero.html",
 
-        lavados=lavados
+        lavados=lavados,
+
+        ticket_data=ticket_data
     )
 
 
