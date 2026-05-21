@@ -65,9 +65,31 @@ def dashboard_lavadero():
 
     lavados = listar_lavados()
 
-    estadisticas = (
-        obtener_estadisticas_responsables()
-    )
+    # ==========================================
+    # FORMATEAR FECHAS
+    # ==========================================
+    for lavado in lavados:
+
+        try:
+
+            fecha = lavado["fecha"]
+
+            if isinstance(
+                fecha,
+                str
+            ):
+
+                fecha = datetime.fromisoformat(
+                    fecha
+                )
+
+            lavado["fecha"] = fecha.strftime(
+                "%d/%m/%Y %H:%M"
+            )
+
+        except:
+
+            pass
 
     return render_template(
 
@@ -88,11 +110,8 @@ def dashboard_lavadero():
             0
         ),
 
-        lavados=lavados,
-
-        estadisticas=estadisticas
+        lavados=lavados
     )
-
 
 # ==========================================
 # REGISTRO LAVADOS
