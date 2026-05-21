@@ -234,6 +234,19 @@
 
                     </div>
 
+                    <div
+    
+                        id="mensajeExito"
+                        class="alert alert-success d-none mb-4"
+>
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Lavado registrado correctamente
+
+                    </div>
+
+
                     <form id="formLavado">
 
                         <div class="row">
@@ -551,6 +564,30 @@ formLavado.addEventListener(
             new Audio(
                 "/static/audio/success.mp3"
             ).play();
+
+
+            // MENSAJE EXITO
+            const mensaje =
+                document.getElementById(
+                    "mensajeExito"
+            );
+
+            mensaje.innerHTML =
+
+                `<i class="bi bi-check-circle-fill"></i>
+                Lavado ${data.placa} registrado correctamente`;
+
+            mensaje.classList.remove(
+                "d-none"
+            );
+
+            setTimeout(() => {
+
+                mensaje.classList.add(
+                    "d-none"
+            );
+
+            }, 3000);
 
 
             // IMPRIMIR TICKET
