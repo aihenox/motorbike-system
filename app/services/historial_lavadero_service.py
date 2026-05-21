@@ -31,22 +31,49 @@ def listar_historial_lavadero(
 
     for item in historial_db:
 
-        historial.append({
+        # ==========================================
+        # POSTGRESQL
+        # ==========================================
+        if isinstance(item, dict):
 
-            "id": item[0],
+            historial.append({
 
-            "placa": item[1],
+                "id": item["id"],
 
-            "vehiculo": item[2],
+                "placa": item["placa"],
 
-            "tipo_lavado": item[3],
+                "vehiculo": item["vehiculo"],
 
-            "valor": item[4],
+                "tipo_lavado": item["tipo_lavado"],
 
-            "responsable": item[5],
+                "valor": item["valor"],
 
-            "fecha": item[6]
-        })
+                "responsable": item["responsable"],
+
+                "fecha": item["fecha"]
+            })
+
+        # ==========================================
+        # SQLITE
+        # ==========================================
+        else:
+
+            historial.append({
+
+                "id": item[0],
+
+                "placa": item[1],
+
+                "vehiculo": item[2],
+
+                "tipo_lavado": item[3],
+
+                "valor": item[4],
+
+                "responsable": item[5],
+
+                "fecha": item[6]
+            })
 
     return historial
 
