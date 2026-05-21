@@ -164,45 +164,59 @@ def lavadero():
 # ==========================================
 # HISTORIAL LAVADERO
 # ==========================================
-import traceback
-
-@lavadero_bp.route("/historial/lavadero")
+@lavadero_bp.route(
+    "/historial/lavadero"
+)
 @login_required
 def historial_lavadero():
 
-    try:
+    placa = request.args.get(
+        "placa",
+        ""
+    )
 
-        placa = request.args.get("placa", "")
-        fecha = request.args.get("fecha", "")
-        responsable = request.args.get("responsable", "")
+    fecha = request.args.get(
+        "fecha",
+        ""
+    )
 
-        historial = listar_historial_lavadero(
-            placa,
-            fecha,
-            responsable
-        )
+    responsable = request.args.get(
+        "responsable",
+        ""
+    )
 
-        total = obtener_total_lavadero(
-            placa,
-            fecha,
-            responsable
-        )
+    historial = listar_historial_lavadero(
 
-        return render_template(
-            "historial_lavadero.html",
-            historial=historial,
-            total=total,
-            placa=placa,
-            fecha=fecha,
-            responsable=responsable
-        )
+        placa,
 
-    except Exception:
+        fecha,
 
-        return f"""
-        <h2>Error Historial Lavadero</h2>
-        <pre>{traceback.format_exc()}</pre>
-        """
+        responsable
+    )
+
+    total = obtener_total_lavadero(
+
+        placa,
+
+        fecha,
+
+        responsable
+    )
+
+    return render_template(
+
+        "historial_lavadero.html",
+
+        historial=historial,
+
+        total=total,
+
+        placa=placa,
+
+        fecha=fecha,
+
+        responsable=responsable
+    )
 
 
 # ==========================================

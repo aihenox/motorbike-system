@@ -1,4 +1,14 @@
+import os
+
 from app.repositories.connection import conectar
+
+
+# ==========================================
+# MOTOR DATABASE
+# ==========================================
+POSTGRES = os.getenv(
+    "DATABASE_URL"
+)
 
 
 # ==========================================
@@ -17,6 +27,8 @@ def obtener_historial_lavadero_db(
 
         c = conn.cursor()
 
+        operador = "%s" if POSTGRES else "?"
+
         query = """
 
             SELECT *
@@ -30,13 +42,13 @@ def obtener_historial_lavadero_db(
         parametros = []
 
         # ==========================================
-        # FILTRO PLACA
+        # PLACA
         # ==========================================
         if placa:
 
-            query += """
+            query += f"""
 
-                AND placa LIKE ?
+                AND placa LIKE {operador}
 
             """
 
@@ -45,13 +57,13 @@ def obtener_historial_lavadero_db(
             )
 
         # ==========================================
-        # FILTRO RESPONSABLE
+        # RESPONSABLE
         # ==========================================
         if responsable:
 
-            query += """
+            query += f"""
 
-                AND responsable LIKE ?
+                AND responsable LIKE {operador}
 
             """
 
@@ -60,27 +72,20 @@ def obtener_historial_lavadero_db(
             )
 
         # ==========================================
-        # FILTRO FECHA
+        # FECHA
         # ==========================================
         if fecha:
 
-            fecha_formato = "/".join(
-                fecha.split("-")[::-1]
-            )
+            query += f"""
 
-            query += """
-
-                AND fecha LIKE ?
+                AND fecha LIKE {operador}
 
             """
 
             parametros.append(
-                f"{fecha_formato}%"
+                f"{fecha}%"
             )
 
-        # ==========================================
-        # ORDEN
-        # ==========================================
         query += """
 
             ORDER BY id DESC
@@ -89,7 +94,7 @@ def obtener_historial_lavadero_db(
 
         c.execute(
             query,
-            parametros
+            tuple(parametros)
         )
 
         return c.fetchall()
@@ -111,12 +116,16 @@ def obtener_total_lavadero_db(
 
         c = conn.cursor()
 
+        operador = "%s" if POSTGRES else "?"
+
         query = """
 
-            SELECT COALESCE(
-                SUM(valor),
-                0
-            )
+            SELECT
+
+                COALESCE(
+                    SUM(valor),
+                    0
+                ) AS total
 
             FROM lavados
 
@@ -126,12 +135,14 @@ def obtener_total_lavadero_db(
 
         parametros = []
 
+        # ==========================================
         # PLACA
+        # ==========================================
         if placa:
 
-            query += """
+            query += f"""
 
-                AND placa LIKE ?
+                AND placa LIKE {operador}
 
             """
 
@@ -139,12 +150,14 @@ def obtener_total_lavadero_db(
                 f"%{placa}%"
             )
 
+        # ==========================================
         # RESPONSABLE
+        # ==========================================
         if responsable:
 
-            query += """
+            query += f"""
 
-                AND responsable LIKE ?
+                AND responsable LIKE {operador}
 
             """
 
@@ -152,28 +165,36 @@ def obtener_total_lavadero_db(
                 f"%{responsable}%"
             )
 
+        # ==========================================
         # FECHA
+        # ==========================================
         if fecha:
 
-            fecha_formato = "/".join(
-                fecha.split("-")[::-1]
-            )
+            query += f"""
 
-            query += """
-
-                AND fecha LIKE ?
+                AND fecha LIKE {operador}
 
             """
 
             parametros.append(
-                f"{fecha_formato}%"
+                f"{fecha}%"
             )
 
         c.execute(
             query,
-            parametros
+            tuple(parametros)
         )
 
-        total = c.fetchone()[0]
+        row = c.fetchone()
 
-        return total or 0
+        # ==========================================
+        # POSTGRESQL
+        # ==========================================
+        if POSTGRES:
+
+            return row["total"] or 0
+
+        # ==========================================
+        # SQLITE
+        # ==========================================
+        return row[0] or 0
