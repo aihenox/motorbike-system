@@ -17,7 +17,10 @@ import openpyxl
 
 from io import BytesIO
 
-from datetime import datetime
+from datetime import (
+    datetime,
+    timedelta
+)
 
 from flask_login import (
     login_required
@@ -113,6 +116,7 @@ def dashboard_lavadero():
         lavados=lavados
     )
 
+
 # ==========================================
 # REGISTRO LAVADOS
 # ==========================================
@@ -147,7 +151,15 @@ def lavadero():
             "responsable"
         ]
 
-        fecha = datetime.now().isoformat()
+        # ==========================================
+        # HORA COLOMBIA UTC-5
+        # ==========================================
+        fecha = (
+            datetime.utcnow()
+            - timedelta(hours=5)
+        ).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
 
         registrar_lavado(
 
