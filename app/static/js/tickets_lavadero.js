@@ -3,20 +3,40 @@
 // ==========================================
 function abrirTicketLavadero(html){
 
+    alert("Abriendo ticket");
+
     const ventana = window.open(
         "",
-        "_blank",
-        "width=400,height=700"
+        "_blank"
     );
 
-    ventana.document.write(html);
+    console.log(
+        "VENTANA:",
+        ventana
+    );
+
+    if(!ventana){
+
+        alert(
+            "Popup bloqueado"
+        );
+
+        return;
+    }
+
+    ventana.document.open();
+
+    ventana.document.write(
+        html
+    );
 
     ventana.document.close();
 
-    ventana.onload = function(){
+    setTimeout(() => {
 
         ventana.print();
-    };
+
+    }, 500);
 }
 
 
@@ -280,7 +300,7 @@ function generarTicketLavadero(data){
             ¡Gracias por preferirnos!
 
         </div>
-
+    
     </body>
 
     </html>
