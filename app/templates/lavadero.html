@@ -546,19 +546,21 @@ formLavado.addEventListener(
 
                 return;
             }
-
+            
             // SONIDO
             new Audio(
                 "/static/audio/success.mp3"
             ).play();
 
-            // TICKET
+
+            // IMPRIMIR TICKET
             abrirTicketLavadero(
 
                 generarTicketLavadero(
                     data
                 )
             );
+
 
             // LIMPIAR FORMULARIO
             formLavado.reset();
@@ -568,6 +570,7 @@ formLavado.addEventListener(
                     "placa"
                 )
                 .focus();
+
 
         }
         catch(error){
