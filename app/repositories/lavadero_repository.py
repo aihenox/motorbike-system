@@ -1,6 +1,7 @@
 import os
 
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from app.repositories.connection import conectar
 
@@ -158,7 +159,7 @@ def obtener_lavados_db():
         """)
 
         return c.fetchall()
-
+    
 
 # ==========================================
 # HISTORIAL LAVADOS
@@ -266,7 +267,11 @@ def obtener_metricas_lavadero_db():
 
         c = conn.cursor()
 
-        hoy = datetime.now().strftime(
+        hoy = datetime.now(
+            ZoneInfo(
+                "America/Bogota"
+        )
+        ).strftime(
             "%Y-%m-%d"
         )
 
@@ -370,7 +375,11 @@ def obtener_estadisticas_responsables_db():
 
         c = conn.cursor()
 
-        hoy = datetime.now().strftime(
+        hoy = datetime.now(
+            ZoneInfo(
+                "America/Bogota"
+        )
+        ).strftime(
             "%Y-%m-%d"
         )
 
