@@ -613,11 +613,17 @@ formLavado.addEventListener(
         catch(error){
 
             console.error(
+                "ERROR LAVADERO:",
                 error
             );
 
             alert(
-                "Error de conexión"
+
+                "Error:\n\n" +
+
+                error.message +
+
+                "\n\nRevise la consola (F12)."
             );
         }
     }
