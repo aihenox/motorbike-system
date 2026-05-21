@@ -234,7 +234,7 @@
 
                     </div>
 
-                    <form method="POST">
+                    <form id="formLavado">
 
                         <div class="row">
 
@@ -501,47 +501,89 @@ valorInput.addEventListener(
 </script>
 <script src="/static/js/tickets_lavadero.js"></script>
 
-{% if ticket_data %}
-
 <script>
-alert("Ticket detectado");
-// ==========================================
-// SONIDO
-// ==========================================
-new Audio(
-    "/static/audio/success.mp3"
-).play();
 
+const formLavado =
+    document.getElementById(
+        "formLavado"
+    );
 
-// ==========================================
-// TICKET
-// ==========================================
-const ticketData = {
+formLavado.addEventListener(
+    "submit",
+    async function(e){
 
-    placa: "{{ ticket_data.placa }}",
+        e.preventDefault();
 
-    vehiculo: "{{ ticket_data.vehiculo }}",
+        try{
 
-    tipo_lavado: "{{ ticket_data.tipo_lavado }}",
+            const formData =
+                new FormData(
+                    formLavado
+                );
 
-    responsable: "{{ ticket_data.responsable }}",
+            const response =
+                await fetch(
 
-    valor: "{{ ticket_data.valor }}",
+                    "/registrar_lavado",
 
-    fecha: "{{ ticket_data.fecha }}"
-};
+                    {
+                        method:"POST",
 
-abrirTicketLavadero(
+                        body:formData
+                    }
+                );
 
-    generarTicketLavadero(
-        ticketData
-    )
+            const data =
+                await response.json();
+
+            if(
+                !data.success
+            ){
+
+                alert(
+                    "Error al registrar lavado"
+                );
+
+                return;
+            }
+
+            // SONIDO
+            new Audio(
+                "/static/audio/success.mp3"
+            ).play();
+
+            // TICKET
+            abrirTicketLavadero(
+
+                generarTicketLavadero(
+                    data
+                )
+            );
+
+            // LIMPIAR FORMULARIO
+            formLavado.reset();
+
+            document
+                .getElementById(
+                    "placa"
+                )
+                .focus();
+
+        }
+        catch(error){
+
+            console.error(
+                error
+            );
+
+            alert(
+                "Error de conexión"
+            );
+        }
+    }
 );
 
 </script>
-
-{% endif %}
-
 </body>
 
 </html>
