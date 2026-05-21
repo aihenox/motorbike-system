@@ -57,7 +57,7 @@ def registrar_lavado(
 # ==========================================
 def listar_lavados():
 
-    return obtener_lavados_db()
+    return obtener_ultimos_lavados_db()
 
 
 # ==========================================
