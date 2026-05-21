@@ -5,11 +5,15 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>
+
         Registrar Lavado
+
     </title>
 
     <!-- BOOTSTRAP -->
@@ -27,78 +31,129 @@
     <style>
 
         body{
+
             background:#eef2f7;
+
             font-family:'Segoe UI';
+
             min-height:100vh;
         }
 
         .navbar{
+
             box-shadow:0 3px 15px rgba(0,0,0,.08);
         }
 
         .card-form{
+
             border:none;
+
             border-radius:24px;
+
             box-shadow:0 10px 25px rgba(0,0,0,.06);
+
             overflow:hidden;
         }
 
         .titulo{
+
             font-weight:700;
+
             color:#1e293b;
+
             font-size:28px;
         }
 
         .subtitulo{
+
             color:#64748b;
+
             font-size:14px;
         }
 
         .form-control,
         .form-select{
+
             border-radius:14px;
+
             padding:12px 14px;
+
             border:1px solid #dbe2ea;
         }
 
         .form-control:focus,
         .form-select:focus{
+
             box-shadow:none;
+
             border-color:#212529;
         }
 
         .btn-custom{
+
             border:none;
+
             border-radius:14px;
+
             padding:12px;
+
             font-weight:600;
+
             transition:.2s;
         }
 
         .btn-custom:hover{
+
             transform:translateY(-2px);
         }
 
         .icon-header{
+
             width:70px;
+
             height:70px;
+
             background:#fef3c7;
+
             border-radius:20px;
+
             display:flex;
+
             align-items:center;
+
             justify-content:center;
+
             font-size:32px;
+
             color:#d97706;
         }
 
         .contenedor{
+
             min-height:calc(100vh - 80px);
+
             display:flex;
+
             align-items:center;
         }
 
+        .reloj{
+
+            background:white;
+
+            padding:10px 16px;
+
+            border-radius:12px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+            font-weight:600;
+        }
+
         label{
+
             margin-bottom:6px;
+
             font-size:14px;
         }
 
@@ -108,7 +163,6 @@
 
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-dark bg-dark px-4 py-3">
 
     <span class="navbar-brand fw-bold fs-5">
@@ -117,8 +171,10 @@
 
     </span>
 
-    <a href="/dashboard/lavadero"
-       class="btn btn-outline-light">
+    <a
+        href="/dashboard/lavadero"
+        class="btn btn-outline-light"
+    >
 
         Volver
 
@@ -126,7 +182,22 @@
 
 </nav>
 
-<!-- CONTENIDO -->
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-end mb-3">
+
+        <div class="reloj">
+
+            <i class="bi bi-clock"></i>
+
+            <span id="fechaHora"></span>
+
+        </div>
+
+    </div>
+
+</div>
+
 <div class="container contenedor">
 
     <div class="row justify-content-center w-100">
@@ -137,7 +208,6 @@
 
                 <div class="card-body p-4 p-md-5">
 
-                    <!-- HEADER -->
                     <div class="text-center mb-4">
 
                         <div class="d-flex justify-content-center mb-3">
@@ -150,13 +220,13 @@
 
                         </div>
 
-                        <h2 class="titulo mb-1">
+                        <h2 class="titulo">
 
                             Registrar lavado
 
                         </h2>
 
-                        <p class="subtitulo mb-0">
+                        <p class="subtitulo">
 
                             Ingresa la información del servicio realizado
 
@@ -164,34 +234,33 @@
 
                     </div>
 
-                    <!-- FORMULARIO -->
                     <form method="POST">
 
                         <div class="row">
 
-                            <!-- PLACA -->
                             <div class="col-md-6 mb-3">
 
-                                <label class="form-label fw-bold">
+                                <label class="fw-bold">
 
                                     Placa
 
                                 </label>
 
                                 <input
+                                    id="placa"
                                     type="text"
                                     name="placa"
                                     class="form-control text-uppercase"
-                                    placeholder="ABC123"
+                                    maxlength="10"
+                                    autocomplete="off"
                                     required
                                 >
 
                             </div>
 
-                            <!-- VEHICULO -->
                             <div class="col-md-6 mb-3">
 
-                                <label class="form-label fw-bold">
+                                <label class="fw-bold">
 
                                     Vehículo
 
@@ -219,10 +288,9 @@
 
                             </div>
 
-                            <!-- RESPONSABLE -->
                             <div class="col-md-6 mb-3">
 
-                                <label class="form-label fw-bold">
+                                <label class="fw-bold">
 
                                     Responsable
 
@@ -258,10 +326,9 @@
 
                             </div>
 
-                            <!-- SERVICIO -->
                             <div class="col-md-6 mb-3">
 
-                                <label class="form-label fw-bold">
+                                <label class="fw-bold">
 
                                     Servicio realizado
 
@@ -271,37 +338,39 @@
                                     type="text"
                                     name="tipo_lavado"
                                     class="form-control"
-                                    placeholder="Ej: Lavado full, Polichado..."
                                     required
                                 >
 
                             </div>
 
-                            <!-- VALOR -->
                             <div class="col-12 mb-4">
 
-                                <label class="form-label fw-bold">
+                                <label class="fw-bold">
 
                                     Valor
 
                                 </label>
 
                                 <input
-                                    type="number"
-                                    name="valor"
+                                    id="valor"
+                                    type="text"
                                     class="form-control"
-                                    placeholder="15000"
+                                    placeholder="15.000"
                                     required
+                                >
+
+                                <input
+                                    type="hidden"
+                                    id="valor_real"
+                                    name="valor"
                                 >
 
                             </div>
 
                         </div>
 
-                        <!-- BOTONES -->
                         <div class="row">
 
-                            <!-- REGISTRAR -->
                             <div class="col-md-6 mb-2">
 
                                 <button
@@ -317,11 +386,12 @@
 
                             </div>
 
-                            <!-- CANCELAR -->
                             <div class="col-md-6 mb-2">
 
-                                <a href="/dashboard/lavadero"
-                                   class="btn btn-dark w-100 btn-custom">
+                                <a
+                                    href="/dashboard/lavadero"
+                                    class="btn btn-dark w-100 btn-custom"
+                                >
 
                                     <i class="bi bi-arrow-left-circle"></i>
 
@@ -345,5 +415,133 @@
 
 </div>
 
+<script>
+
+// ==========================================
+// RELOJ
+// ==========================================
+function actualizarFechaHora(){
+
+    const ahora = new Date();
+
+    document.getElementById(
+        "fechaHora"
+    ).innerHTML =
+
+        ahora.toLocaleString(
+            "es-CO"
+        );
+}
+
+actualizarFechaHora();
+
+setInterval(
+    actualizarFechaHora,
+    1000
+);
+
+
+// ==========================================
+// FOCUS PLACA
+// ==========================================
+document.getElementById(
+    "placa"
+).focus();
+
+
+// ==========================================
+// MAYUSCULAS
+// ==========================================
+document.getElementById(
+    "placa"
+).addEventListener(
+    "input",
+    function(){
+
+        this.value = this.value
+            .toUpperCase()
+            .replace(
+                /[^A-Z0-9]/g,
+                ""
+            );
+    }
+);
+
+
+// ==========================================
+// FORMATO MONEDA
+// ==========================================
+const valorInput =
+    document.getElementById(
+        "valor"
+    );
+
+const valorReal =
+    document.getElementById(
+        "valor_real"
+    );
+
+valorInput.addEventListener(
+    "input",
+    function(){
+
+        let numero = this.value
+            .replace(/\D/g, "");
+
+        valorReal.value = numero;
+
+        this.value =
+            Number(numero || 0)
+            .toLocaleString(
+                "es-CO"
+            );
+    }
+);
+
+</script>
+<script src="/static/js/tickets_lavadero.js"></script>
+
+{% if ticket_data %}
+
+<script>
+
+// ==========================================
+// SONIDO
+// ==========================================
+new Audio(
+    "/static/audio/success.mp3"
+).play();
+
+
+// ==========================================
+// TICKET
+// ==========================================
+const ticketData = {
+
+    placa: "{{ ticket_data.placa }}",
+
+    vehiculo: "{{ ticket_data.vehiculo }}",
+
+    tipo_lavado: "{{ ticket_data.tipo_lavado }}",
+
+    responsable: "{{ ticket_data.responsable }}",
+
+    valor: "{{ ticket_data.valor }}",
+
+    fecha: "{{ ticket_data.fecha }}"
+};
+
+abrirTicketLavadero(
+
+    generarTicketLavadero(
+        ticketData
+    )
+);
+
+</script>
+
+{% endif %}
+
 </body>
+
 </html>
