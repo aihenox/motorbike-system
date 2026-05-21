@@ -29,15 +29,13 @@ from app.services.lavadero_service import (
 
     listar_lavados,
 
+    obtener_metricas_lavadero,
+
     obtener_estadisticas_responsables,
 
     obtener_lavado_por_id,
 
     actualizar_lavado
-)
-
-from app.services.lavadero_service import (
-    obtener_metricas_lavadero
 )
 
 from app.services.historial_lavadero_service import (
@@ -86,7 +84,7 @@ def dashboard_lavadero():
         ),
 
         total_servicios=metricas.get(
-            "total_lavadero",
+            "dinero_generado",
             0
         ),
 
@@ -108,9 +106,6 @@ def dashboard_lavadero():
 @login_required
 def lavadero():
 
-    # ==========================================
-    # GUARDAR
-    # ==========================================
     if request.method == "POST":
 
         placa = request.form[
@@ -156,9 +151,6 @@ def lavadero():
             )
         )
 
-    # ==========================================
-    # LISTAR
-    # ==========================================
     lavados = listar_lavados()
 
     return render_template(
@@ -260,9 +252,6 @@ def exportar_excel_lavadero():
         responsable
     )
 
-    # ==========================================
-    # CREAR EXCEL
-    # ==========================================
     wb = openpyxl.Workbook()
 
     ws = wb.active
@@ -288,9 +277,6 @@ def exportar_excel_lavadero():
         encabezados
     )
 
-    # ==========================================
-    # FILAS
-    # ==========================================
     for item in historial:
 
         ws.append([
@@ -308,9 +294,6 @@ def exportar_excel_lavadero():
             item["valor"]
         ])
 
-    # ==========================================
-    # AJUSTAR COLUMNAS
-    # ==========================================
     for columna in ws.columns:
 
         longitud = 0
@@ -331,24 +314,16 @@ def exportar_excel_lavadero():
 
                 pass
 
-        ajuste = longitud + 5
-
         ws.column_dimensions[
             columna_letra
-        ].width = ajuste
+        ].width = longitud + 5
 
-    # ==========================================
-    # CREAR ARCHIVO MEMORIA
-    # ==========================================
     archivo = BytesIO()
 
     wb.save(archivo)
 
     archivo.seek(0)
 
-    # ==========================================
-    # DESCARGAR
-    # ==========================================
     return send_file(
 
         archivo,
@@ -378,16 +353,10 @@ def editar_lavado(
     lavado_id
 ):
 
-    # ==========================================
-    # OBTENER LAVADO
-    # ==========================================
     lavado = obtener_lavado_por_id(
         lavado_id
     )
 
-    # ==========================================
-    # ACTUALIZAR
-    # ==========================================
     if request.method == "POST":
 
         placa = request.form[
