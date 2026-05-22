@@ -80,6 +80,9 @@ def obtener_metricas_dashboard_db():
 
         c = conn.cursor()
 
+        # ==========================================
+        # VEHÍCULOS DENTRO
+        # ==========================================
         c.execute("""
 
             SELECT COUNT(*)
@@ -124,37 +127,75 @@ def obtener_metricas_dashboard_db():
             c.fetchone()
         )
 
-        if POSTGRES:
+        # ==========================================
+        # TOTAL PARQUEADERO
+        # ==========================================
+        c.execute("""
 
-            c.execute("""
+            SELECT COALESCE(
+                SUM(valor),
+                0
+            )
 
-                SELECT COALESCE(
-                    SUM(valor),
-                    0
-                )
+            FROM ingresos
 
-                FROM ingresos
+            WHERE estado = 'Fuera'
 
-                WHERE estado = 'Fuera'
-
-            """)
-
-        else:
-
-            c.execute("""
-
-                SELECT COALESCE(
-                    SUM(valor),
-                    0
-                )
-
-                FROM ingresos
-
-                WHERE estado = 'Fuera'
-
-            """)
+        """)
 
         total_parqueadero = obtener_valor(
+            c.fetchone()
+        )
+
+        # ==========================================
+        # LAVADOS MOTOS
+        # ==========================================
+        c.execute("""
+
+            SELECT COUNT(*)
+
+            FROM lavados
+
+            WHERE vehiculo = 'Moto'
+
+        """)
+
+        lavados_motos = obtener_valor(
+            c.fetchone()
+        )
+
+        # ==========================================
+        # LAVADOS CARROS
+        # ==========================================
+        c.execute("""
+
+            SELECT COUNT(*)
+
+            FROM lavados
+
+            WHERE vehiculo = 'Carro'
+
+        """)
+
+        lavados_carros = obtener_valor(
+            c.fetchone()
+        )
+
+        # ==========================================
+        # TOTAL LAVADERO
+        # ==========================================
+        c.execute("""
+
+            SELECT COALESCE(
+                SUM(valor),
+                0
+            )
+
+            FROM lavados
+
+        """)
+
+        total_lavadero = obtener_valor(
             c.fetchone()
         )
 
@@ -166,10 +207,15 @@ def obtener_metricas_dashboard_db():
 
             "carros_activos": carros_activos,
 
-            "total_parqueadero": total_parqueadero
+            "total_parqueadero": total_parqueadero,
+
+            "lavados_motos": lavados_motos,
+
+            "lavados_carros": lavados_carros,
+
+            "total_servicios": total_lavadero
         }
-
-
+    
 # ==========================================
 # ÚLTIMOS INGRESOS
 # ==========================================
