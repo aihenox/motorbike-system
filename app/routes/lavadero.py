@@ -436,46 +436,82 @@ def editar_lavado(
 
     if request.method == "POST":
 
-        placa = validar_placa(
-            request.form.get("placa")
-        )
+        try:
 
-        vehiculo = validar_tipo_vehiculo(
-            request.form.get("vehiculo")
-        )
-
-        tipo_lavado = validar_tipo_lavado(
-            request.form.get("tipo_lavado")
-        )
-
-        valor = validar_valor(
-            request.form.get("valor")
-        )
-
-        responsable = validar_responsable(
-            request.form.get("responsable")
-        )
-
-        actualizar_lavado(
-
-            lavado_id,
-
-            placa,
-
-            vehiculo,
-
-            tipo_lavado,
-
-            valor,
-
-            responsable
-        )
-
-        return redirect(
-            url_for(
-                "lavadero.historial_lavadero"
+            placa = validar_placa(
+                request.form.get("placa")
             )
-        )
+
+            vehiculo = validar_tipo_vehiculo(
+                request.form.get("vehiculo")
+            )
+
+            tipo_lavado = validar_tipo_lavado(
+                request.form.get("tipo_lavado")
+            )
+
+            valor = validar_valor(
+                request.form.get("valor")
+            )
+
+            responsable = validar_responsable(
+                request.form.get("responsable")
+            )
+
+            actualizar_lavado(
+
+                lavado_id,
+
+                placa,
+
+                vehiculo,
+
+                tipo_lavado,
+
+                valor,
+
+                responsable
+            )
+
+            return redirect(
+                url_for(
+                    "lavadero.historial_lavadero"
+                )
+            )
+
+        except ValueError as e:
+
+            lavado.update({
+
+                "placa": request.form.get(
+                    "placa"
+                ),
+
+                "vehiculo": request.form.get(
+                    "vehiculo"
+                ),
+
+                "tipo_lavado": request.form.get(
+                    "tipo_lavado"
+                ),
+
+                "valor": request.form.get(
+                    "valor"
+                ),
+
+                "responsable": request.form.get(
+                    "responsable"
+                )
+            })
+
+            return render_template(
+
+                "editar_lavado.html",
+
+                lavado=lavado,
+
+                error=str(e)
+            )
 
     return render_template(
 
