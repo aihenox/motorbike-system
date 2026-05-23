@@ -623,35 +623,52 @@
 
                             <td>
 
-                                <form
-                                    method="POST"
-                                    action="{{ url_for('historial.eliminar_registro', registro_id=item.id) }}"
-                                    onsubmit="return confirm('Eliminar definitivamente el registro {{ item.id }} de la placa {{ item.placa }}?');"
-                                >
+                                {% if item.estado == "Fuera" %}
 
-                                    <input
-                                        type="hidden"
-                                        name="placa"
-                                        value="{{ placa }}"
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('historial.eliminar_registro', registro_id=item.id) }}"
+                                        onsubmit="return confirm('Eliminar definitivamente el registro {{ item.id }} de la placa {{ item.placa }}?');"
                                     >
 
-                                    <input
-                                        type="hidden"
-                                        name="fecha"
-                                        value="{{ fecha }}"
-                                    >
+                                        <input
+                                            type="hidden"
+                                            name="placa"
+                                            value="{{ placa }}"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="fecha"
+                                            value="{{ fecha }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-outline-danger btn-icon"
+                                            title="Eliminar registro"
+                                        >
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                {% else %}
 
                                     <button
-                                        type="submit"
-                                        class="btn btn-outline-danger btn-icon"
-                                        title="Eliminar registro"
+                                        type="button"
+                                        class="btn btn-outline-secondary btn-icon"
+                                        title="No se puede eliminar mientras estÃ¡ dentro"
+                                        disabled
                                     >
 
-                                        <i class="bi bi-trash"></i>
+                                        <i class="bi bi-lock"></i>
 
                                     </button>
 
-                                </form>
+                                {% endif %}
 
                             </td>
 

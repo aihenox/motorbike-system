@@ -136,7 +136,7 @@ def eliminar_registro(registro_id):
     else:
 
         flash(
-            "No se encontrÃ³ el registro para eliminar."
+            "Solo se pueden eliminar registros con estado Fuera."
         )
 
     return redirect(

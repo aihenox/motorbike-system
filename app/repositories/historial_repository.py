@@ -267,6 +267,7 @@ def eliminar_registro_historial_db(
                 DELETE FROM ingresos
 
                 WHERE id = %s
+                AND estado = 'Fuera'
 
             """, (
                 registro_id,
@@ -279,6 +280,7 @@ def eliminar_registro_historial_db(
                 DELETE FROM ingresos
 
                 WHERE id = ?
+                AND estado = 'Fuera'
 
             """, (
                 registro_id,
