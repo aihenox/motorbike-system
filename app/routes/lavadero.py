@@ -10,7 +10,9 @@ from flask import (
 
     url_for,
 
-    send_file
+    send_file,
+
+    jsonify
 )
 
 import openpyxl
