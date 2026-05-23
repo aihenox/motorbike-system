@@ -12,6 +12,10 @@ from app.repositories.activos_repository import (
     eliminar_vehiculo_db
 )
 
+from app.utils.validators import (
+    validar_placa,
+    validar_tipo_vehiculo
+)
 
 # ==========================================
 # REGISTRAR INGRESO
@@ -21,7 +25,9 @@ def registrar_ingreso(
     tipo
 ):
 
-    placa = placa.upper().strip()
+    placa = validar_placa(placa)
+
+    tipo = validar_tipo_vehiculo(tipo)
 
     if placa_activa_db(placa):
 

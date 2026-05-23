@@ -11,6 +11,10 @@ from app.services.parqueadero_service import (
     registrar_ingreso
 )
 
+from app.utils.validators import (
+    validar_placa,
+    validar_tipo_vehiculo
+)
 
 ingreso_bp = Blueprint(
     "ingreso",
@@ -43,15 +47,33 @@ def ingreso():
 @login_required
 def registrar_ingreso_ajax():
 
-    placa = request.form["placa"]
+    try:
 
-    tipo = request.form["tipo"]
+        placa = validar_placa(
+            request.form.get("placa")
+        )
 
-    resultado = registrar_ingreso(
-        placa,
-        tipo
-    )
+        tipo = validar_tipo_vehiculo(
+            request.form.get("tipo")
+        )
 
-    return jsonify(
-        resultado
-    )
+        resultado = registrar_ingreso(
+            placa,
+            tipo
+        )
+
+        return jsonify(resultado)
+
+    except ValueError as e:
+
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 400
+    
+    except Exception as e:
+
+        return jsonify({
+            "success": False,
+            "message": "Error interno del sistema"
+        }), 500
