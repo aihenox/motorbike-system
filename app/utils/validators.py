@@ -36,9 +36,6 @@ def validar_placa(placa):
 
 
 def validar_tipo_vehiculo(tipo):
-    """
-    Valida el tipo de vehículo.
-    """
 
     if tipo is None:
         raise ValueError(
@@ -46,11 +43,6 @@ def validar_tipo_vehiculo(tipo):
         )
 
     tipo = tipo.strip().lower()
-
-    if not tipo:
-        raise ValueError(
-            "Debe seleccionar un tipo de vehículo"
-        )
 
     tipos_validos = {
         "moto",
@@ -62,8 +54,7 @@ def validar_tipo_vehiculo(tipo):
             "Tipo de vehículo inválido"
         )
 
-    return tipo
-
+    return tipo.capitalize()
 
 def validar_valor(valor):
     """
