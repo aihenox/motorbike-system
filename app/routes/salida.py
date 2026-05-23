@@ -11,6 +11,9 @@ from app.services.salida_service import (
     procesar_salida
 )
 
+from app.utils.validators import (
+    validar_id
+)
 
 salida_bp = Blueprint(
     "salida",
@@ -45,7 +48,9 @@ def procesar_salida_ajax():
 
     try:
 
-        ticket = request.form["ticket"]
+        ticket = validar_id(
+            request.form.get("ticket")
+        )
 
         resultado = procesar_salida(
             ticket
@@ -55,7 +60,7 @@ def procesar_salida_ajax():
             resultado
         )
 
-    except Exception as e:
+    except ValueError as e:
 
         return jsonify({
 
@@ -63,4 +68,14 @@ def procesar_salida_ajax():
 
             "message": str(e)
 
-        })
+        }), 400
+
+    except Exception:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Error interno del sistema"
+
+        }), 500
