@@ -48,6 +48,13 @@ from app.services.historial_lavadero_service import (
     obtener_total_lavadero
 )
 
+from app.utils.validators import (
+    validar_placa,
+    validar_tipo_vehiculo,
+    validar_tipo_lavado,
+    validar_valor,
+    validar_responsable
+)
 
 lavadero_bp = Blueprint(
     "lavadero",
@@ -143,74 +150,92 @@ def lavadero():
     "/registrar_lavado",
     methods=["POST"]
 )
+@lavadero_bp.route(
+    "/registrar_lavado",
+    methods=["POST"]
+)
 @login_required
 def registrar_lavado_ajax():
 
-    placa = request.form[
-        "placa"
-    ].upper()
+    try:
 
-    vehiculo = request.form[
-        "vehiculo"
-    ]
+        placa = validar_placa(
+            request.form.get("placa")
+        )
 
-    tipo_lavado = request.form[
-        "tipo_lavado"
-    ]
+        vehiculo = validar_tipo_vehiculo(
+            request.form.get("vehiculo")
+        )
 
-    valor = int(
-        request.form["valor"]
-    )
+        tipo_lavado = validar_tipo_lavado(
+            request.form.get("tipo_lavado")
+        )
 
-    responsable = request.form[
-        "responsable"
-    ]
+        valor = validar_valor(
+            request.form.get("valor")
+        )
 
-    ahora = datetime.now(
-        ZoneInfo("America/Bogota")
-    )
+        responsable = validar_responsable(
+            request.form.get("responsable")
+        )
 
-    fecha_db = ahora.strftime(
-        "%Y-%m-%d %H:%M:%S"
-    )
+        ahora = datetime.now(
+            ZoneInfo("America/Bogota")
+        )
 
-    registrar_lavado(
+        fecha_db = ahora.strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
 
-        placa,
+        registrar_lavado(
 
-        vehiculo,
+            placa,
 
-        tipo_lavado,
+            vehiculo,
 
-        valor,
+            tipo_lavado,
 
-        responsable,
+            valor,
 
-        fecha_db
-    )
+            responsable,
 
-    fecha_ticket = ahora.strftime(
-        "%d/%m/%Y %H:%M"
-    )
+            fecha_db
+        )
 
-    return {
+        fecha_ticket = ahora.strftime(
+            "%d/%m/%Y %H:%M"
+        )
 
-        "success": True,
+        return {
 
-        "placa": placa,
+            "success": True,
 
-        "vehiculo": vehiculo,
+            "placa": placa,
 
-        "tipo_lavado": tipo_lavado,
+            "vehiculo": vehiculo,
 
-        "responsable": responsable,
+            "tipo_lavado": tipo_lavado,
 
-        "valor": f"{valor:,}",
+            "responsable": responsable,
 
-        "fecha": fecha_ticket
-    }
+            "valor": f"{int(valor):,}",
 
+            "fecha": fecha_ticket
+        }
 
+    except ValueError as e:
+
+        return {
+            "success": False,
+            "message": str(e)
+        }, 400
+
+    except Exception:
+
+        return {
+            "success": False,
+            "message": "Error interno del sistema"
+        }, 500
 
 
 # ==========================================
@@ -411,25 +436,25 @@ def editar_lavado(
 
     if request.method == "POST":
 
-        placa = request.form[
-            "placa"
-        ].upper()
-
-        vehiculo = request.form[
-            "vehiculo"
-        ]
-
-        tipo_lavado = request.form[
-            "tipo_lavado"
-        ]
-
-        valor = int(
-            request.form["valor"]
+        placa = validar_placa(
+            request.form.get("placa")
         )
 
-        responsable = request.form[
-            "responsable"
-        ]
+        vehiculo = validar_tipo_vehiculo(
+            request.form.get("vehiculo")
+        )
+
+        tipo_lavado = validar_tipo_lavado(
+            request.form.get("tipo_lavado")
+        )
+
+        valor = validar_valor(
+            request.form.get("valor")
+        )
+
+        responsable = validar_responsable(
+            request.form.get("responsable")
+        )
 
         actualizar_lavado(
 

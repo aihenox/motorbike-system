@@ -15,6 +15,21 @@ from app.repositories.lavadero_repository import (
     actualizar_lavado_db
 )
 
+from app.utils.validators import (
+
+    validar_id,
+
+    validar_placa,
+
+    validar_tipo_vehiculo,
+
+    validar_tipo_lavado,
+
+    validar_valor,
+
+    validar_responsable
+)
+
 
 # ==========================================
 # REGISTRAR LAVADO
@@ -33,6 +48,26 @@ def registrar_lavado(
 
     fecha
 ):
+
+    placa = validar_placa(
+        placa
+    )
+
+    vehiculo = validar_tipo_vehiculo(
+        vehiculo
+    )
+
+    tipo_lavado = validar_tipo_lavado(
+        tipo_lavado
+    )
+
+    valor = validar_valor(
+        valor
+    )
+
+    responsable = validar_responsable(
+        responsable
+    )
 
     registrar_lavado_db(
 
@@ -112,6 +147,10 @@ def obtener_lavado_por_id(
     lavado_id
 ):
 
+    lavado_id = validar_id(
+        lavado_id
+    )
+
     return obtener_lavado_por_id_db(
         lavado_id
     )
@@ -134,6 +173,30 @@ def actualizar_lavado(
 
     responsable
 ):
+
+    lavado_id = validar_id(
+        lavado_id
+    )
+
+    placa = validar_placa(
+        placa
+    )
+
+    vehiculo = validar_tipo_vehiculo(
+        vehiculo
+    )
+
+    tipo_lavado = validar_tipo_lavado(
+        tipo_lavado
+    )
+
+    valor = validar_valor(
+        valor
+    )
+
+    responsable = validar_responsable(
+        responsable
+    )
 
     actualizar_lavado_db(
 

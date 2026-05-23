@@ -183,3 +183,40 @@ def validar_id(registro_id):
         )
 
     return registro_id
+
+def validar_responsable(responsable):
+
+    if not responsable:
+        raise ValueError(
+            "Debe seleccionar un responsable"
+        )
+
+    responsables_validos = {
+        "Angela",
+        "Angelica",
+        "Diva",
+        "Karime"
+    }
+
+    if responsable not in responsables_validos:
+        raise ValueError(
+            "Responsable inválido"
+        )
+
+    return responsable
+
+def validar_tipo_lavado(tipo):
+
+    if not tipo:
+        raise ValueError(
+            "Debe ingresar el servicio realizado"
+        )
+
+    tipo = tipo.strip()
+
+    if len(tipo) < 3:
+        raise ValueError(
+            "Servicio inválido"
+        )
+
+    return tipo
