@@ -2,7 +2,10 @@ from flask import (
     Blueprint,
     render_template,
     request,
-    send_file
+    send_file,
+    redirect,
+    url_for,
+    flash
 )
 
 from flask_login import login_required
@@ -13,7 +16,9 @@ from app.services.historial_service import (
 
     buscar_placa,
 
-    filtrar_fecha
+    filtrar_fecha,
+
+    eliminar_registro_historial
 )
 
 from openpyxl import Workbook
@@ -95,6 +100,51 @@ def historial():
         placa=placa,
 
         fecha=fecha
+    )
+
+
+# ==========================================
+# ELIMINAR REGISTRO
+# ==========================================
+@historial_bp.route(
+    "/historial/eliminar/<int:registro_id>",
+    methods=["POST"]
+)
+@login_required
+def eliminar_registro(registro_id):
+
+    placa = request.form.get(
+        "placa",
+        ""
+    )
+
+    fecha = request.form.get(
+        "fecha",
+        ""
+    )
+
+    eliminado = eliminar_registro_historial(
+        registro_id
+    )
+
+    if eliminado:
+
+        flash(
+            "Registro eliminado correctamente."
+        )
+
+    else:
+
+        flash(
+            "No se encontrÃ³ el registro para eliminar."
+        )
+
+    return redirect(
+        url_for(
+            "historial.historial",
+            placa=placa,
+            fecha=fecha
+        )
     )
 
 

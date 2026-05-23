@@ -209,6 +209,21 @@
             color:#334155;
         }
 
+        .btn-icon{
+
+            width:40px;
+
+            height:40px;
+
+            display:inline-flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            border-radius:12px;
+        }
+
     </style>
 
 </head>
@@ -341,6 +356,27 @@
 
     </div>
 
+    {% with mensajes = get_flashed_messages() %}
+
+        {% if mensajes %}
+
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+
+                {{ mensajes[0] }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Cerrar"
+                ></button>
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
     <!-- TABLA -->
     <div class="card card-custom">
 
@@ -465,6 +501,10 @@
                                 Estado ↕
                             </th>
 
+                            <th>
+                                Acciones
+                            </th>
+
                         </tr>
 
                     </thead>
@@ -578,6 +618,40 @@
                                     </span>
 
                                 {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('historial.eliminar_registro', registro_id=item.id) }}"
+                                    onsubmit="return confirm('Eliminar definitivamente el registro {{ item.id }} de la placa {{ item.placa }}?');"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="placa"
+                                        value="{{ placa }}"
+                                    >
+
+                                    <input
+                                        type="hidden"
+                                        name="fecha"
+                                        value="{{ fecha }}"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-outline-danger btn-icon"
+                                        title="Eliminar registro"
+                                    >
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </button>
+
+                                </form>
 
                             </td>
 
@@ -779,6 +853,10 @@ function mostrarFilas(){
 mostrarFilas();
 
 </script>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+></script>
 
 </body>
 

@@ -4,7 +4,9 @@ from app.repositories.historial_repository import (
 
     buscar_por_placa_db,
 
-    filtrar_por_fecha_db
+    filtrar_por_fecha_db,
+
+    eliminar_registro_historial_db
 )
 
 from app.utils.date_utils import (
@@ -93,4 +95,16 @@ def filtrar_fecha(
 
     return formatear_historial(
         historial
+    )
+
+
+# ==========================================
+# ELIMINAR REGISTRO
+# ==========================================
+def eliminar_registro_historial(
+    registro_id
+):
+
+    return eliminar_registro_historial_db(
+        registro_id
     )

@@ -247,3 +247,45 @@ def filtrar_por_fecha_db(
             )
 
         return resultado
+
+
+# ==========================================
+# ELIMINAR REGISTRO
+# ==========================================
+def eliminar_registro_historial_db(
+    registro_id
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                DELETE FROM ingresos
+
+                WHERE id = %s
+
+            """, (
+                registro_id,
+            ))
+
+        else:
+
+            c.execute("""
+
+                DELETE FROM ingresos
+
+                WHERE id = ?
+
+            """, (
+                registro_id,
+            ))
+
+        filas_eliminadas = c.rowcount
+
+        conn.commit()
+
+        return filas_eliminadas > 0
