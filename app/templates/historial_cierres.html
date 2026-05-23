@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Historial Cierres
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+
+        body{
+            background:#eef2f7;
+            font-family:'Segoe UI';
+        }
+
+        .navbar{
+            box-shadow:0 3px 15px rgba(0,0,0,.08);
+        }
+
+        .card-custom{
+            border:none;
+            border-radius:22px;
+            background:white;
+            box-shadow:0 12px 30px rgba(0,0,0,.06);
+        }
+
+        .titulo{
+            font-weight:700;
+            color:#1e293b;
+        }
+
+        .subtitulo{
+            color:#64748b;
+        }
+
+        .resumen-card{
+            border-radius:18px;
+            padding:25px;
+            color:white;
+        }
+
+        .bg-total{
+            background:#111827;
+        }
+
+        .valor{
+            font-size:34px;
+            font-weight:700;
+        }
+
+        th{
+            cursor:pointer;
+            user-select:none;
+            white-space:nowrap;
+        }
+
+        th:hover{
+            opacity:.9;
+        }
+
+        .table td,
+        .table th{
+            vertical-align:middle;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark px-4 py-3">
+
+    <span class="navbar-brand fw-bold fs-4">
+
+        Historial Cierres
+
+    </span>
+
+    <a href="/dashboard"
+       class="btn btn-outline-light">
+
+        Dashboard
+
+    </a>
+
+</nav>
+
+<!-- CONTENIDO -->
+<div class="container mt-4 mb-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+        <div>
+
+            <h2 class="titulo mb-1">
+
+                Historial financiero
+
+            </h2>
+
+            <p class="subtitulo mb-0">
+
+                Auditoría y control de cierres de caja
+
+            </p>
+
+        </div>
+
+        <!-- BOTONES -->
+        <div class="d-flex gap-2">
+
+            <!-- EXPORTAR -->
+            <a href="/exportar-cierres-excel"
+               class="btn btn-success">
+
+                <i class="bi bi-file-earmark-excel"></i>
+
+                Exportar Excel
+
+            </a>
+
+            <!-- VOLVER -->
+            <a href="/cierre-caja"
+               class="btn btn-dark">
+
+                Volver
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="row mb-4">
+
+        <div class="col-md-4">
+
+            <div class="resumen-card bg-total">
+
+                <h5>
+
+                    Total histórico
+
+                </h5>
+
+                <div class="valor">
+
+                    $ {{ "{:,}".format(total_general or 0) }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+    <div class="card card-custom">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table
+                    class="table table-hover align-middle"
+                    id="tablaCierres"
+                >
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <!-- FECHA -->
+                            <th onclick="ordenarTabla(0)">
+                                Fecha ↕
+                            </th>
+
+                            <!-- PARQUEADERO -->
+                            <th onclick="ordenarTabla(1)">
+                                Parqueadero ↕
+                            </th>
+
+                            <!-- LAVADERO -->
+                            <th onclick="ordenarTabla(2)">
+                                Lavadero ↕
+                            </th>
+
+                            <!-- TOTAL -->
+                            <th onclick="ordenarTabla(3)">
+                                Total ↕
+                            </th>
+
+                            <!-- USUARIO -->
+                            <th onclick="ordenarTabla(4)">
+                                Usuario ↕
+                            </th>
+
+                            <!-- HORA -->
+                            <th onclick="ordenarTabla(5)">
+                                Hora ↕
+                            </th>
+
+                            <!-- OBSERVACIONES -->
+                            <th>
+                                Observaciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in historial %}
+
+                        <tr>
+
+                            <!-- FECHA -->
+                            <td>
+
+                                {{ item.fecha }}
+
+                            </td>
+
+                            <!-- PARQUEADERO -->
+                            <td class="text-primary fw-bold">
+
+                                $ {{ "{:,}".format(item.total_parqueadero or 0) }}
+
+                            </td>
+
+                            <!-- LAVADERO -->
+                            <td class="text-success fw-bold">
+
+                                $ {{ "{:,}".format(item.total_lavadero or 0) }}
+
+                            </td>
+
+                            <!-- TOTAL -->
+                            <td class="fw-bold">
+
+                                $ {{ "{:,}".format(item.total_general or 0) }}
+
+                            </td>
+
+                            <!-- USUARIO -->
+                            <td>
+
+                                {{ item.usuario }}
+
+                            </td>
+
+                            <!-- HORA -->
+                            <td>
+
+                                {{ item.hora_cierre }}
+
+                            </td>
+
+                            <!-- OBSERVACIONES -->
+                            <td>
+
+                                {{ item.observaciones }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+// ==========================================
+// ORDENAR TABLA
+// ==========================================
+let direccionOrden = {};
+
+function obtenerValor(texto){
+
+    texto = texto.replace("$", "")
+                 .replaceAll(",", "")
+                 .trim();
+
+    if(!isNaN(texto) && texto !== ""){
+
+        return Number(texto);
+    }
+
+    return texto.toLowerCase();
+}
+
+
+function ordenarTabla(columna){
+
+    const tabla = document.getElementById(
+        "tablaCierres"
+    );
+
+    const tbody = tabla.querySelector(
+        "tbody"
+    );
+
+    const filas = Array.from(
+        tbody.querySelectorAll("tr")
+    );
+
+    direccionOrden[columna] =
+        !direccionOrden[columna];
+
+    filas.sort((a, b) => {
+
+        const valorA = obtenerValor(
+
+            a.children[columna]
+             .innerText
+        );
+
+        const valorB = obtenerValor(
+
+            b.children[columna]
+             .innerText
+        );
+
+        if(valorA < valorB){
+
+            return direccionOrden[columna]
+                ? -1
+                : 1;
+        }
+
+        if(valorA > valorB){
+
+            return direccionOrden[columna]
+                ? 1
+                : -1;
+        }
+
+        return 0;
+    });
+
+    filas.forEach(fila => {
+
+        tbody.appendChild(fila);
+
+    });
+}
+
+</script>
+
+</body>
+</html>

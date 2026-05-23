@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Dashboard Lavadero
+    </title>
+
+    <!-- BOOTSTRAP -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- ICONOS -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+
+        body{
+
+            background:#f1f5f9;
+
+            font-family:'Segoe UI';
+        }
+
+        .navbar{
+
+            box-shadow:0 3px 15px rgba(0,0,0,.08);
+        }
+
+        .titulo{
+
+            font-weight:700;
+
+            color:#0f172a;
+        }
+
+        .subtitulo{
+
+            color:#64748b;
+        }
+
+        .menu-btn{
+
+            border:none;
+
+            border-radius:18px;
+
+            padding:18px;
+
+            font-weight:600;
+
+            transition:.2s;
+
+            box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+            font-size:16px;
+        }
+
+        .menu-btn:hover{
+
+            transform:translateY(-3px);
+        }
+
+        .card-dashboard{
+
+            border:none;
+
+            border-radius:22px;
+
+            padding:25px;
+
+            background:white;
+
+            box-shadow:0 12px 30px rgba(0,0,0,.06);
+
+            transition:.2s;
+
+            height:100%;
+        }
+
+        .card-dashboard:hover{
+
+            transform:translateY(-4px);
+        }
+
+        .card-icon{
+
+            width:60px;
+
+            height:60px;
+
+            border-radius:18px;
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            font-size:28px;
+
+            margin-bottom:18px;
+        }
+
+        .icon-moto{
+
+            background:#dcfce7;
+
+            color:#16a34a;
+        }
+
+        .icon-carro{
+
+            background:#fee2e2;
+
+            color:#dc2626;
+        }
+
+        .icon-dinero{
+
+            background:#ede9fe;
+
+            color:#7c3aed;
+        }
+
+        .card-title{
+
+            color:#64748b;
+
+            font-size:15px;
+
+            margin-bottom:6px;
+        }
+
+        .card-value{
+
+            font-size:34px;
+
+            font-weight:700;
+
+            color:#0f172a;
+        }
+
+        .reloj{
+
+            background:white;
+
+            padding:12px 18px;
+
+            border-radius:14px;
+
+            box-shadow:0 8px 20px rgba(0,0,0,.06);
+
+            font-weight:600;
+
+            color:#334155;
+        }
+
+        .tabla-card{
+
+            border:none;
+
+            border-radius:22px;
+
+            background:white;
+
+            box-shadow:0 12px 30px rgba(0,0,0,.06);
+
+            overflow:hidden;
+        }
+
+        .badge-custom{
+
+            padding:8px 14px;
+
+            border-radius:12px;
+
+            font-size:13px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark bg-dark px-4 py-3">
+
+    <span class="navbar-brand fw-bold fs-4">
+
+        Módulo Lavadero
+
+    </span>
+
+    <a
+        href="/dashboard"
+        class="btn btn-outline-light"
+    >
+
+        Dashboard General
+
+    </a>
+
+</nav>
+
+<!-- CONTENIDO -->
+<div class="container mt-4 mb-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+
+        <div>
+
+            <h2 class="titulo mb-1">
+
+                Dashboard Lavadero
+
+            </h2>
+
+            <p class="subtitulo mb-0">
+
+                Gestión operativa del lavadero
+
+            </p>
+
+        </div>
+
+        <div class="reloj">
+
+            <i class="bi bi-clock"></i>
+
+            <span id="fechaHora"></span>
+
+        </div>
+
+    </div>
+
+    <!-- MENU -->
+    <div class="row mb-4">
+
+        <!-- REGISTRAR -->
+        <div class="col-md-6 mb-3">
+
+            <a
+                href="/lavadero"
+                class="btn btn-warning w-100 menu-btn text-dark"
+            >
+
+                <i class="bi bi-plus-circle"></i>
+
+                Registrar lavado
+
+            </a>
+
+        </div>
+
+        <!-- HISTORIAL -->
+        <div class="col-md-6 mb-3">
+
+            <a
+                href="/historial/lavadero"
+                class="btn btn-dark w-100 menu-btn"
+            >
+
+                <i class="bi bi-clock-history"></i>
+
+                Historial lavados
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- MÉTRICAS -->
+    <div class="row g-4 mb-5">
+
+        <!-- MOTOS -->
+        <div class="col-md-4">
+
+            <div class="card-dashboard">
+
+                <div class="card-icon icon-moto">
+
+                    <i class="bi bi-scooter"></i>
+
+                </div>
+
+                <div class="card-title">
+
+                    Motos lavadas hoy
+
+                </div>
+
+                <div class="card-value text-success">
+
+                    {{ lavados_motos or 0 }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CARROS -->
+        <div class="col-md-4">
+
+            <div class="card-dashboard">
+
+                <div class="card-icon icon-carro">
+
+                    <i class="bi bi-car-front-fill"></i>
+
+                </div>
+
+                <div class="card-title">
+
+                    Carros lavados hoy
+
+                </div>
+
+                <div class="card-value text-danger">
+
+                    {{ lavados_carros or 0 }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TOTAL -->
+        <div class="col-md-4">
+
+            <div class="card-dashboard">
+
+                <div class="card-icon icon-dinero">
+
+                    <i class="bi bi-cash-stack"></i>
+
+                </div>
+
+                <div class="card-title">
+
+                    Generado lavadero hoy
+
+                </div>
+
+                <div class="card-value text-primary">
+
+                    $ {{ "{:,}".format(total_servicios or 0) }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+    <div class="tabla-card">
+
+        <div class="p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <h4 class="fw-bold mb-0">
+
+                    Últimos lavados
+
+                </h4>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>
+                                Fecha
+                            </th>
+
+                            <th>
+                                Vehículo
+                            </th>
+
+                            <th>
+                                Placa
+                            </th>
+
+                            <th>
+                                Responsable
+                            </th>
+
+                            <th>
+                                Servicio
+                            </th>
+
+                            <th>
+                                Valor
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in lavados[:10] %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ item.fecha }}
+
+                            </td>
+
+                            <td>
+
+                                {{ item.vehiculo }}
+
+                            </td>
+
+                            <td class="fw-bold text-uppercase">
+
+                                {{ item.placa }}
+
+                            </td>
+
+                            <td>
+
+                                {{ item.responsable }}
+
+                            </td>
+
+                            <td>
+
+                                {{ item.tipo_lavado }}
+
+                            </td>
+
+                            <td class="text-success fw-bold">
+
+                                $ {{ "{:,}".format(item.valor or 0) }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+// ==========================================
+// RELOJ
+// ==========================================
+function actualizarFechaHora(){
+
+    const ahora = new Date();
+
+    const dia = String(
+        ahora.getDate()
+    ).padStart(2, "0");
+
+    const mes = String(
+        ahora.getMonth() + 1
+    ).padStart(2, "0");
+
+    const anio = ahora.getFullYear();
+
+    const horas = String(
+        ahora.getHours()
+    ).padStart(2, "0");
+
+    const minutos = String(
+        ahora.getMinutes()
+    ).padStart(2, "0");
+
+    const segundos = String(
+        ahora.getSeconds()
+    ).padStart(2, "0");
+
+    document.getElementById(
+        "fechaHora"
+    ).innerHTML =
+
+        `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+}
+
+actualizarFechaHora();
+
+setInterval(
+    actualizarFechaHora,
+    1000
+);
+
+// ==========================================
+// AUTO REFRESH
+// ==========================================
+setInterval(() => {
+
+    window.location.reload();
+
+}, 30000);
+
+</script>
+
+</body>
+
+</html>
