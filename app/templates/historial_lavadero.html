@@ -428,16 +428,28 @@
                             <!-- ACCIONES -->
                             <td>
 
-                                <a
-                                    href="/editar-lavado/{{ item.id }}"
-                                    class="btn btn-sm btn-primary"
-                                >
+                                <div class="d-flex gap-1">
 
-                                    <i class="bi bi-pencil-square"></i>
+                                    <a
+                                        href="/editar-lavado/{{ item.id }}"
+                                        class="btn btn-sm btn-primary"
+                                    >
 
-                                    Editar
+                                        <i class="bi bi-pencil-square"></i>
 
-                                </a>
+                                        Editar
+
+                                    </a>
+
+                                    <button
+                                        class="btn btn-sm btn-danger btn-eliminar-lavado"
+                                        data-id="{{ item.id }}"
+                                    >
+                                        <i class="bi bi-trash"></i>
+                                        Eliminar
+                                    </button>
+
+                                </div>
 
                             </td>
 
@@ -557,6 +569,68 @@ function mostrarFilas(){
 }
 
 mostrarFilas();
+
+document.querySelectorAll(
+    ".btn-eliminar-lavado"
+).forEach(btn => {
+
+    btn.addEventListener(
+        "click",
+        function(){
+
+            eliminarLavado(
+                this.dataset.id
+            );
+        }
+    );
+
+});
+
+async function eliminarLavado(
+    lavadoId
+){
+
+    const confirmar = confirm(
+        "¿Está seguro de eliminar este lavado?\n\nEsta acción no se puede deshacer."
+    );
+
+    if(!confirmar){
+
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+
+            `/eliminar-lavado/${lavadoId}`,
+
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+
+        if(data.success){
+
+            location.reload();
+
+        }else{
+
+            alert(
+                data.message ||
+                "No fue posible eliminar el registro"
+            );
+        }
+
+    }catch(error){
+
+        alert(
+            "Error eliminando el registro"
+        );
+    }
+}
 
 </script>
 

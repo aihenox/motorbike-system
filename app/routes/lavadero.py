@@ -38,7 +38,9 @@ from app.services.lavadero_service import (
 
     obtener_lavado_por_id,
 
-    actualizar_lavado
+    actualizar_lavado,
+
+    eliminar_lavado
 )
 
 from app.services.historial_lavadero_service import (
@@ -519,3 +521,35 @@ def editar_lavado(
 
         lavado=lavado
     )
+
+# ==========================================
+# ELIMINAR LAVADO
+# ==========================================
+@lavadero_bp.route(
+    "/eliminar-lavado/<int:lavado_id>",
+    methods=["POST"]
+)
+@login_required
+def eliminar_lavado_route(
+    lavado_id
+):
+
+    try:
+
+        eliminar_lavado(
+            lavado_id
+        )
+
+        return jsonify({
+
+            "success": True
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": str(e)
+        }), 500

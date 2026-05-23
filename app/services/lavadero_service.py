@@ -12,7 +12,9 @@ from app.repositories.lavadero_repository import (
 
     obtener_lavado_por_id_db,
 
-    actualizar_lavado_db
+    actualizar_lavado_db,
+
+    eliminar_lavado_db
 )
 
 from app.utils.validators import (
@@ -211,4 +213,19 @@ def actualizar_lavado(
         valor,
 
         responsable
+    )
+
+# ==========================================
+# ELIMINAR LAVADO
+# ==========================================
+def eliminar_lavado(
+    lavado_id
+):
+
+    lavado_id = validar_id(
+        lavado_id
+    )
+
+    eliminar_lavado_db(
+        lavado_id
     )

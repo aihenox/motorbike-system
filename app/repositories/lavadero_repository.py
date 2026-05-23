@@ -557,3 +557,40 @@ def actualizar_lavado_db(
         ))
 
         conn.commit()
+
+# ==========================================
+# ELIMINAR LAVADO
+# ==========================================
+def eliminar_lavado_db(
+    lavado_id
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                DELETE FROM lavados
+
+                WHERE id = %s
+
+            """, (
+                lavado_id,
+            ))
+
+        else:
+
+            c.execute("""
+
+                DELETE FROM lavados
+
+                WHERE id = ?
+
+            """, (
+                lavado_id,
+            ))
+
+        conn.commit()
