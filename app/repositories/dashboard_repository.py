@@ -4,6 +4,10 @@ from app.repositories.connection import conectar
 
 from app.utils.date_utils import formatear_fecha
 
+from datetime import datetime
+
+from zoneinfo import ZoneInfo
+
 
 # ==========================================
 # MOTOR DATABASE
@@ -35,6 +39,10 @@ def obtener_metricas_dashboard_db():
     with conectar() as conn:
 
         c = conn.cursor()
+
+        hoy = datetime.now(
+            ZoneInfo("America/Bogota")
+        ).strftime("%Y-%m-%d")
 
         # ==========================================
         # VEHÍCULOS DENTRO
@@ -96,8 +104,9 @@ def obtener_metricas_dashboard_db():
             FROM ingresos
 
             WHERE estado = 'Fuera'
+            AND hora_salida::text LIKE %s
 
-        """)
+        """(f"{hoy}%",))
 
         total_parqueadero = obtener_valor(
             c.fetchone()
@@ -113,8 +122,9 @@ def obtener_metricas_dashboard_db():
             FROM lavados
 
             WHERE vehiculo = 'Moto'
+            AND fecha LIKE %s
 
-        """)
+        """(f"{hoy}%",))
 
         lavados_motos = obtener_valor(
             c.fetchone()
@@ -130,8 +140,9 @@ def obtener_metricas_dashboard_db():
             FROM lavados
 
             WHERE vehiculo = 'Carro'
+            AND fecha LIKE %s
 
-        """)
+        """ (f"{hoy}%",))
 
         lavados_carros = obtener_valor(
             c.fetchone()
@@ -147,9 +158,9 @@ def obtener_metricas_dashboard_db():
                 0
             )
 
-            FROM lavados
-
-        """)
+            FROM lavados        
+            WHERE fecha LIKE %s
+        """ (f"{hoy}%",))
 
         total_lavadero = obtener_valor(
             c.fetchone()
