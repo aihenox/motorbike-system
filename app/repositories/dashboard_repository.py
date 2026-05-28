@@ -216,3 +216,80 @@ def obtener_metricas_dashboard_db():
 
             "total_general_hoy": total_general_hoy
         }
+
+# ==========================================
+# ÚLTIMOS INGRESOS
+# ==========================================
+def obtener_ultimos_ingresos_db(
+    limite=10
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        query = f"""
+
+            SELECT
+
+                placa,
+                tipo,
+                hora_ingreso,
+                hora_salida,
+                estado
+
+            FROM ingresos
+
+            ORDER BY id DESC
+
+            LIMIT {int(limite)}
+
+        """
+
+        c.execute(query)
+
+        rows = c.fetchall()
+
+        resultado = []
+
+        for row in rows:
+
+            if POSTGRES:
+
+                resultado.append({
+
+                    "placa": row["placa"],
+
+                    "tipo": row["tipo"],
+
+                    "hora_ingreso": formatear_fecha(
+                        row["hora_ingreso"]
+                    ),
+
+                    "hora_salida": formatear_fecha(
+                        row["hora_salida"]
+                    ),
+
+                    "estado": row["estado"]
+                })
+
+            else:
+
+                resultado.append({
+
+                    "placa": row[0],
+
+                    "tipo": row[1],
+
+                    "hora_ingreso": formatear_fecha(
+                        row[2]
+                    ),
+
+                    "hora_salida": formatear_fecha(
+                        row[3]
+                    ),
+
+                    "estado": row[4]
+                })
+
+        return resultado 
