@@ -193,9 +193,10 @@ def obtener_metricas_dashboard_db():
         # ==========================================
         # TOTAL GENERAL HOY
         # ==========================================
-        total_general_hoy = (
-            total_parqueadero +
-            total_lavadero
+        total_general_hoy = int(
+            total_parqueadero or 0
+        ) + int(
+            total_lavadero or 0
         )
 
         return {
