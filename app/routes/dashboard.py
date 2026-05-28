@@ -36,12 +36,22 @@ def dashboard():
         "dashboard.html",
 
         motos=metricas.get(
-            "motos_activas",
+            "motos_fuera",
             0
         ),
 
         carros=metricas.get(
-            "carros_activos",
+            "carros_fuera",
+            0
+        ),
+
+        activos=metricas.get(
+            "total_activos",
+            0
+        ),
+
+        total_general_hoy=metricas.get(
+            "total_general_hoy",
             0
         ),
 

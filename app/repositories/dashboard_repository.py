@@ -47,7 +47,7 @@ def obtener_metricas_dashboard_db():
         operador = "%s" if POSTGRES else "?"
 
         # ==========================================
-        # VEHÍCULOS DENTRO
+        # VEHÍCULOS ACTIVOS
         # ==========================================
         c.execute("""
 
@@ -63,33 +63,45 @@ def obtener_metricas_dashboard_db():
             c.fetchone()
         )
 
-        c.execute("""
+        # ==========================================
+        # MOTOS FUERA HOY
+        # ==========================================
+        c.execute(f"""
 
             SELECT COUNT(*)
 
             FROM ingresos
 
-            WHERE estado = 'Dentro'
+            WHERE estado = 'Fuera'
             AND tipo = 'Moto'
+            AND hora_salida LIKE {operador}
 
-        """)
+        """, (
+            f"{hoy}%",
+        ))
 
-        motos_activas = obtener_valor(
+        motos_fuera = obtener_valor(
             c.fetchone()
         )
 
-        c.execute("""
+        # ==========================================
+        # CARROS FUERA HOY
+        # ==========================================
+        c.execute(f"""
 
             SELECT COUNT(*)
 
             FROM ingresos
 
-            WHERE estado = 'Dentro'
+            WHERE estado = 'Fuera'
             AND tipo = 'Carro'
+            AND hora_salida LIKE {operador}
 
-        """)
+        """, (
+            f"{hoy}%",
+        ))
 
-        carros_activos = obtener_valor(
+        carros_fuera = obtener_valor(
             c.fetchone()
         )
 
@@ -178,13 +190,21 @@ def obtener_metricas_dashboard_db():
             c.fetchone()
         )
 
+        # ==========================================
+        # TOTAL GENERAL HOY
+        # ==========================================
+        total_general_hoy = (
+            total_parqueadero +
+            total_lavadero
+        )
+
         return {
 
             "total_activos": total_activos,
 
-            "motos_activas": motos_activas,
+            "motos_fuera": motos_fuera,
 
-            "carros_activos": carros_activos,
+            "carros_fuera": carros_fuera,
 
             "total_parqueadero": total_parqueadero,
 
@@ -192,82 +212,7 @@ def obtener_metricas_dashboard_db():
 
             "lavados_carros": lavados_carros,
 
-            "total_servicios": total_lavadero
+            "total_servicios": total_lavadero,
+
+            "total_general_hoy": total_general_hoy
         }
-    
-# ==========================================
-# ÚLTIMOS INGRESOS
-# ==========================================
-def obtener_ultimos_ingresos_db(
-    limite=10
-):
-
-    with conectar() as conn:
-
-        c = conn.cursor()
-
-        query = f"""
-
-            SELECT
-
-                placa,
-                tipo,
-                hora_ingreso,
-                hora_salida,
-                estado
-
-            FROM ingresos
-
-            ORDER BY id DESC
-
-            LIMIT {int(limite)}
-
-        """
-
-        c.execute(query)
-
-        rows = c.fetchall()
-
-        resultado = []
-
-        for row in rows:
-
-            if POSTGRES:
-
-                resultado.append({
-
-                    "placa": row["placa"],
-
-                    "tipo": row["tipo"],
-
-                    "hora_ingreso": formatear_fecha(
-                        row["hora_ingreso"]
-                    ),
-
-                    "hora_salida": formatear_fecha(
-                        row["hora_salida"]
-                    ),
-
-                    "estado": row["estado"]
-                })
-
-            else:
-
-                resultado.append({
-
-                    "placa": row[0],
-
-                    "tipo": row[1],
-
-                    "hora_ingreso": formatear_fecha(
-                        row[2]
-                    ),
-
-                    "hora_salida": formatear_fecha(
-                        row[3]
-                    ),
-
-                    "estado": row[4]
-                })
-
-        return resultado
