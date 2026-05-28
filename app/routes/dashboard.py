@@ -61,7 +61,7 @@ def dashboard():
         ),
 
         dinero=metricas.get(
-            "total_servicios",
+            "total_general_hoy",
             0
         ),
 
