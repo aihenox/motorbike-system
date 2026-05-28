@@ -34,11 +34,11 @@ def calcular_valor(
         diferencia.total_seconds()
     )
 
-    horas = total_segundos // 3600
+    total_minutos = total_segundos // 60
 
-    minutos = (
-        total_segundos % 3600
-    ) // 60
+    horas = total_minutos // 60
+
+    minutos = total_minutos % 60
 
     # ==========================================
     # REGLA COBRO

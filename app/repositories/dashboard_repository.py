@@ -44,6 +44,8 @@ def obtener_metricas_dashboard_db():
             ZoneInfo("America/Bogota")
         ).strftime("%Y-%m-%d")
 
+        operador = "%s" if POSTGRES else "?"
+
         # ==========================================
         # VEHÍCULOS DENTRO
         # ==========================================
@@ -92,9 +94,9 @@ def obtener_metricas_dashboard_db():
         )
 
         # ==========================================
-        # TOTAL PARQUEADERO
+        # TOTAL PARQUEADERO HOY
         # ==========================================
-        c.execute("""
+        c.execute(f"""
 
             SELECT COALESCE(
                 SUM(valor),
@@ -104,63 +106,73 @@ def obtener_metricas_dashboard_db():
             FROM ingresos
 
             WHERE estado = 'Fuera'
-            AND hora_salida::text LIKE %s
+            AND hora_salida LIKE {operador}
 
-        """(f"{hoy}%",))
+        """, (
+            f"{hoy}%",
+        ))
 
         total_parqueadero = obtener_valor(
             c.fetchone()
         )
 
         # ==========================================
-        # LAVADOS MOTOS
+        # LAVADOS MOTOS HOY
         # ==========================================
-        c.execute("""
+        c.execute(f"""
 
             SELECT COUNT(*)
 
             FROM lavados
 
             WHERE vehiculo = 'Moto'
-            AND fecha LIKE %s
+            AND fecha LIKE {operador}
 
-        """(f"{hoy}%",))
+        """, (
+            f"{hoy}%",
+        ))
 
         lavados_motos = obtener_valor(
             c.fetchone()
         )
 
         # ==========================================
-        # LAVADOS CARROS
+        # LAVADOS CARROS HOY
         # ==========================================
-        c.execute("""
+        c.execute(f"""
 
             SELECT COUNT(*)
 
             FROM lavados
 
             WHERE vehiculo = 'Carro'
-            AND fecha LIKE %s
+            AND fecha LIKE {operador}
 
-        """ (f"{hoy}%",))
+        """, (
+            f"{hoy}%",
+        ))
 
         lavados_carros = obtener_valor(
             c.fetchone()
         )
 
         # ==========================================
-        # TOTAL LAVADERO
+        # TOTAL LAVADERO HOY
         # ==========================================
-        c.execute("""
+        c.execute(f"""
 
             SELECT COALESCE(
                 SUM(valor),
                 0
             )
 
-            FROM lavados        
-            WHERE fecha LIKE %s
-        """ (f"{hoy}%",))
+            FROM lavados
+
+            WHERE fecha LIKE {operador}
+
+        """, (
+            f"{hoy}%",
+        ))
 
         total_lavadero = obtener_valor(
             c.fetchone()
