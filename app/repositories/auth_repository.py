@@ -6,11 +6,15 @@ from app.repositories.connection import (
 
 
 # ==========================================
-# MOTOR DATABASE
+# PLACEHOLDER SQL
 # ==========================================
-POSTGRES = os.getenv(
-    "DATABASE_URL"
-)
+def get_placeholder():
+
+    return (
+        "%s"
+        if os.getenv("DATABASE_URL")
+        else "?"
+    )
 
 
 # ==========================================
@@ -20,51 +24,27 @@ def obtener_usuario_por_username(
     usuario
 ):
 
+    placeholder = get_placeholder()
+
     with conectar() as conn:
 
         c = conn.cursor()
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
-        if POSTGRES:
+        c.execute(f"""
 
-            c.execute("""
+            SELECT
+                id,
+                usuario,
+                password,
+                rol
 
-                SELECT
-                    id,
-                    usuario,
-                    password,
-                    rol
+            FROM usuarios
 
-                FROM usuarios
+            WHERE usuario = {placeholder}
 
-                WHERE usuario = %s
+        """, (usuario,))
 
-            """, (usuario,))
-
-            return c.fetchone()
-
-        # ==========================================
-        # SQLITE
-        # ==========================================
-        else:
-
-            c.execute("""
-
-                SELECT
-                    id,
-                    usuario,
-                    password,
-                    rol
-
-                FROM usuarios
-
-                WHERE usuario = ?
-
-            """, (usuario,))
-
-            return c.fetchone()
+        return c.fetchone()
 
 
 # ==========================================
@@ -74,123 +54,69 @@ def obtener_usuario_por_id(
     user_id
 ):
 
+    placeholder = get_placeholder()
+
     with conectar() as conn:
 
         c = conn.cursor()
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
-        if POSTGRES:
+        c.execute(f"""
 
-            c.execute("""
+            SELECT
+                id,
+                usuario,
+                password,
+                rol
 
-                SELECT
-                    id,
-                    usuario,
-                    password,
-                    rol
+            FROM usuarios
 
-                FROM usuarios
+            WHERE id = {placeholder}
 
-                WHERE id = %s
+        """, (user_id,))
 
-            """, (user_id,))
-
-            return c.fetchone()
-
-        # ==========================================
-        # SQLITE
-        # ==========================================
-        else:
-
-            c.execute("""
-
-                SELECT
-                    id,
-                    usuario,
-                    password,
-                    rol
-
-                FROM usuarios
-
-                WHERE id = ?
-
-            """, (user_id,))
-
-            return c.fetchone()
+        return c.fetchone()
 
 
 # ==========================================
 # CREAR USUARIO
 # ==========================================
 def crear_usuario(
-
     usuario,
-
     password,
-
     rol
 ):
+
+    p = get_placeholder()
 
     with conectar() as conn:
 
         c = conn.cursor()
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
-        if POSTGRES:
+        c.execute(f"""
 
-            c.execute("""
-
-                INSERT INTO usuarios (
-
-                    usuario,
-
-                    password,
-
-                    rol
-
-                )
-
-                VALUES (%s, %s, %s)
-
-            """, (
+            INSERT INTO usuarios (
 
                 usuario,
 
                 password,
 
                 rol
-            ))
 
-        # ==========================================
-        # SQLITE
-        # ==========================================
-        else:
+            )
 
-            c.execute("""
+            VALUES (
+                {p},
+                {p},
+                {p}
+            )
 
-                INSERT INTO usuarios (
+        """, (
 
-                    usuario,
+            usuario,
 
-                    password,
+            password,
 
-                    rol
-
-                )
-
-                VALUES (?, ?, ?)
-
-            """, (
-
-                usuario,
-
-                password,
-
-                rol
-            ))
+            rol
+        ))
 
         conn.commit()

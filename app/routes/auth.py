@@ -51,13 +51,15 @@ def login():
 
     if request.method == "POST":
 
-        usuario = request.form[
-            "usuario"
-        ]
+        usuario = request.form.get(
+            "usuario",
+            ""
+        ).strip()
 
-        password = request.form[
-            "password"
-        ]
+        password = request.form.get(
+            "password",
+            ""
+        )
 
         user_db = validar_login(
 
@@ -81,7 +83,8 @@ def login():
             )
 
         flash(
-            "Usuario o contraseña incorrectos"
+            "Usuario o contraseña incorrectos",
+            "danger"
         )
 
     return render_template(
@@ -97,6 +100,11 @@ def login():
 def logout():
 
     logout_user()
+
+    flash(
+        "Sesión cerrada correctamente.",
+        "success"
+    )
 
     return redirect(
         url_for("auth.login")
