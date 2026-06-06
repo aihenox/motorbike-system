@@ -1,8 +1,10 @@
+import os
+
 from flask import Flask
 
 from flask_login import LoginManager
 
-from config import Config
+from config import config
 
 from database import crear_bd
 
@@ -19,6 +21,10 @@ from app.errors import (
 login_manager = LoginManager()
 
 login_manager.login_view = "auth.login"
+
+login_manager.login_message = (
+    "Debe iniciar sesión para continuar."
+)
 
 
 # ==========================================
@@ -37,8 +43,19 @@ def create_app():
 
     app = Flask(__name__)
 
+    # ==========================================
+    # CONFIGURACIÓN
+    # ==========================================
+    env = os.getenv(
+        "FLASK_ENV",
+        "development"
+    )
+
     app.config.from_object(
-        Config
+        config.get(
+            env,
+            config["default"]
+        )
     )
 
     # ==========================================
@@ -47,7 +64,7 @@ def create_app():
     login_manager.init_app(app)
 
     # ==========================================
-    # CREAR DB
+    # CREAR BASE DE DATOS
     # ==========================================
     with app.app_context():
 
@@ -83,32 +100,29 @@ def create_app():
     # ==========================================
     # REGISTRAR BLUEPRINTS
     # ==========================================
-    app.register_blueprint(auth_bp)
+    blueprints = [
+        auth_bp,
+        dashboard_bp,
+        ingreso_bp,
+        salida_bp,
+        activos_bp,
+        editar_bp,
+        eliminar_bp,
+        historial_bp,
+        lavadero_bp,
+        parqueadero_bp,
+        cierre_bp,
+        recibos_bp,
+    ]
 
-    app.register_blueprint(dashboard_bp)
+    for blueprint in blueprints:
 
-    app.register_blueprint(ingreso_bp)
-
-    app.register_blueprint(salida_bp)
-
-    app.register_blueprint(activos_bp)
-
-    app.register_blueprint(editar_bp)
-
-    app.register_blueprint(eliminar_bp)
-
-    app.register_blueprint(historial_bp)
-
-    app.register_blueprint(lavadero_bp)
-
-    app.register_blueprint(parqueadero_bp)
-
-    app.register_blueprint(cierre_bp)
-
-    app.register_blueprint(recibos_bp)
+        app.register_blueprint(
+            blueprint
+        )
 
     # ==========================================
-    # ERROR HANDLERS
+    # MANEJO DE ERRORES
     # ==========================================
     register_error_handlers(app)
 
