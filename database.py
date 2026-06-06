@@ -46,7 +46,21 @@ def crear_bd():
             id_type
         )
 
+        crear_tabla_tarifas(
+            c,
+            id_type
+        )
+
+        crear_tabla_mensualidades(
+            c,
+            id_type
+        )
+
+        actualizar_tabla_ingresos(c)
+
         crear_indices(c)
+
+        insertar_tarifas_default(c)
 
         conn.commit()
 
@@ -174,7 +188,198 @@ def crear_tabla_cierres(
 
 
 # ==========================================
-# ÍNDICES
+# CONFIGURACION TARIFAS
+# ==========================================
+def crear_tabla_tarifas(
+    c,
+    id_type
+):
+
+    c.execute(f"""
+
+        CREATE TABLE IF NOT EXISTS configuracion_tarifas(
+
+            id {id_type},
+
+            hora_moto INTEGER,
+
+            hora_carro INTEGER,
+
+            fraccion_moto INTEGER,
+
+            fraccion_carro INTEGER,
+
+            dia_moto INTEGER,
+
+            dia_carro INTEGER,
+
+            noche_moto INTEGER,
+
+            noche_carro INTEGER,
+
+            mensualidad_moto INTEGER,
+
+            mensualidad_carro INTEGER,
+
+            minutos_gracia INTEGER
+
+        )
+
+    """)
+
+
+# ==========================================
+# MENSUALIDADES
+# ==========================================
+def crear_tabla_mensualidades(
+    c,
+    id_type
+):
+
+    c.execute(f"""
+
+        CREATE TABLE IF NOT EXISTS mensualidades(
+
+            id {id_type},
+
+            placa TEXT NOT NULL,
+
+            tipo TEXT NOT NULL,
+
+            propietario TEXT,
+
+            telefono TEXT,
+
+            fecha_inicio TEXT,
+
+            fecha_fin TEXT,
+
+            estado TEXT NOT NULL
+
+        )
+
+    """)
+
+
+# ==========================================
+# MIGRACION INGRESOS
+# ==========================================
+def actualizar_tabla_ingresos(c):
+
+    columnas = [
+
+        (
+            "modalidad",
+            "TEXT DEFAULT 'Hora'"
+        ),
+
+        (
+            "puesto_casco",
+            "INTEGER"
+        ),
+
+        (
+            "cantidad_cascos",
+            "INTEGER DEFAULT 0"
+        )
+    ]
+
+    for nombre, tipo in columnas:
+
+        try:
+
+            c.execute(
+                f"""
+                ALTER TABLE ingresos
+                ADD COLUMN {nombre} {tipo}
+                """
+            )
+
+        except Exception:
+
+            pass
+
+
+# ==========================================
+# TARIFAS POR DEFECTO
+# ==========================================
+def insertar_tarifas_default(c):
+
+    try:
+
+        c.execute("""
+            SELECT COUNT(*)
+            FROM configuracion_tarifas
+        """)
+
+        resultado = c.fetchone()
+
+        cantidad = (
+            resultado[0]
+            if not isinstance(
+                resultado,
+                dict
+            )
+            else list(
+                resultado.values()
+            )[0]
+        )
+
+        if cantidad == 0:
+
+            c.execute("""
+
+                INSERT INTO configuracion_tarifas(
+
+                    hora_moto,
+                    hora_carro,
+
+                    fraccion_moto,
+                    fraccion_carro,
+
+                    dia_moto,
+                    dia_carro,
+
+                    noche_moto,
+                    noche_carro,
+
+                    mensualidad_moto,
+                    mensualidad_carro,
+
+                    minutos_gracia
+
+                )
+
+                VALUES (
+
+                    1500,
+                    3000,
+
+                    500,
+                    1000,
+
+                    10000,
+                    20000,
+
+                    5000,
+                    10000,
+
+                    50000,
+                    100000,
+
+                    10
+
+                )
+
+            """)
+
+    except Exception:
+
+        pass
+
+
+# ==========================================
+# INDICES
 # ==========================================
 def crear_indices(c):
 
