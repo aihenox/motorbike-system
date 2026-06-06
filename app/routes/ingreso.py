@@ -1,3 +1,5 @@
+import logging
+
 from flask import (
     Blueprint,
     render_template,
@@ -5,7 +7,9 @@ from flask import (
     jsonify
 )
 
-from flask_login import login_required
+from flask_login import (
+    login_required
+)
 
 from app.services.parqueadero_service import (
     registrar_ingreso
@@ -15,6 +19,10 @@ from app.utils.validators import (
     validar_placa,
     validar_tipo_vehiculo
 )
+
+
+logger = logging.getLogger(__name__)
+
 
 ingreso_bp = Blueprint(
     "ingreso",
@@ -62,7 +70,9 @@ def registrar_ingreso_ajax():
             tipo
         )
 
-        return jsonify(resultado)
+        return jsonify(
+            resultado
+        )
 
     except ValueError as e:
 
@@ -70,8 +80,12 @@ def registrar_ingreso_ajax():
             "success": False,
             "message": str(e)
         }), 400
-    
-    except Exception as e:
+
+    except Exception:
+
+        logger.exception(
+            "Error registrando ingreso"
+        )
 
         return jsonify({
             "success": False,
