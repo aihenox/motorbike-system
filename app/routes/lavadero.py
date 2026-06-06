@@ -150,10 +150,7 @@ def lavadero():
 # ==========================================
 # REGISTRAR LAVADO AJAX
 # ==========================================
-@lavadero_bp.route(
-    "/registrar_lavado",
-    methods=["POST"]
-)
+
 @lavadero_bp.route(
     "/registrar_lavado",
     methods=["POST"]
@@ -190,7 +187,7 @@ def registrar_lavado_ajax():
         fecha_db = ahora.strftime(
             "%Y-%m-%d %H:%M:%S"
         )
-
+        
         registrar_lavado(
 
             placa,
