@@ -1,9 +1,13 @@
 import os
 import sqlite3
+
 import psycopg2
 
 from flask import current_app
-from psycopg2.extras import RealDictCursor
+
+from psycopg2.extras import (
+    RealDictCursor
+)
 
 
 # ==========================================
@@ -15,21 +19,33 @@ def conectar():
         "DATABASE_URL"
     )
 
-    # ==========================================
-    # POSTGRESQL ONLINE
-    # ==========================================
     if database_url:
 
-        conn = psycopg2.connect(
-            database_url,
-            cursor_factory=RealDictCursor
+        return conectar_postgres(
+            database_url
         )
 
-        return conn
+    return conectar_sqlite()
 
-    # ==========================================
-    # SQLITE LOCAL
-    # ==========================================
+
+# ==========================================
+# POSTGRESQL
+# ==========================================
+def conectar_postgres(
+    database_url
+):
+
+    return psycopg2.connect(
+        database_url,
+        cursor_factory=RealDictCursor
+    )
+
+
+# ==========================================
+# SQLITE
+# ==========================================
+def conectar_sqlite():
+
     db_path = current_app.config.get(
         "DATABASE_PATH",
         "instance/parqueadero.db"
@@ -40,7 +56,9 @@ def conectar():
         exist_ok=True
     )
 
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(
+        db_path
+    )
 
     conn.row_factory = sqlite3.Row
 
