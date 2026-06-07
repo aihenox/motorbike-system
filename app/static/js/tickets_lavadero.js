@@ -44,152 +44,177 @@ function abrirTicketLavadero(html){
 // ==========================================
 function generarTicketLavadero(data){
 
+    let cortesia = "";
+
+    if(data.gratis){
+
+        cortesia = `
+
+            <div class="linea"></div>
+
+            <div
+                style="
+                    text-align:center;
+                    font-size:16px;
+                    font-weight:bold;
+                "
+            >
+
+                🎉 LAVADO DE CORTESÍA
+
+            </div>
+
+            <div
+                style="
+                    text-align:center;
+                    margin-top:5px;
+                "
+            >
+
+                Cliente frecuente
+
+            </div>
+
+        `;
+    }
+
     return `
 
-<!DOCTYPE html>
+    <html>
 
-<html>
+    <head>
 
-<head>
+        <title>
 
-<meta charset="UTF-8">
+            Recibo Lavadero
 
-<title>
+        </title>
 
-Recibo Lavadero
+        ${generarEstilosTicket()}
 
-</title>
+    </head>
 
-<style>
+    <body>
 
-body{
+        ${generarHeaderTicket()}
 
-    font-family:Arial,sans-serif;
+        <div class="linea"></div>
 
-    width:300px;
+        <div class="titulo">
 
-    margin:auto;
+            RECIBO DE LAVADO
 
-    padding:15px;
+        </div>
 
-    text-align:center;
-}
+        <div class="linea"></div>
 
-h2{
+        <div class="dato">
 
-    margin-bottom:5px;
-}
+            <span>
 
-.linea{
+                PLACA:
 
-    border-top:1px dashed #000;
+            </span>
 
-    margin:10px 0;
-}
+            <strong>
 
-.dato{
+                ${data.placa}
 
-    text-align:left;
+            </strong>
 
-    margin:6px 0;
-}
+        </div>
 
-.total{
+        <div class="dato">
 
-    font-size:26px;
+            <span>
 
-    font-weight:bold;
+                VEHÍCULO:
 
-    margin-top:15px;
-}
+            </span>
 
-</style>
+            <strong>
 
-</head>
+                ${data.vehiculo}
 
-<body>
+            </strong>
 
-<h2>
+        </div>
 
-ESPUMOSO MOTORBIKE
+        <div class="dato">
 
-</h2>
+            <span>
 
-<p>
+                SERVICIO:
 
-PARQUEADERO Y LAVADERO
+            </span>
 
-</p>
+            <strong>
 
-<div class="linea"></div>
+                ${data.tipo_lavado}
 
-<h3>
+            </strong>
 
-RECIBO DE LAVADO
+        </div>
 
-</h3>
+        <div class="dato">
 
-<div class="linea"></div>
+            <span>
 
-<div class="dato">
+                RESPONSABLE:
 
-<strong>Placa:</strong>
+            </span>
 
-${data.placa}
+            <strong>
 
-</div>
+                ${data.responsable}
 
-<div class="dato">
+            </strong>
 
-<strong>Vehículo:</strong>
+        </div>
 
-${data.vehiculo}
+        <div class="dato">
 
-</div>
+            <span>
 
-<div class="dato">
+                FECHA:
 
-<strong>Servicio:</strong>
+            </span>
 
-${data.tipo_lavado}
+            <strong>
 
-</div>
+                ${data.fecha}
 
-<div class="dato">
+            </strong>
 
-<strong>Responsable:</strong>
+        </div>
 
-${data.responsable}
+        ${cortesia}
 
-</div>
+        <div class="linea"></div>
 
-<div class="dato">
+        <div class="total">
 
-<strong>Fecha:</strong>
+            $ ${data.valor}
 
-${data.fecha}
+        </div>
 
-</div>
+        <div class="pagado">
 
-<div class="linea"></div>
+            ✓ SERVICIO REGISTRADO
 
-<div class="total">
+        </div>
 
-$ ${data.valor}
+        <div class="linea"></div>
 
-</div>
+        <div class="footer">
 
-<div class="linea"></div>
+            ¡Gracias por preferirnos!
 
-<p>
+        </div>
 
-¡Gracias por preferirnos!
+    </body>
 
-</p>
+    </html>
 
-</body>
-
-</html>
-
-`;
+    `;
 }

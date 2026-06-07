@@ -14,7 +14,9 @@ from app.repositories.lavadero_repository import (
 
     actualizar_lavado_db,
 
-    eliminar_lavado_db
+    eliminar_lavado_db,
+
+    contar_lavados_placa_db
 )
 
 from app.utils.validators import (
@@ -55,6 +57,12 @@ def registrar_lavado(
         placa
     )
 
+    if validar_lavado_gratis(
+        placa
+    ):
+
+        valor = 0
+
     vehiculo = validar_tipo_vehiculo(
         vehiculo
     )
@@ -71,6 +79,16 @@ def registrar_lavado(
         responsable
     )
 
+    gratis = False
+
+    if validar_lavado_gratis(
+        placa
+    ):
+
+        valor = 0
+
+        gratis = True
+
     registrar_lavado_db(
 
         placa,
@@ -85,6 +103,13 @@ def registrar_lavado(
 
         fecha
     )
+
+    return {
+
+        "gratis": gratis,
+
+        "valor": valor
+    }
 
 
 # ==========================================
@@ -228,4 +253,30 @@ def eliminar_lavado(
 
     eliminar_lavado_db(
         lavado_id
+    )
+
+# ==========================================
+# VALIDAR LAVADO GRATIS
+# ==========================================
+def validar_lavado_gratis(
+    placa
+):
+
+    cantidad = contar_lavados_placa_db(
+        placa
+    )
+
+    siguiente = cantidad + 1
+
+    return siguiente % 5 == 0
+
+# ==========================================
+# CONTAR LAVADOS PLACA
+# ==========================================
+def contar_lavados_placa(
+    placa
+):
+
+    return contar_lavados_placa_db(
+        placa
     )

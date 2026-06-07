@@ -15,6 +15,7 @@ from flask import (
     jsonify
 )
 
+
 import openpyxl
 
 from io import BytesIO
@@ -42,7 +43,9 @@ from app.services.lavadero_service import (
 
     actualizar_lavado,
 
-    eliminar_lavado
+    eliminar_lavado,
+
+    contar_lavados_placa_db
 )
 
 from app.services.historial_lavadero_service import (
@@ -188,7 +191,7 @@ def registrar_lavado_ajax():
             "%Y-%m-%d %H:%M:%S"
         )
         
-        registrar_lavado(
+        resultado = registrar_lavado(
 
             placa,
 
@@ -211,6 +214,8 @@ def registrar_lavado_ajax():
 
             "success": True,
 
+            "gratis": resultado["gratis"],
+
             "placa": placa,
 
             "vehiculo": vehiculo,
@@ -219,7 +224,7 @@ def registrar_lavado_ajax():
 
             "responsable": responsable,
 
-            "valor": f"{int(valor):,}",
+            "valor": f"{int(resultado['valor']):,}",
 
             "fecha": fecha_ticket
         }
@@ -552,3 +557,30 @@ def eliminar_lavado_route(
 
             "message": str(e)
         }), 500
+    
+# ==========================================
+# CONSULTAR LAVADO GRATIS
+# ==========================================
+@lavadero_bp.route(
+    "/api/lavado-gratis/<placa>"
+)
+@login_required
+def consultar_lavado_gratis(
+    placa
+):
+
+    cantidad = contar_lavados_placa_db(
+        placa
+    )
+
+    siguiente = cantidad + 1
+
+    return jsonify({
+
+        "cantidad": cantidad,
+
+        "gratis": (
+            siguiente % 5 == 0
+        )
+
+    })

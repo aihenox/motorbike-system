@@ -594,3 +594,59 @@ def eliminar_lavado_db(
             ))
 
         conn.commit()
+
+# ==========================================
+# CONTAR LAVADOS POR PLACA
+# ==========================================
+def contar_lavados_placa_db(
+    placa
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT COUNT(*)
+
+                FROM lavados
+
+                WHERE placa = %s
+
+            """, (
+                placa.upper(),
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT COUNT(*)
+
+                FROM lavados
+
+                WHERE placa = ?
+
+            """, (
+                placa.upper(),
+            ))
+
+        resultado = c.fetchone()
+
+        if resultado is None:
+
+            return 0
+
+        if isinstance(
+            resultado,
+            dict
+        ):
+
+            return list(
+                resultado.values()
+            )[0]
+
+        return resultado[0]
