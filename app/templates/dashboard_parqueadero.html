@@ -221,14 +221,56 @@
 
     </span>
 
-    <a
-        href="/dashboard"
-        class="btn btn-outline-light"
-    >
+    <div class="d-flex align-items-center gap-2">
 
-        Dashboard General
+        <!-- CONFIGURACION -->
+        <div class="dropdown">
 
-    </a>
+            <button
+                class="btn btn-outline-warning dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+
+                <i class="bi bi-gear-fill"></i>
+
+                Configuración
+
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+
+                <li>
+
+                    <a
+                        class="dropdown-item"
+                        href="/tarifas"
+                    >
+
+                        <i class="bi bi-cash-coin"></i>
+
+                        Tarifas
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- DASHBOARD GENERAL -->
+        <a
+            href="/dashboard"
+            class="btn btn-outline-light"
+        >
+
+            Dashboard General
+
+        </a>
+
+    </div>
 
 </nav>
 
@@ -331,8 +373,23 @@
             </a>
 
         </div>
+        <!-- MENSUALIDADES -->
+        <div class="col-md-3 mb-3">
 
+            <a
+                href="/mensualidades"
+                class="btn btn-secondary w-100 menu-btn"
+            >
+
+                <i class="bi bi-calendar-check"></i>
+
+                Mensualidades
+
+            </a>
+
+        </div>
     </div>
+
 
     <!-- MÉTRICAS -->
     <div class="row g-4 mb-5">
@@ -665,9 +722,8 @@ setInterval(() => {
 
 </script>
 
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-</body>
 </body>
 
 </html>
