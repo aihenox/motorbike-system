@@ -186,3 +186,55 @@ def buscar_mensualidad_activa(
     return buscar_mensualidad_activa_db(
         placa
     )
+
+# ==========================================
+# ACTUALIZAR MENSUALIDADES VENCIDAS
+# ==========================================
+def actualizar_mensualidades_vencidas():
+
+    registros = obtener_mensualidades_db()
+
+    hoy = date.today()
+
+    for item in registros:
+
+        try:
+
+            data = dict(item)
+
+            if data["estado"] != "Activa":
+
+                continue
+
+            fecha_fin = datetime.strptime(
+
+                data["fecha_fin"],
+
+                "%Y-%m-%d"
+
+            ).date()
+
+            if fecha_fin < hoy:
+
+                actualizar_mensualidad(
+
+                    data["id"],
+
+                    data["placa"],
+
+                    data["tipo"],
+
+                    data["propietario"],
+
+                    data["telefono"],
+
+                    data["fecha_inicio"],
+
+                    data["fecha_fin"],
+
+                    "Inactiva"
+                )
+
+        except Exception:
+
+            pass

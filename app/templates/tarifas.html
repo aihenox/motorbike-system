@@ -12,7 +12,7 @@
 
     <title>
 
-        Configuración Tarifas
+        Configuración de Tarifas
 
     </title>
 
@@ -26,27 +26,137 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     >
 
+    <style>
+
+        body{
+
+            background:#f1f5f9;
+
+            font-family:'Segoe UI',sans-serif;
+        }
+
+        .card-principal{
+
+            border:none;
+
+            border-radius:24px;
+
+            overflow:hidden;
+
+            box-shadow:0 15px 40px rgba(0,0,0,.08);
+        }
+
+        .header-custom{
+
+            background:linear-gradient(
+                135deg,
+                #f59e0b,
+                #facc15
+            );
+
+            color:#0f172a;
+
+            padding:25px;
+        }
+
+        .header-custom h2{
+
+            margin:0;
+
+            font-weight:700;
+        }
+
+        .tarjeta{
+
+            background:white;
+
+            border:none;
+
+            border-radius:20px;
+
+            padding:18px;
+
+            box-shadow:0 8px 25px rgba(0,0,0,.06);
+
+            height:100%;
+        }
+
+        .titulo-tarjeta{
+
+            font-size:20px;
+
+            font-weight:700;
+
+            margin-bottom:15px;
+        }
+
+        .form-control{
+
+            border-radius:12px;
+
+            min-height:40px;
+        }
+
+        .form-control:focus{
+
+            box-shadow:none;
+
+            border-color:#2563eb;
+        }
+
+        .btn{
+
+            border-radius:12px;
+        }
+
+        .badge-seccion{
+
+            font-size:14px;
+
+            padding:8px 12px;
+
+            border-radius:10px;
+        }
+
+        .footer-actions{
+
+            border-top:1px solid #e5e7eb;
+
+            margin-top:30px;
+
+            padding-top:25px;
+        }
+
+    </style>
+
 </head>
 
-<body class="bg-light">
+<body>
 
-<div class="container mt-4 mb-5">
+<div class="container py-4">
 
-    <div class="card shadow">
+    <div class="card card-principal">
 
-        <div class="card-header bg-warning">
+        <!-- HEADER -->
+        <div class="header-custom">
 
-            <h3 class="mb-0">
+            <h2>
 
                 <i class="bi bi-cash-coin"></i>
 
                 Configuración de Tarifas
 
-            </h3>
+            </h2>
+
+            <small>
+
+                Administre los valores de cobro del parqueadero
+
+            </small>
 
         </div>
 
-        <div class="card-body">
+        <div class="card-body p-4">
 
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -54,6 +164,8 @@
                     {% for category, message in messages %}
 
                         <div class="alert alert-success">
+
+                            <i class="bi bi-check-circle-fill"></i>
 
                             {{ message }}
 
@@ -66,167 +178,266 @@
 
             <form method="POST">
 
-                <div class="row">
+                <div class="row g-4">
 
-                    <!-- MOTO -->
-                    <div class="col-md-6">
+                    <!-- TARIFA HORA -->
+                    <div class="col-lg-6">
 
-                        <h4 class="mb-3">
+                        <div class="tarjeta">
 
-                            Moto
+                            <div class="titulo-tarjeta text-primary">
 
-                        </h4>
+                                <i class="bi bi-clock-history"></i>
 
-                        <div class="mb-3">
+                                Tarifas por Hora
 
-                            <label class="form-label">
+                            </div>
 
-                                Valor Hora
+                            <div class="mb-3">
 
-                            </label>
+                                <label class="form-label">
 
-                            <input
-                                type="number"
-                                name="hora_moto"
-                                class="form-control"
-                                value="{{ tarifas.hora_moto }}"
-                                required
-                            >
+                                    Moto
 
-                        </div>
+                                </label>
 
-                        <div class="mb-3">
+                                <input
+                                    type="text"
+                                    min="0"
+                                    step="1"
+                                    name="hora_moto"
+                                    class="form-control moneda"
+                                    value="{{ tarifas.hora_moto }}"
+                                    required
+                                >
 
-                            <label class="form-label">
+                            </div>
 
-                                Tarifa Día
+                            <div>
 
-                            </label>
+                                <label class="form-label">
 
-                            <input
-                                type="number"
-                                name="dia_moto"
-                                class="form-control"
-                                value="{{ tarifas.dia_moto }}"
-                                required
-                            >
+                                    Carro
 
-                        </div>
+                                </label>
 
-                        <div class="mb-3">
+                                <input
+                                    type="text"
+                                    min="0"
+                                    step="1"
+                                    name="hora_carro"
+                                    class="form-control moneda"
+                                    value="{{ tarifas.hora_carro }}"
+                                    required
+                                >
 
-                            <label class="form-label">
-
-                                Tarifa Noche
-
-                            </label>
-
-                            <input
-                                type="number"
-                                name="noche_moto"
-                                class="form-control"
-                                value="{{ tarifas.noche_moto }}"
-                                required
-                            >
-
-                        </div>
-
-                        <div class="mb-3">
-
-                            <label class="form-label">
-
-                                Mensualidad
-
-                            </label>
-
-                            <input
-                                type="number"
-                                name="mensualidad_moto"
-                                class="form-control"
-                                value="{{ tarifas.mensualidad_moto }}"
-                                required
-                            >
+                            </div>
 
                         </div>
 
                     </div>
 
-                    <!-- CARRO -->
-                    <div class="col-md-6">
+                    <!-- TARIFA DIA -->
+                    <div class="col-lg-6">
 
-                        <h4 class="mb-3">
+                        <div class="tarjeta">
 
-                            Carro
+                            <div class="titulo-tarjeta text-success">
 
-                        </h4>
+                                <i class="bi bi-sun"></i>
 
-                        <div class="mb-3">
+                                Tarifas por Día
 
-                            <label class="form-label">
+                            </div>
 
-                                Valor Hora
+                            <div class="mb-3">
 
-                            </label>
+                                <label class="form-label">
 
-                            <input
-                                type="number"
-                                name="hora_carro"
-                                class="form-control"
-                                value="{{ tarifas.hora_carro }}"
-                                required
-                            >
+                                    Moto
 
-                        </div>
+                                </label>
 
-                        <div class="mb-3">
+                                <input
+                                    type="text"
+                                    min="0"
+                                    step="1"
+                                    name="dia_moto"
+                                    class="form-control moneda"
+                                    value="{{ tarifas.dia_moto }}"
+                                    required
+                                >
 
-                            <label class="form-label">
+                            </div>
 
-                                Tarifa Día
+                            <div>
 
-                            </label>
+                                <label class="form-label">
 
-                            <input
-                                type="number"
-                                name="dia_carro"
-                                class="form-control"
-                                value="{{ tarifas.dia_carro }}"
-                                required
-                            >
+                                    Carro
 
-                        </div>
+                                </label>
 
-                        <div class="mb-3">
+                                <input
+                                    type="text"
+                                    min="0"
+                                    step="1"
+                                    name="dia_carro"
+                                    class="form-control moneda"
+                                    value="{{ tarifas.dia_carro }}"
+                                    required
+                                >
 
-                            <label class="form-label">
-
-                                Tarifa Noche
-
-                            </label>
-
-                            <input
-                                type="number"
-                                name="noche_carro"
-                                class="form-control"
-                                value="{{ tarifas.noche_carro }}"
-                                required
-                            >
+                            </div>
 
                         </div>
 
-                        <div class="mb-3">
+                    </div>
+
+                    <!-- TARIFA NOCHE -->
+                    <div class="col-lg-6">
+
+                        <div class="tarjeta">
+
+                            <div class="titulo-tarjeta text-dark">
+
+                                <i class="bi bi-moon-stars"></i>
+
+                                Tarifas Nocturnas
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Moto
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    min="0"
+                                    step="1"
+                                    name="noche_moto"
+                                    class="form-control moneda"
+                                    value="{{ tarifas.noche_moto }}"
+                                    required
+                                >
+
+                            </div>
+
+                            <div>
+
+                                <label class="form-label">
+
+                                    Carro
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    min="0"
+                                    step="1"
+                                    name="noche_carro"
+                                    class="form-control moneda"
+                                    value="{{ tarifas.noche_carro }}"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- MENSUALIDADES -->
+                    <div class="col-lg-6">
+
+                        <div class="tarjeta">
+
+                            <div class="titulo-tarjeta text-danger">
+
+                                <i class="bi bi-calendar-check"></i>
+
+                                Mensualidades
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label class="form-label">
+
+                                    Moto
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    min="0"
+                                    step="1"
+                                    name="mensualidad_moto"
+                                    class="form-control moneda"
+                                    value="{{ tarifas.mensualidad_moto }}"
+                                    required
+                                >
+
+                            </div>
+
+                            <div>
+
+                                <label class="form-label">
+
+                                    Carro
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    min="0"
+                                    step="1"
+                                    name="mensualidad_carro"
+                                    class="form-control moneda"
+                                    value="{{ tarifas.mensualidad_carro }}"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CONFIG GENERAL -->
+                <div class="tarjeta mt-4">
+
+                    <div class="titulo-tarjeta text-secondary">
+
+                        <i class="bi bi-gear-fill"></i>
+
+                        Configuración General
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
 
                             <label class="form-label">
 
-                                Mensualidad
+                                Minutos de gracia
 
                             </label>
 
                             <input
                                 type="number"
-                                name="mensualidad_carro"
+                                min="0"
+                                step="1"
+                                name="minutos_gracia"
                                 class="form-control"
-                                value="{{ tarifas.mensualidad_carro }}"
+                                value="{{ tarifas.minutos_gracia }}"
                                 required
                             >
 
@@ -236,53 +447,34 @@
 
                 </div>
 
-                <hr>
+                <!-- BOTONES -->
+                <div class="footer-actions">
 
-                <div class="row">
+                    <div class="d-flex gap-2 flex-wrap">
 
-                    <div class="col-md-4">
-
-                        <label class="form-label">
-
-                            Minutos de gracia
-
-                        </label>
-
-                        <input
-                            type="number"
-                            name="minutos_gracia"
-                            class="form-control"
-                            value="{{ tarifas.minutos_gracia }}"
-                            required
+                        <button
+                            type="submit"
+                            class="btn btn-success btn-lg"
                         >
 
+                            <i class="bi bi-save"></i>
+
+                            Guardar Cambios
+
+                        </button>
+
+                        <a
+                            href="/dashboard/parqueadero"
+                            class="btn btn-secondary btn-lg"
+                        >
+
+                            <i class="bi bi-arrow-left"></i>
+
+                            Volver
+
+                        </a>
+
                     </div>
-
-                </div>
-
-                <hr>
-
-                <div class="d-flex gap-2">
-
-                    <button
-                        type="submit"
-                        class="btn btn-success"
-                    >
-
-                        <i class="bi bi-save"></i>
-
-                        Guardar Cambios
-
-                    </button>
-
-                    <a
-                        href="/dashboard/parqueadero"
-                        class="btn btn-secondary"
-                    >
-
-                        Volver
-
-                    </a>
 
                 </div>
 
@@ -293,6 +485,85 @@
     </div>
 
 </div>
+
+<script>
+
+document
+.querySelectorAll(
+    'input[type="number"]'
+)
+.forEach(input => {
+
+    input.addEventListener(
+        "input",
+        function(){
+
+            if(
+                this.value < 0
+            ){
+                this.value = 0;
+            }
+        }
+    );
+});
+
+</script>
+
+<script>
+
+document
+.querySelectorAll(".moneda")
+.forEach(input => {
+
+    function formatear(){
+
+        let valor = this.value
+            .replace(/\D/g,'');
+
+        if(!valor){
+
+            this.value = '';
+
+            return;
+        }
+
+        this.value =
+            Number(valor)
+            .toLocaleString(
+                'es-CO'
+            );
+    }
+
+    input.addEventListener(
+        'input',
+        formatear
+    );
+
+    formatear.call(input);
+});
+
+document.querySelector(
+    'form'
+).addEventListener(
+    'submit',
+    function(){
+
+        document
+        .querySelectorAll(
+            '.moneda'
+        )
+        .forEach(input => {
+
+            input.value =
+                input.value.replace(
+                    /\./g,
+                    ''
+                );
+        });
+    }
+);
+
+</script>
 
 </body>
 

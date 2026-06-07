@@ -12,6 +12,10 @@ from app.services.mensualidades_service import (
     buscar_mensualidad_activa
 )
 
+from app.services.mensualidades_service import (
+    actualizar_mensualidades_vencidas
+)
+
 from flask_login import (
     login_required
 )
@@ -187,3 +191,20 @@ def consultar_mensualidad(
         "mensualidad": mensualidad is not None
 
     })
+
+@mensualidades_bp.route(
+    "/mensualidades"
+)
+@login_required
+def mensualidades():
+
+    actualizar_mensualidades_vencidas()
+
+    registros = listar_mensualidades()
+
+    return render_template(
+
+        "mensualidades.html",
+
+        registros=registros
+    )
