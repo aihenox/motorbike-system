@@ -6,6 +6,10 @@ from app.utils.date_utils import (
     parsear_fecha
 )
 
+from app.services.tarifas_service import (
+    obtener_tarifa_activa
+)
+
 
 # ==========================================
 # CALCULAR VALOR PARQUEADERO
@@ -21,9 +25,6 @@ def calcular_valor(
         )
     )
 
-    # ==========================================
-    # HORA ACTUAL COLOMBIA
-    # ==========================================
     ahora = datetime.now(
         ZoneInfo("America/Bogota")
     )
@@ -41,33 +42,41 @@ def calcular_valor(
     minutos = total_minutos % 60
 
     # ==========================================
-    # REGLA COBRO
-    # SOLO COBRA SIGUIENTE HORA
-    # SI SUPERA 10 MINUTOS
+    # CONFIGURACION
     # ==========================================
+    tarifas = obtener_tarifa_activa()
+
+    minutos_gracia = tarifas.get(
+        "minutos_gracia",
+        10
+    )
+
     horas_cobro = horas
 
-    if minutos >= 10:
+    if minutos >= minutos_gracia:
 
         horas_cobro += 1
 
-    # ==========================================
-    # MÍNIMO 1 HORA
-    # ==========================================
     if horas_cobro <= 0:
 
         horas_cobro = 1
 
     # ==========================================
-    # TARIFAS
+    # TARIFA SEGUN VEHICULO
     # ==========================================
     if tipo == "Moto":
 
-        tarifa = 1500
+        tarifa = tarifas.get(
+            "hora_moto",
+            1500
+        )
 
     else:
 
-        tarifa = 3000
+        tarifa = tarifas.get(
+            "hora_carro",
+            3000
+        )
 
     total = horas_cobro * tarifa
 

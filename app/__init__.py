@@ -97,6 +97,8 @@ def create_app():
 
     from app.routes.recibos import recibos_bp
 
+    from app.routes.tarifas import tarifas_bp
+
     # ==========================================
     # REGISTRAR BLUEPRINTS
     # ==========================================
@@ -113,6 +115,7 @@ def create_app():
         parqueadero_bp,
         cierre_bp,
         recibos_bp,
+        tarifas_bp,
     ]
 
     for blueprint in blueprints:
