@@ -21,6 +21,9 @@ from app.utils.validators import (
     validar_tipo_vehiculo
 )
 
+from app.services.mensualidades_service import (
+    buscar_mensualidad_activa
+)
 
 # ==========================================
 # FECHA ACTUAL COLOMBIA
@@ -55,6 +58,17 @@ def registrar_ingreso(
     tipo = validar_tipo_vehiculo(
         tipo
     )
+
+    # ==========================================
+    # DETECTAR MENSUALIDAD
+    # ==========================================
+    mensualidad = buscar_mensualidad_activa(
+        placa
+    )
+
+    if mensualidad:
+
+        modalidad = "Mensualidad"
 
     if placa_activa_db(placa):
 

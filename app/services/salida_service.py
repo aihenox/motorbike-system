@@ -51,10 +51,13 @@ def procesar_salida(ticket):
     # ==========================================
     # CALCULAR VALOR SEGUN MODALIDAD
     # ==========================================
-    modalidad = data.get(
-        "modalidad",
-        "Hora"
-    )
+    try:
+
+        modalidad = data["modalidad"]
+
+    except Exception:
+
+        modalidad = "Hora"
 
     tarifas = obtener_tarifa_activa()
 

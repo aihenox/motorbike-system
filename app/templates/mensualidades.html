@@ -130,23 +130,28 @@
 
                             <td>
 
-                                <button
+                                <a
+                                    href="/mensualidades/editar/{{ item.id }}"
                                     class="btn btn-sm btn-warning"
-                                    disabled
                                 >
+
+                                    <i class="bi bi-pencil"></i>
 
                                     Editar
 
-                                </button>
+                                </a>
 
-                                <button
+                                <a
+                                    href="/mensualidades/eliminar/{{ item.id }}"
                                     class="btn btn-sm btn-danger"
-                                    disabled
+                                    onclick="return confirm('¿Desea eliminar esta mensualidad?')"
                                 >
+
+                                    <i class="bi bi-trash"></i>
 
                                     Eliminar
 
-                                </button>
+                                </a>
 
                             </td>
 

@@ -7,7 +7,15 @@
 
     <title>
 
-        Nueva Mensualidad
+        {% if mensualidad %}
+
+            Editar Mensualidad
+
+        {% else %}
+
+            Nueva Mensualidad
+
+        {% endif %}
 
     </title>
 
@@ -28,7 +36,15 @@
 
             <h3>
 
-                Nueva Mensualidad
+                {% if mensualidad %}
+
+                    Editar Mensualidad
+
+                {% else %}
+
+                    Nueva Mensualidad
+
+                {% endif %}
 
             </h3>
 
@@ -58,6 +74,7 @@
                             required
                             maxlength="10"
                             style="text-transform:uppercase"
+                            value="{{ mensualidad.placa if mensualidad else '' }}"
                         >
 
                     </div>
@@ -78,16 +95,22 @@
                             class="form-select"
                         >
 
-                            <option value="Moto">
-
+                            <option
+                                value="Moto"
+                                {% if mensualidad and mensualidad.tipo == "Moto" %}
+                                    selected
+                                {% endif %}
+                            >
                                 Moto
-
                             </option>
 
-                            <option value="Carro">
-
+                            <option
+                                value="Carro"
+                                {% if mensualidad and mensualidad.tipo == "Carro" %}
+                                    selected
+                                {% endif %}
+                            >
                                 Carro
-
                             </option>
 
                         </select>
@@ -113,6 +136,7 @@
                             type="text"
                             name="propietario"
                             class="form-control"
+                            value="{{ mensualidad.propietario if mensualidad else '' }}"
                         >
 
                     </div>
@@ -132,6 +156,7 @@
                             type="text"
                             name="telefono"
                             class="form-control"
+                            value="{{ mensualidad.telefono if mensualidad else '' }}"
                         >
 
                     </div>
@@ -155,6 +180,7 @@
                             type="date"
                             name="fecha_inicio"
                             class="form-control"
+                            value="{{ mensualidad.fecha_inicio if mensualidad else '' }}"
                         >
 
                     </div>
@@ -174,6 +200,7 @@
                             type="date"
                             name="fecha_fin"
                             class="form-control"
+                            value="{{ mensualidad.fecha_fin if mensualidad else '' }}"
                         >
 
                     </div>
@@ -196,16 +223,22 @@
                         class="form-select"
                     >
 
-                        <option value="Activa">
-
+                        <option
+                            value="Activa"
+                            {% if mensualidad and mensualidad.estado == "Activa" %}
+                                selected
+                            {% endif %}
+                        >
                             Activa
-
                         </option>
 
-                        <option value="Inactiva">
-
+                        <option
+                            value="Inactiva"
+                            {% if mensualidad and mensualidad.estado == "Inactiva" %}
+                                selected
+                            {% endif %}
+                        >
                             Inactiva
-
                         </option>
 
                     </select>
@@ -222,7 +255,15 @@
 
                         <i class="bi bi-save"></i>
 
-                        Guardar
+                        {% if mensualidad %}
+
+                            Actualizar
+
+                        {% else %}
+
+                            Guardar
+
+                        {% endif %}
 
                     </button>
 

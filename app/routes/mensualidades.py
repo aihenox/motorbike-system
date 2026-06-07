@@ -13,7 +13,10 @@ from flask_login import (
 
 from app.services.mensualidades_service import (
     listar_mensualidades,
-    crear_mensualidad
+    crear_mensualidad,
+    obtener_mensualidad,
+    actualizar_mensualidad,
+    eliminar_mensualidad
 )
 
 
@@ -82,4 +85,79 @@ def nueva_mensualidad():
 
     return render_template(
         "mensualidad_form.html"
+    )
+
+# ==========================================
+# EDITAR MENSUALIDAD
+# ==========================================
+@mensualidades_bp.route(
+    "/mensualidades/editar/<int:id>",
+    methods=["GET", "POST"]
+)
+@login_required
+def editar_mensualidad(id):
+
+    mensualidad = obtener_mensualidad(
+        id
+    )
+
+    if request.method == "POST":
+
+        actualizar_mensualidad(
+
+            id,
+
+            request.form["placa"],
+
+            request.form["tipo"],
+
+            request.form["propietario"],
+
+            request.form["telefono"],
+
+            request.form["fecha_inicio"],
+
+            request.form["fecha_fin"],
+
+            request.form["estado"]
+        )
+
+        flash(
+            "Mensualidad actualizada correctamente"
+        )
+
+        return redirect(
+            url_for(
+                "mensualidades.mensualidades"
+            )
+        )
+
+    return render_template(
+
+        "mensualidad_form.html",
+
+        mensualidad=mensualidad
+    )
+
+# ==========================================
+# ELIMINAR MENSUALIDAD
+# ==========================================
+@mensualidades_bp.route(
+    "/mensualidades/eliminar/<int:id>"
+)
+@login_required
+def eliminar_mensualidad_route(id):
+
+    eliminar_mensualidad(
+        id
+    )
+
+    flash(
+        "Mensualidad eliminada correctamente"
+    )
+
+    return redirect(
+        url_for(
+            "mensualidades.mensualidades"
+        )
     )

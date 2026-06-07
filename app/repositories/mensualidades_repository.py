@@ -134,3 +134,227 @@ def crear_mensualidad_db(
             ))
 
         conn.commit()
+
+# ==========================================
+# OBTENER MENSUALIDAD
+# ==========================================
+def obtener_mensualidad_db(id):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT *
+
+                FROM mensualidades
+
+                WHERE id = %s
+
+            """, (
+                id,
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT *
+
+                FROM mensualidades
+
+                WHERE id = ?
+
+            """, (
+                id,
+            ))
+
+        return c.fetchone()
+
+
+# ==========================================
+# ACTUALIZAR MENSUALIDAD
+# ==========================================
+def actualizar_mensualidad_db(
+
+    id,
+
+    placa,
+
+    tipo,
+
+    propietario,
+
+    telefono,
+
+    fecha_inicio,
+
+    fecha_fin,
+
+    estado
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                UPDATE mensualidades
+
+                SET
+
+                    placa = %s,
+                    tipo = %s,
+                    propietario = %s,
+                    telefono = %s,
+                    fecha_inicio = %s,
+                    fecha_fin = %s,
+                    estado = %s
+
+                WHERE id = %s
+
+            """, (
+
+                placa.upper(),
+
+                tipo,
+
+                propietario,
+
+                telefono,
+
+                fecha_inicio,
+
+                fecha_fin,
+
+                estado,
+
+                id
+            ))
+
+        else:
+
+            c.execute("""
+
+                UPDATE mensualidades
+
+                SET
+
+                    placa = ?,
+                    tipo = ?,
+                    propietario = ?,
+                    telefono = ?,
+                    fecha_inicio = ?,
+                    fecha_fin = ?,
+                    estado = ?
+
+                WHERE id = ?
+
+            """, (
+
+                placa.upper(),
+
+                tipo,
+
+                propietario,
+
+                telefono,
+
+                fecha_inicio,
+
+                fecha_fin,
+
+                estado,
+
+                id
+            ))
+
+        conn.commit()
+
+# ==========================================
+# ELIMINAR MENSUALIDAD
+# ==========================================
+def eliminar_mensualidad_db(id):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                DELETE FROM mensualidades
+
+                WHERE id = %s
+
+            """, (
+                id,
+            ))
+
+        else:
+
+            c.execute("""
+
+                DELETE FROM mensualidades
+
+                WHERE id = ?
+
+            """, (
+                id,
+            ))
+
+        conn.commit()
+
+# ==========================================
+# BUSCAR MENSUALIDAD ACTIVA
+# ==========================================
+def buscar_mensualidad_activa_db(
+    placa
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT *
+
+                FROM mensualidades
+
+                WHERE placa = %s
+                AND estado = 'Activa'
+
+                LIMIT 1
+
+            """, (
+                placa.upper(),
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT *
+
+                FROM mensualidades
+
+                WHERE placa = ?
+                AND estado = 'Activa'
+
+                LIMIT 1
+
+            """, (
+                placa.upper(),
+            ))
+
+        return c.fetchone()
