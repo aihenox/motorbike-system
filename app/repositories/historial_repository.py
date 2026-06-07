@@ -26,6 +26,8 @@ def convertir_row_historial(row):
 
             "tipo": row["tipo"],
 
+            "modalidad": row["modalidad"],
+
             "hora_ingreso": row["hora_ingreso"],
 
             "hora_salida": row["hora_salida"],
@@ -43,16 +45,16 @@ def convertir_row_historial(row):
 
         "tipo": row[2],
 
-        "hora_ingreso": row[3],
+        "modalidad": row[3],
 
-        "hora_salida": row[4],
+        "hora_ingreso": row[4],
 
-        "valor": row[5],
+        "hora_salida": row[5],
 
-        "estado": row[6]
+        "valor": row[6],
+
+        "estado": row[7]
     }
-
-
 # ==========================================
 # OBTENER HISTORIAL
 # ==========================================
@@ -69,6 +71,7 @@ def obtener_historial_db():
                 id,
                 placa,
                 tipo,
+                modalidad,
                 hora_ingreso,
                 hora_salida,
                 valor,
@@ -116,6 +119,7 @@ def buscar_por_placa_db(
                     id,
                     placa,
                     tipo,
+                    modalidad,
                     hora_ingreso,
                     hora_salida,
                     valor,
@@ -143,6 +147,7 @@ def buscar_por_placa_db(
                     id,
                     placa,
                     tipo,
+                    modalidad,
                     hora_ingreso,
                     hora_salida,
                     valor,

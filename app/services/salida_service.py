@@ -3,6 +3,10 @@ from app.repositories.ingreso_repository import (
     cerrar_ticket_db
 )
 
+from app.services.tarifas_service import (
+    obtener_tarifa_activa
+)
+
 from app.utils.calculos import (
     calcular_valor
 )
@@ -43,16 +47,59 @@ def procesar_salida(ticket):
         )
     )
 
-    # ==========================================
-    # CALCULAR VALOR
-    # ==========================================
-    valor, hora_salida = calcular_valor(
 
-        tipo,
-
-        ingreso_dt.isoformat()
+    # ==========================================
+    # CALCULAR VALOR SEGUN MODALIDAD
+    # ==========================================
+    modalidad = data.get(
+        "modalidad",
+        "Hora"
     )
 
+    tarifas = obtener_tarifa_activa()
+
+    if modalidad == "Hora":
+
+        valor, hora_salida = calcular_valor(
+
+            tipo,
+
+            ingreso_dt.isoformat()
+        )
+
+    else:
+
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+
+        hora_salida = datetime.now(
+            ZoneInfo("America/Bogota")
+        )
+
+        if modalidad == "Dia":
+
+            if tipo == "Moto":
+
+                valor = tarifas["dia_moto"]
+
+            else:
+
+                valor = tarifas["dia_carro"]
+
+        elif modalidad == "Noche":
+
+            if tipo == "Moto":
+
+                valor = tarifas["noche_moto"]
+
+            else:
+
+                valor = tarifas["noche_carro"]
+
+        else:
+
+            valor = 0
+            
     # ==========================================
     # ASEGURAR TZ EN SALIDA
     # ==========================================

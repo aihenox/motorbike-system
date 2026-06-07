@@ -478,26 +478,30 @@
                             </th>
 
                             <th onclick="ordenarTabla(3)">
+                                Modalidad ↕
+                            </th>
+
+                            <th onclick="ordenarTabla(3)">
                                 Placa ↕
                             </th>
 
-                            <th onclick="ordenarTabla(4)">
+                            <th onclick="ordenarTabla(5)">
                                 Entrada ↕
                             </th>
 
-                            <th onclick="ordenarTabla(5)">
+                            <th onclick="ordenarTabla(6)">
                                 Salida ↕
                             </th>
 
-                            <th onclick="ordenarTabla(6)">
+                            <th onclick="ordenarTabla(7)">
                                 Tiempo ↕
                             </th>
 
-                            <th onclick="ordenarTabla(7)">
+                            <th onclick="ordenarTabla(8)">
                                 Total ↕
                             </th>
 
-                            <th onclick="ordenarTabla(8)">
+                            <th onclick="ordenarTabla(9)">
                                 Estado ↕
                             </th>
 
@@ -548,6 +552,45 @@
                                 {% endif %}
 
                             </td>
+                            
+                            <td>
+
+                                {% if item.modalidad == "Hora" %}
+
+                                    <span class="badge bg-primary">
+
+                                        Hora
+
+                                    </span>
+
+                                {% elif item.modalidad == "Dia" %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Día
+
+                                    </span>
+
+                                {% elif item.modalidad == "Noche" %}
+
+                                    <span class="badge bg-dark">
+
+                                        Noche
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+
+                                        {{ item.modalidad }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
 
                             <td class="fw-bold">
 
