@@ -99,6 +99,8 @@ def create_app():
 
     from app.routes.tarifas import tarifas_bp
 
+    from app.routes.mensualidades import mensualidades_bp
+
     # ==========================================
     # REGISTRAR BLUEPRINTS
     # ==========================================
@@ -116,6 +118,7 @@ def create_app():
         cierre_bp,
         recibos_bp,
         tarifas_bp,
+        mensualidades_bp
     ]
 
     for blueprint in blueprints:
