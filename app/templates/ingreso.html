@@ -315,6 +315,19 @@
 
                         </div>
 
+                        <div
+                            id="alertaMensualidad"
+                            class="alert alert-success d-none"
+                        >
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Mensualidad activa detectada.
+                            El ingreso será registrado automáticamente
+                            como mensualidad.
+
+                        </div>
+                    
                         <!-- MODALIDAD -->
                         <div class="mb-4">
 
@@ -323,6 +336,7 @@
                             </label>
 
                             <select
+                                id="modalidad"
                                 name="modalidad"
                                 class="form-select"
                             >
@@ -687,6 +701,78 @@ form.addEventListener(
 
 </script>
     <script src="/static/js/tickets.js"></script>
+
+<script>
+
+const modalidadSelect =
+    document.getElementById(
+        "modalidad"
+    );
+
+const alertaMensualidad =
+    document.getElementById(
+        "alertaMensualidad"
+    );
+
+placaInput.addEventListener(
+    "blur",
+    async function(){
+
+        const placa =
+            placaInput.value.trim();
+
+        if(!placa){
+
+            alertaMensualidad.classList.add(
+                "d-none"
+            );
+
+            modalidadSelect.disabled =
+                false;
+
+            return;
+        }
+
+        try{
+
+            const response =
+                await fetch(
+                    `/api/mensualidad/${placa}`
+                );
+
+            const data =
+                await response.json();
+
+            if(data.mensualidad){
+
+                alertaMensualidad.classList.remove(
+                    "d-none"
+                );
+
+                modalidadSelect.disabled =
+                    true;
+
+            }else{
+
+                alertaMensualidad.classList.add(
+                    "d-none"
+                );
+
+                modalidadSelect.disabled =
+                    false;
+            }
+
+        }catch(error){
+
+            console.error(
+                error
+            );
+        }
+    }
+);
+
+</script>
+
 </body>
 
 </html>

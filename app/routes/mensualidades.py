@@ -7,6 +7,11 @@ from flask import (
     flash
 )
 
+from flask import jsonify
+from app.services.mensualidades_service import (
+    buscar_mensualidad_activa
+)
+
 from flask_login import (
     login_required
 )
@@ -161,3 +166,24 @@ def eliminar_mensualidad_route(id):
             "mensualidades.mensualidades"
         )
     )
+
+# ==========================================
+# CONSULTAR MENSUALIDAD AJAX
+# ==========================================
+@mensualidades_bp.route(
+    "/api/mensualidad/<placa>"
+)
+@login_required
+def consultar_mensualidad(
+    placa
+):
+
+    mensualidad = buscar_mensualidad_activa(
+        placa
+    )
+
+    return jsonify({
+
+        "mensualidad": mensualidad is not None
+
+    })
