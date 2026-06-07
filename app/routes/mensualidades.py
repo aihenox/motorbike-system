@@ -192,19 +192,3 @@ def consultar_mensualidad(
 
     })
 
-@mensualidades_bp.route(
-    "/mensualidades"
-)
-@login_required
-def mensualidades():
-
-    actualizar_mensualidades_vencidas()
-
-    registros = listar_mensualidades()
-
-    return render_template(
-
-        "mensualidades.html",
-
-        registros=registros
-    )
