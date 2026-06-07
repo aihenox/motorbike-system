@@ -266,6 +266,10 @@ def crear_tabla_mensualidades(
 # ==========================================
 def actualizar_tabla_ingresos(c):
 
+    postgres = os.getenv(
+        "DATABASE_URL"
+    )
+
     columnas = [
 
         (
@@ -286,18 +290,46 @@ def actualizar_tabla_ingresos(c):
 
     for nombre, tipo in columnas:
 
-        try:
+        if postgres:
 
-            c.execute(
-                f"""
-                ALTER TABLE ingresos
-                ADD COLUMN {nombre} {tipo}
-                """
-            )
+            c.execute("""
 
-        except Exception:
+                SELECT column_name
 
-            pass
+                FROM information_schema.columns
+
+                WHERE table_name = 'ingresos'
+                AND column_name = %s
+
+            """, (
+                nombre,
+            ))
+
+            existe = c.fetchone()
+
+            if not existe:
+
+                c.execute(
+                    f"""
+                    ALTER TABLE ingresos
+                    ADD COLUMN {nombre} {tipo}
+                    """
+                )
+
+        else:
+
+            try:
+
+                c.execute(
+                    f"""
+                    ALTER TABLE ingresos
+                    ADD COLUMN {nombre} {tipo}
+                    """
+                )
+
+            except Exception:
+
+                pass
 
 
 # ==========================================
