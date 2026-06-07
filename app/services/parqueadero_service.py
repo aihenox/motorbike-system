@@ -6,7 +6,8 @@ from zoneinfo import ZoneInfo
 
 from app.repositories.ingreso_repository import (
     placa_activa_db,
-    insertar_ingreso_db
+    insertar_ingreso_db,
+    puesto_casco_ocupado_db
 )
 
 from app.repositories.activos_repository import (
@@ -41,7 +42,10 @@ def obtener_fecha_actual():
 # ==========================================
 def registrar_ingreso(
     placa,
-    tipo
+    tipo,
+    modalidad="Hora",
+    puesto_casco=None,
+    cantidad_cascos=0
 ):
 
     placa = validar_placa(
@@ -59,6 +63,24 @@ def registrar_ingreso(
             "message": "Vehículo ya está dentro"
         }
 
+    # ==========================================
+    # VALIDAR PUESTO CASCO
+    # ==========================================
+    if puesto_casco:
+
+        if puesto_casco_ocupado_db(
+            puesto_casco
+        ):
+
+            return {
+                "success": False,
+                "message": (
+                    f"El puesto de casco "
+                    f"{puesto_casco} "
+                    f"ya está ocupado"
+                )
+            }
+
     hora_actual = obtener_fecha_actual()
 
     ticket = insertar_ingreso_db(
@@ -67,7 +89,13 @@ def registrar_ingreso(
 
         tipo,
 
-        hora_actual.isoformat()
+        hora_actual.isoformat(),
+
+        modalidad,
+
+        puesto_casco,
+
+        cantidad_cascos
     )
 
     return {
@@ -79,6 +107,12 @@ def registrar_ingreso(
         "placa": placa,
 
         "tipo": tipo,
+
+        "modalidad": modalidad,
+
+        "puesto_casco": puesto_casco,
+
+        "cantidad_cascos": cantidad_cascos,
 
         "hora": hora_actual.strftime(
             "%d/%m/%Y %I:%M %p"

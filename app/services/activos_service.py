@@ -76,6 +76,12 @@ def listar_activos():
 
             "tipo": item["tipo"],
 
+            "modalidad": item["modalidad"],
+
+            "puesto_casco": item["puesto_casco"],
+
+            "cantidad_cascos": item["cantidad_cascos"],
+
             "fecha": hora_ingreso.strftime(
                 "%d/%m/%Y"
             ),
@@ -86,5 +92,5 @@ def listar_activos():
 
             "tiempo": tiempo
         })
-
+        
     return activos

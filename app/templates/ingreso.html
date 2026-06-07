@@ -274,9 +274,7 @@
                         <div class="mb-4">
 
                             <label class="form-label">
-
                                 Placa
-
                             </label>
 
                             <input
@@ -297,9 +295,7 @@
                         <div class="mb-4">
 
                             <label class="form-label">
-
                                 Tipo Vehículo
-
                             </label>
 
                             <select
@@ -308,15 +304,110 @@
                             >
 
                                 <option value="Moto">
-
                                     Moto
-
                                 </option>
 
                                 <option value="Carro">
-
                                     Carro
+                                </option>
 
+                            </select>
+
+                        </div>
+
+                        <!-- MODALIDAD -->
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Modalidad de Cobro
+                            </label>
+
+                            <select
+                                name="modalidad"
+                                class="form-select"
+                            >
+
+                                <option value="Hora">
+                                    Hora / Fracción
+                                </option>
+
+                                <option value="Dia">
+                                    Tarifa Día
+                                </option>
+
+                                <option value="Noche">
+                                    Tarifa Noche
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- PUESTO CASCO -->
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Casillero de Cascos
+                            </label>
+
+                            <select
+                                id="puesto_casco"
+                                name="puesto_casco"
+                                class="form-select"
+                            >
+
+                                <option value="">
+                                    No deja casco
+                                </option>
+
+                                <option value="1">Puesto 1</option>
+                                <option value="2">Puesto 2</option>
+                                <option value="3">Puesto 3</option>
+                                <option value="4">Puesto 4</option>
+                                <option value="5">Puesto 5</option>
+                                <option value="6">Puesto 6</option>
+                                <option value="7">Puesto 7</option>
+                                <option value="8">Puesto 8</option>
+                                <option value="9">Puesto 9</option>
+                                <option value="10">Puesto 10</option>
+                                <option value="11">Puesto 11</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- CANTIDAD CASCOS -->
+                        <div class="mb-4">
+
+                            <label class="form-label">
+                                Cantidad de Cascos
+                            </label>
+
+                            <select
+                                id="cantidad_cascos"
+                                name="cantidad_cascos"
+                                class="form-select"
+                                disabled
+                            >
+
+                                <option value="0">
+                                    0
+                                </option>
+
+                                <option value="1">
+                                    1
+                                </option>
+
+                                <option value="2">
+                                    2
+                                </option>
+
+                                <option value="3">
+                                    3
+                                </option>
+
+                                <option value="4">
+                                    4
                                 </option>
 
                             </select>
@@ -428,6 +519,39 @@ const placaInput = document.getElementById(
     "placa"
 );
 
+const puestoCasco = document.getElementById(
+    "puesto_casco"
+);
+
+const cantidadCascos = document.getElementById(
+    "cantidad_cascos"
+);
+
+
+// ==========================================
+// CASCOS
+// ==========================================
+puestoCasco.addEventListener(
+    "change",
+    function(){
+
+        if(this.value){
+
+            cantidadCascos.disabled = false;
+
+            if(cantidadCascos.value === "0"){
+
+                cantidadCascos.value = "1";
+            }
+
+        }else{
+
+            cantidadCascos.disabled = true;
+
+            cantidadCascos.value = "0";
+        }
+    }
+);
 
 // ==========================================
 // VALIDAR PLACA

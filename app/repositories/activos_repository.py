@@ -27,6 +27,9 @@ def obtener_activos_db():
                 id,
                 placa,
                 tipo,
+                modalidad,
+                puesto_casco,
+                cantidad_cascos,
                 hora_ingreso
 
             FROM ingresos
@@ -35,7 +38,7 @@ def obtener_activos_db():
 
             ORDER BY hora_ingreso DESC
 
-        """)
+                    """)
 
         return c.fetchall()
 

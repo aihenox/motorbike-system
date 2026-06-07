@@ -65,9 +65,49 @@ def registrar_ingreso_ajax():
             request.form.get("tipo")
         )
 
+        modalidad = request.form.get(
+            "modalidad",
+            "Hora"
+        )
+
+        puesto_casco = request.form.get(
+            "puesto_casco"
+        )
+
+        cantidad_cascos = request.form.get(
+            "cantidad_cascos",
+            0
+        )
+
+        # ==========================
+        # NORMALIZAR DATOS
+        # ==========================
+        if puesto_casco == "":
+
+            puesto_casco = None
+
+        if cantidad_cascos in (
+            "",
+            None
+        ):
+
+            cantidad_cascos = 0
+
+        cantidad_cascos = int(
+            cantidad_cascos
+        )
+
         resultado = registrar_ingreso(
+
             placa,
-            tipo
+
+            tipo,
+
+            modalidad,
+
+            puesto_casco,
+
+            cantidad_cascos
         )
 
         return jsonify(

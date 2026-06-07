@@ -20,9 +20,6 @@ def placa_activa_db(placa):
 
         c = conn.cursor()
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
         if POSTGRES:
 
             c.execute("""
@@ -38,9 +35,6 @@ def placa_activa_db(placa):
                 placa.upper(),
             ))
 
-        # ==========================================
-        # SQLITE
-        # ==========================================
         else:
 
             c.execute("""
@@ -60,6 +54,54 @@ def placa_activa_db(placa):
 
 
 # ==========================================
+# VALIDAR PUESTO CASCO
+# ==========================================
+def puesto_casco_ocupado_db(
+    puesto
+):
+
+    if not puesto:
+
+        return False
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT 1
+
+                FROM ingresos
+
+                WHERE estado = 'Dentro'
+                AND puesto_casco = %s
+
+            """, (
+                puesto,
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT 1
+
+                FROM ingresos
+
+                WHERE estado = 'Dentro'
+                AND puesto_casco = ?
+
+            """, (
+                puesto,
+            ))
+
+        return c.fetchone() is not None
+
+
+# ==========================================
 # INSERTAR INGRESO
 # ==========================================
 def insertar_ingreso_db(
@@ -68,16 +110,19 @@ def insertar_ingreso_db(
 
     tipo,
 
-    hora
+    hora,
+
+    modalidad="Hora",
+
+    puesto_casco=None,
+
+    cantidad_cascos=0
 ):
 
     with conectar() as conn:
 
         c = conn.cursor()
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
         if POSTGRES:
 
             c.execute("""
@@ -87,11 +132,22 @@ def insertar_ingreso_db(
                     placa,
                     tipo,
                     hora_ingreso,
-                    estado
+                    estado,
+                    modalidad,
+                    puesto_casco,
+                    cantidad_cascos
 
                 )
 
-                VALUES (%s, %s, %s, %s)
+                VALUES (
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s,
+                    %s
+                )
 
                 RETURNING id
 
@@ -100,14 +156,14 @@ def insertar_ingreso_db(
                 placa.upper(),
                 tipo,
                 hora,
-                "Dentro"
+                "Dentro",
+                modalidad,
+                puesto_casco,
+                cantidad_cascos
             ))
 
             ticket_id = c.fetchone()["id"]
 
-        # ==========================================
-        # SQLITE
-        # ==========================================
         else:
 
             c.execute("""
@@ -117,18 +173,24 @@ def insertar_ingreso_db(
                     placa,
                     tipo,
                     hora_ingreso,
-                    estado
+                    estado,
+                    modalidad,
+                    puesto_casco,
+                    cantidad_cascos
 
                 )
 
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
 
             """, (
 
                 placa.upper(),
                 tipo,
                 hora,
-                "Dentro"
+                "Dentro",
+                modalidad,
+                puesto_casco,
+                cantidad_cascos
             ))
 
             ticket_id = c.lastrowid
@@ -147,9 +209,6 @@ def obtener_ticket_activo_db(ticket):
 
         c = conn.cursor()
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
         if POSTGRES:
 
             c.execute("""
@@ -158,6 +217,9 @@ def obtener_ticket_activo_db(ticket):
                     id,
                     placa,
                     tipo,
+                    modalidad,
+                    puesto_casco,
+                    cantidad_cascos,
                     hora_ingreso,
                     hora_salida,
                     valor,
@@ -172,9 +234,6 @@ def obtener_ticket_activo_db(ticket):
                 ticket,
             ))
 
-        # ==========================================
-        # SQLITE
-        # ==========================================
         else:
 
             c.execute("""
@@ -183,6 +242,9 @@ def obtener_ticket_activo_db(ticket):
                     id,
                     placa,
                     tipo,
+                    modalidad,
+                    puesto_casco,
+                    cantidad_cascos,
                     hora_ingreso,
                     hora_salida,
                     valor,
@@ -216,9 +278,6 @@ def cerrar_ticket_db(
 
         c = conn.cursor()
 
-        # ==========================================
-        # POSTGRESQL
-        # ==========================================
         if POSTGRES:
 
             c.execute("""
@@ -239,9 +298,6 @@ def cerrar_ticket_db(
                 ticket
             ))
 
-        # ==========================================
-        # SQLITE
-        # ==========================================
         else:
 
             c.execute("""

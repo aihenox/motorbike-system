@@ -318,6 +318,12 @@
 
                             <th>Tipo</th>
 
+                            <th>Modalidad</th>
+
+                            <th>Casillero</th>
+
+                            <th>Cascos</th>
+
                             <th>Fecha</th>
 
                             <th>Hora</th>
@@ -369,6 +375,36 @@
                                 {% endif %}
 
                             </td>
+
+                            <td>
+
+                            {{ vehiculo.modalidad }}
+
+                        </td>
+
+                        <td>
+
+                            {% if vehiculo.puesto_casco %}
+
+                                <span class="badge bg-primary">
+
+                                    {{ vehiculo.puesto_casco }}
+
+                                </span>
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            {{ vehiculo.cantidad_cascos }}
+
+                        </td>
 
                             <td>
 
