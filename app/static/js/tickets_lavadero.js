@@ -110,17 +110,9 @@ function generarTicketLavadero(data){
 
         <div class="dato">
 
-            <span>
+            <strong>PLACA:</strong>
 
-                PLACA:
-
-            </span>
-
-            <strong>
-
-                ${data.placa}
-
-            </strong>
+            ${data.placa}
 
         </div>
 

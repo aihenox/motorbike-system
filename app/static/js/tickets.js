@@ -147,37 +147,25 @@ function generarTicketIngreso(data){
 
         <div class="dato">
 
-            <span>
-                PLACA:
-            </span>
+            <strong>PLACA:</strong>
 
-            <strong>
-                ${data.placa}
-            </strong>
+            ${data.placa}
 
         </div>
 
         <div class="dato">
 
-            <span>
-                VEHÍCULO:
-            </span>
+            <strong>VEHÍCULO:</strong>
 
-            <strong>
-                ${data.tipo}
-            </strong>
+            ${data.tipo}
 
         </div>
 
         <div class="dato">
 
-            <span>
-                INGRESO:
-            </span>
+            <strong>INGRESO:</strong>
 
-            <strong>
-                ${data.hora}
-            </strong>
+            ${data.hora}
 
         </div>
 
