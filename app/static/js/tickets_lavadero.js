@@ -9,7 +9,7 @@ function abrirTicketLavadero(html){
 
         "ticket_lavado",
 
-        "width=420,height=700"
+        "width=250,height=700"
     );
 
     if(!ventana){

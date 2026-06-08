@@ -74,11 +74,11 @@ function generarEstilosTicket(){
             html,
             body{
 
-                width:58mm;
+                width:48mm;
 
                 margin:0;
 
-                padding:2mm;
+                padding:1mm;
 
                 font-family:'Courier New', monospace;
 
@@ -99,7 +99,7 @@ function generarEstilosTicket(){
 
             .empresa{
 
-                font-size:17px;
+                font-size:13px;
 
                 font-weight:bold;
 
@@ -108,7 +108,7 @@ function generarEstilosTicket(){
 
             .subtitulo{
 
-                font-size:11px;
+                font-size:9px;
 
                 margin-bottom:4px;
             }
@@ -122,7 +122,7 @@ function generarEstilosTicket(){
 
             .telefonos{
 
-                font-size:11px;
+                font-size:9px;
 
                 margin-bottom:10px;
             }
@@ -136,7 +136,7 @@ function generarEstilosTicket(){
 
             .titulo{
 
-                font-size:15px;
+                font-size:13px;
 
                 font-weight:bold;
 
@@ -147,7 +147,7 @@ function generarEstilosTicket(){
 
             .ticket{
 
-                font-size:24px;
+                font-size:20px;
 
                 font-weight:bold;
 
@@ -158,20 +158,23 @@ function generarEstilosTicket(){
 
             .dato{
 
-                display:flex;
+                margin:4px 0;
 
-                justify-content:space-between;
+                font-size:10px;
 
-                gap:10px;
+                word-wrap:break-word;
+            }
 
-                margin:8px 0;
+            .dato span{
 
-                font-size:12px;
+                font-weight:bold;
             }
 
             .dato strong{
 
-                text-align:right;
+                display:block;
+
+                margin-top:1px;
             }
 
             .barcode{
@@ -223,7 +226,7 @@ function generarEstilosTicket(){
 
                 text-align:center;
 
-                font-size:24px;
+                font-size:20px;
 
                 font-weight:bold;
 
