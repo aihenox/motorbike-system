@@ -431,28 +431,49 @@
 </div>
 
 <!-- MODAL REGISTRAR VENTA -->
-
 <div
     class="modal fade"
     id="modalVenta"
     tabindex="-1"
 >
 
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
 
-        <div class="modal-content">
+        <div class="modal-content border-0 shadow-lg">
 
-            <div class="modal-header">
+            <!-- HEADER -->
+            <div
+                class="modal-header text-white"
+                style="
+                    background:linear-gradient(
+                        135deg,
+                        #f59e0b,
+                        #d97706
+                    );
+                "
+            >
 
-                <h5 class="modal-title">
+                <div>
 
-                    Registrar venta
+                    <h4 class="mb-0">
 
-                </h5>
+                        <i class="bi bi-cup-hot-fill"></i>
+
+                        Registrar Venta
+
+                    </h4>
+
+                    <small>
+
+                        Cafetería Espumoso Motorbike
+
+                    </small>
+
+                </div>
 
                 <button
                     type="button"
-                    class="btn-close"
+                    class="btn-close btn-close-white"
                     data-bs-dismiss="modal"
                 ></button>
 
@@ -460,97 +481,199 @@
 
             <form id="formVenta">
 
-                <div id="alertaVenta"></div>
+                <div class="modal-body p-4">
 
-                <!-- PRODUCTO -->
-                <div class="mb-3">
+                    <div id="alertaVenta"></div>
 
-                    <label class="form-label">
+                    <div class="row">
 
-                        Producto
+                        <!-- COLUMNA IZQUIERDA -->
+                        <div class="col-md-8">
 
-                    </label>
+                            <!-- PRODUCTO -->
+                            <div class="mb-3">
 
-                    <select
-                        class="form-select"
-                        name="producto_id"
-                        required
-                    >
+                                <label class="form-label fw-bold">
 
-                        <option value="">
+                                    Producto
 
-                            Seleccione
+                                </label>
 
-                        </option>
+                                <select
+                                    class="form-select"
+                                    name="producto_id"
+                                    required
+                                >
 
-                        {% for producto in productos %}
+                                    <option value="">
 
-                            {% if producto.estado == "Activo" %}
+                                        Seleccione un producto
 
-                            <option
-                                value="{{ producto.id }}"
+                                    </option>
+
+                                    {% for producto in productos %}
+
+                                        {% if producto.estado == "Activo" %}
+
+                                        <option
+                                            value="{{ producto.id }}"
+                                        >
+
+                                            {{ producto.nombre }}
+                                            -
+                                            $ {{ "{:,}".format(producto.precio) }}
+
+                                        </option>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                </select>
+
+                            </div>
+
+                            <!-- CANTIDAD -->
+                            <div class="mb-3">
+
+                                <label class="form-label fw-bold">
+
+                                    Cantidad
+
+                                </label>
+
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                    class="form-control"
+                                    name="cantidad"
+                                    required
+                                >
+
+                            </div>
+
+                            <!-- PLACA -->
+                            <div class="mb-3">
+
+                                <label class="form-label fw-bold">
+
+                                    Placa Asociada
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="placa"
+                                    placeholder="ABC123 (Opcional)"
+                                >
+
+                                <small
+                                    class="text-muted"
+                                >
+
+                                    Relacionar el consumo con un vehículo.
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                        <!-- COLUMNA DERECHA -->
+                        <div class="col-md-4">
+
+                            <div
+                                class="card border-0 shadow-sm h-100"
                             >
 
-                                {{ producto.nombre }}
-                                -
-                                $ {{ "{:,}".format(producto.precio) }}
+                                <div
+                                    class="card-body"
+                                >
 
-                            </option>
+                                    <h6
+                                        class="fw-bold mb-3"
+                                    >
 
-                            {% endif %}
+                                        Resumen
 
-                        {% endfor %}
+                                    </h6>
 
-                    </select>
+                                    <div
+                                        class="d-flex justify-content-between mb-2"
+                                    >
+
+                                        <span>
+
+                                            Productos
+
+                                        </span>
+
+                                        <strong>
+
+                                            1
+
+                                        </strong>
+
+                                    </div>
+
+                                    <hr>
+
+                                    <div
+                                        class="text-center mt-4"
+                                    >
+
+                                        <small
+                                            class="text-muted"
+                                        >
+
+                                            Total estimado
+
+                                        </small>
+
+                                        <h2
+                                            class="fw-bold text-success"
+                                            id="totalPreview"
+                                        >
+
+                                            $ 0
+
+                                        </h2>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
-                <!-- CANTIDAD -->
-                <div class="mb-3">
+                <!-- FOOTER -->
+                <div
+                    class="modal-footer"
+                >
 
-                    <label class="form-label">
-
-                        Cantidad
-
-                    </label>
-
-                    <input
-                        type="number"
-                        min="1"
-                        value="1"
-                        class="form-control"
-                        name="cantidad"
-                        required
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
                     >
 
-                </div>
+                        Cancelar
 
-                <!-- PLACA -->
-                <div class="mb-3">
-
-                    <label class="form-label">
-
-                        Placa (Opcional)
-
-                    </label>
-
-                    <input
-                        type="text"
-                        class="form-control"
-                        name="placa"
-                        placeholder="ABC123"
-                    >
-
-                </div>
-
-                <div class="d-grid">
+                    </button>
 
                     <button
                         type="submit"
-                        class="btn btn-success"
+                        class="btn btn-success px-4"
                     >
 
-                        <i class="bi bi-check-circle"></i>
+                        <i class="bi bi-check-circle-fill"></i>
 
                         Registrar Venta
 

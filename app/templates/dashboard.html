@@ -517,9 +517,274 @@
 
     </div>
 
+    <!-- CONSUMOS ASOCIADOS -->
+    <div class="row mt-4">
+
+        <div class="col-12">
+
+            <div class="card-dashboard">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <h4 class="fw-bold mb-0">
+
+                        Consumos asociados por placa
+
+                    </h4>
+
+                    <i class="bi bi-receipt-cutoff fs-2 text-primary"></i>
+
+                </div>
+
+                <div
+                    style="
+                        max-height:170px;
+                        overflow-y:auto;
+                        padding-right:5px;
+                    "
+                >
+
+                    {% if consumos %}
+
+                        {% for item in consumos %}
+
+                        <div class="border rounded p-3 mb-3">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <h5 class="mb-2">
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-link p-0 fw-bold text-decoration-none"
+                                        onclick="verConsumos('{{ item.placa }}')"
+                                    >
+
+                                        {{ item.placa }}
+
+                                    </button>
+
+                                </h5>
+
+                                <span class="badge bg-success fs-6">
+
+                                    $ {{ "{:,}".format(item.total) }}
+
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <div class="text-center text-muted py-4">
+
+                            No existen consumos asociados
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
+<!-- MODAL CONSUMOS -->
+<div
+    class="modal fade"
+    id="modalConsumos"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="tituloConsumos"
+                >
+                    Consumos
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div
+                class="modal-body"
+                id="contenidoConsumos"
+            >
+
+                Cargando...
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
+
+// ==========================================
+// VER CONSUMOS PLACA
+// ==========================================
+async function verConsumos(
+    placa
+){
+
+    const modal = new bootstrap.Modal(
+
+        document.getElementById(
+            "modalConsumos"
+        )
+
+    );
+
+    modal.show();
+
+    document.getElementById(
+        "tituloConsumos"
+    ).innerHTML =
+
+        `Consumos del día - ${placa}`;
+
+    document.getElementById(
+        "contenidoConsumos"
+    ).innerHTML =
+
+        "Cargando...";
+
+    const response = await fetch(
+
+        `/dashboard/consumos/${placa}`
+
+    );
+
+    const data = await response.json();
+
+    let html = "";
+
+    // ==========================
+    // LAVADERO
+    // ==========================
+    if(data.lavados.length){
+
+        html += `
+
+            <h5 class="fw-bold text-dark">
+
+                Lavadero
+
+            </h5>
+
+        `;
+
+        data.lavados.forEach(item => {
+
+            html += `
+
+                <div class="d-flex justify-content-between border-bottom py-2">
+
+                    <span>
+
+                        ${item.descripcion}
+
+                    </span>
+
+                    <strong>
+
+                        $ ${item.valor.toLocaleString()}
+
+                    </strong>
+
+                </div>
+
+            `;
+        });
+    }
+
+    // ==========================
+    // CAFETERIA
+    // ==========================
+    if(data.cafeteria.length){
+
+        html += `
+
+            <h5 class="fw-bold text-primary mt-4">
+
+                Cafetería
+
+            </h5>
+
+        `;
+
+        data.cafeteria.forEach(item => {
+
+            html += `
+
+                <div class="d-flex justify-content-between border-bottom py-2">
+
+                    <span>
+
+                        ${item.producto} x${item.cantidad}
+
+                    </span>
+
+                    <strong>
+
+                        $ ${item.total.toLocaleString()}
+
+                    </strong>
+
+                </div>
+
+            `;
+        });
+    }
+
+    html += `
+
+        <div
+            class="alert alert-success mt-4 text-center"
+        >
+
+            <strong>
+
+                Total consumido:
+
+                $ ${data.total.toLocaleString()}
+
+            </strong>
+
+        </div>
+
+    `;
+
+    document.getElementById(
+        "contenidoConsumos"
+    ).innerHTML = html;
+}
 
 // ==========================================
 // RELOJ

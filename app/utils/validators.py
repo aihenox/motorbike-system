@@ -12,7 +12,7 @@ def validar_placa(placa):
     if placa is None:
         raise ValueError("La placa es obligatoria")
 
-    placa = placa.strip().upper()
+    placa = placa.strip().upper().replace(" ", "")
 
     if not placa:
         raise ValueError("La placa es obligatoria")

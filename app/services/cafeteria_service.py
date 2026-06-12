@@ -16,7 +16,11 @@ from app.repositories.cafeteria_repository import (
 
     obtener_productos_vendidos_hoy_db,
 
-    registrar_venta_cafeteria_db
+    registrar_venta_cafeteria_db,
+
+    buscar_producto_por_nombre_db,
+
+    obtener_consecutivo_venta_dia_db
 )
 
 from app.utils.validators import (
@@ -83,6 +87,49 @@ def crear_producto_cafeteria(
             stock_minimo
         )
     )
+
+    producto_existente = buscar_producto_por_nombre_db(
+        nombre
+    )
+
+    if producto_existente:
+
+        if isinstance(
+            producto_existente,
+            dict
+        ):
+
+            producto_id = producto_existente["id"]
+
+            inventario_actual = (
+                producto_existente["inventario"]
+            )
+
+        else:
+
+            producto_id = producto_existente["id"]
+
+            inventario_actual = (
+                producto_existente["inventario"]
+            )
+
+        actualizar_producto_cafeteria_db(
+
+            producto_id,
+
+            nombre,
+
+            precio,
+
+            inventario_actual + inventario,
+
+            stock_minimo,
+
+            estado
+
+        )
+
+        return
 
     crear_producto_cafeteria_db(
 
@@ -253,6 +300,19 @@ def registrar_venta_cafeteria(
 
         raise ValueError(
             "La cantidad debe ser mayor a cero"
+        )
+
+    # ==========================================
+    # GENERAR CONSECUTIVO SI NO HAY PLACA
+    # ==========================================
+    if not placa:
+
+        consecutivo = (
+            obtener_consecutivo_venta_dia_db()
+        )
+
+        placa = (
+            f"VENTA #{consecutivo}"
         )
 
     producto = obtener_producto_cafeteria_db(

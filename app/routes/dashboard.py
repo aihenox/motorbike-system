@@ -1,6 +1,7 @@
 from flask import (
     Blueprint,
-    render_template
+    render_template,
+    jsonify
 )
 
 from flask_login import (
@@ -10,7 +11,9 @@ from flask_login import (
 
 from app.services.dashboard_service import (
     obtener_metricas_dashboard,
-    obtener_ultimos_ingresos
+    obtener_ultimos_ingresos,
+    obtener_consumos_placas,
+    obtener_detalle_consumos_placa
 )
 
 
@@ -30,6 +33,8 @@ def dashboard():
     metricas = obtener_metricas_dashboard()
 
     movimientos = obtener_ultimos_ingresos()
+
+    consumos = obtener_consumos_placas()
 
     return render_template(
 
@@ -75,5 +80,24 @@ def dashboard():
             0
         ),
 
-        movimientos=movimientos
+        movimientos=movimientos,
+
+        consumos=consumos
     )
+
+# ==========================================
+# DETALLE CONSUMOS PLACA
+# ==========================================
+@dashboard_bp.route(
+    "/dashboard/consumos/<placa>"
+)
+@login_required
+def detalle_consumos_placa(
+    placa
+):
+
+    data = obtener_detalle_consumos_placa(
+        placa.upper()
+    )
+
+    return jsonify(data)

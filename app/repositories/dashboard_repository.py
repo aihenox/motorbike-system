@@ -294,3 +294,284 @@ def obtener_ultimos_ingresos_db(
                 })
 
         return resultado 
+    
+
+# ==========================================
+# CONSUMOS DEL DIA POR PLACA
+# ==========================================
+def obtener_consumos_placas_db():
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        hoy = datetime.now(
+            ZoneInfo(
+                "America/Bogota"
+            )
+        ).strftime("%Y-%m-%d")
+
+        consumos = {}
+
+        operador = (
+            "%s"
+            if POSTGRES
+            else "?"
+        )
+
+        # ==========================
+        # LAVADERO
+        # ==========================
+        c.execute(f"""
+
+            SELECT
+
+                placa,
+
+                valor
+
+            FROM lavados
+
+            WHERE placa IS NOT NULL
+            AND placa <> ''
+            AND fecha LIKE {operador}
+
+        """, (
+            f"{hoy}%",
+        ))
+
+        for row in c.fetchall():
+
+            placa = (
+                row["placa"]
+                if POSTGRES
+                else row[0]
+            )
+
+            valor = (
+                row["valor"]
+                if POSTGRES
+                else row[1]
+            )
+
+            if placa not in consumos:
+
+                consumos[placa] = {
+
+                    "placa": placa,
+
+                    "total": 0
+
+                }
+
+            consumos[placa]["total"] += (
+                valor or 0
+            )
+
+        # ==========================
+        # CAFETERIA
+        # ==========================
+        c.execute(f"""
+
+            SELECT
+
+                placa,
+
+                total
+
+            FROM ventas_cafeteria
+
+            WHERE placa IS NOT NULL
+            AND placa <> ''
+            AND fecha LIKE {operador}
+
+        """, (
+            f"{hoy}%",
+        ))
+
+        for row in c.fetchall():
+
+            placa = (
+                row["placa"]
+                if POSTGRES
+                else row[0]
+            )
+
+            total = (
+                row["total"]
+                if POSTGRES
+                else row[1]
+            )
+
+            if placa not in consumos:
+
+                consumos[placa] = {
+
+                    "placa": placa,
+
+                    "total": 0
+
+                }
+
+            consumos[placa]["total"] += (
+                total or 0
+            )
+
+        return sorted(
+
+            consumos.values(),
+
+            key=lambda x: x["total"],
+
+            reverse=True
+
+        )
+    
+# ==========================================
+# DETALLE CONSUMOS DEL DIA POR PLACA
+# ==========================================
+def obtener_detalle_consumos_placa_db(
+    placa
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        hoy = datetime.now(
+            ZoneInfo(
+                "America/Bogota"
+            )
+        ).strftime("%Y-%m-%d")
+
+        operador = (
+            "%s"
+            if POSTGRES
+            else "?"
+        )
+
+        resultado = {
+
+            "placa": placa,
+
+            "lavados": [],
+
+            "cafeteria": [],
+
+            "total": 0
+
+        }
+
+        # ==========================
+        # LAVADERO
+        # ==========================
+        c.execute(f"""
+
+            SELECT
+
+                tipo_lavado,
+
+                valor
+
+            FROM lavados
+
+            WHERE placa = {operador}
+            AND fecha LIKE {operador}
+
+            ORDER BY id DESC
+
+        """, (
+
+            placa,
+
+            f"{hoy}%"
+
+        ))
+
+        for row in c.fetchall():
+
+            if POSTGRES:
+
+                descripcion = row["tipo_lavado"]
+
+                valor = row["valor"]
+
+            else:
+
+                descripcion = row[0]
+
+                valor = row[1]
+
+            resultado["lavados"].append({
+
+                "descripcion": descripcion,
+
+                "valor": valor
+
+            })
+
+            resultado["total"] += (
+                valor or 0
+            )
+
+        # ==========================
+        # CAFETERIA
+        # ==========================
+        c.execute(f"""
+
+            SELECT
+
+                producto,
+
+                cantidad,
+
+                total
+
+            FROM ventas_cafeteria
+
+            WHERE placa = {operador}
+            AND fecha LIKE {operador}
+
+            ORDER BY id DESC
+
+        """, (
+
+            placa,
+
+            f"{hoy}%"
+
+        ))
+
+        for row in c.fetchall():
+
+            if POSTGRES:
+
+                producto = row["producto"]
+
+                cantidad = row["cantidad"]
+
+                total = row["total"]
+
+            else:
+
+                producto = row[0]
+
+                cantidad = row[1]
+
+                total = row[2]
+
+            resultado["cafeteria"].append({
+
+                "producto": producto,
+
+                "cantidad": cantidad,
+
+                "total": total
+
+            })
+
+            resultado["total"] += (
+                total or 0
+            )
+
+        return resultado

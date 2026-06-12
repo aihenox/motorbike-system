@@ -106,145 +106,6 @@ def configuracion_cafeteria():
 
 
 # ==========================================
-# NUEVO PRODUCTO
-# ==========================================
-@cafeteria_bp.route(
-
-    "/cafeteria/producto/nuevo",
-
-    methods=["GET", "POST"]
-)
-@login_required
-def nuevo_producto():
-
-    if request.method == "POST":
-
-        crear_producto_cafeteria(
-
-            request.form["nombre"],
-
-            request.form["precio"],
-
-            request.form["inventario"],
-
-            request.form["stock_minimo"],
-
-            request.form["estado"]
-
-        )
-
-        flash(
-
-            "Producto creado correctamente",
-
-            "success"
-
-        )
-
-        return redirect(
-
-            url_for(
-                "cafeteria.configuracion_cafeteria"
-            )
-        )
-
-    return render_template(
-
-        "cafeteria_producto_form.html"
-    )
-
-
-# ==========================================
-# EDITAR PRODUCTO
-# ==========================================
-@cafeteria_bp.route(
-
-    "/cafeteria/producto/editar/<int:producto_id>",
-
-    methods=["GET", "POST"]
-)
-@login_required
-def editar_producto(
-    producto_id
-):
-
-    producto = obtener_producto_cafeteria(
-        producto_id
-    )
-
-    if request.method == "POST":
-
-        actualizar_producto_cafeteria(
-
-            producto_id,
-
-            request.form["nombre"],
-
-            request.form["precio"],
-
-            request.form["inventario"],
-
-            request.form["stock_minimo"],
-
-            request.form["estado"]
-
-        )
-
-        flash(
-
-            "Producto actualizado correctamente",
-
-            "success"
-
-        )
-
-        return redirect(
-
-            url_for(
-                "cafeteria.configuracion_cafeteria"
-            )
-        )
-
-    return render_template(
-
-        "cafeteria_producto_form.html",
-
-        producto=producto
-
-    )
-
-
-# ==========================================
-# ELIMINAR PRODUCTO
-# ==========================================
-@cafeteria_bp.route(
-    "/cafeteria/producto/eliminar/<int:producto_id>"
-)
-@login_required
-def eliminar_producto(
-    producto_id
-):
-
-    eliminar_producto_cafeteria(
-        producto_id
-    )
-
-    flash(
-
-        "Producto eliminado correctamente",
-
-        "success"
-
-    )
-
-    return redirect(
-
-        url_for(
-            "cafeteria.configuracion_cafeteria"
-        )
-    )
-
-# ==========================================
 # REGISTRAR VENTA AJAX
 # ==========================================
 @cafeteria_bp.route(
@@ -267,7 +128,7 @@ def registrar_venta_ajax():
         placa = request.form.get(
             "placa",
             ""
-        )
+        ).strip().upper()
 
         ahora = datetime.now(
             ZoneInfo(
@@ -287,7 +148,7 @@ def registrar_venta_ajax():
 
             placa,
 
-            current_user.usuario,
+            current_user.id,
 
             fecha_db
         )
@@ -328,5 +189,187 @@ def registrar_venta_ajax():
 
             "message":
                 "Error interno del sistema"
+
+        }), 500
+    
+# ==========================================
+# CREAR PRODUCTO AJAX
+# ==========================================
+@cafeteria_bp.route(
+    "/cafeteria/api/crear",
+    methods=["POST"]
+)
+@login_required
+def crear_producto_ajax():
+
+    try:
+
+        crear_producto_cafeteria(
+
+            request.form["nombre"],
+
+            request.form["precio"],
+
+            request.form["inventario"],
+
+            request.form["stock_minimo"],
+
+            request.form["estado"]
+
+        )
+
+        return jsonify({
+
+            "success": True
+
+        })
+
+    except ValueError as e:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": str(e)
+
+        }), 400
+
+    except Exception:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Error interno"
+
+        }), 500
+    
+# ==========================================
+# OBTENER PRODUCTO AJAX
+# ==========================================
+@cafeteria_bp.route(
+    "/cafeteria/api/producto/<int:producto_id>"
+)
+@login_required
+def obtener_producto_ajax(
+    producto_id
+):
+
+    producto = obtener_producto_cafeteria(
+        producto_id
+    )
+
+    if not producto:
+
+        return jsonify({
+
+            "success": False
+
+        }), 404
+
+    if isinstance(
+        producto,
+        dict
+    ):
+
+        data = producto
+
+    else:
+
+        data = dict(producto)
+
+    return jsonify({
+
+        "success": True,
+
+        "producto": data
+
+    })
+
+# ==========================================
+# ACTUALIZAR PRODUCTO AJAX
+# ==========================================
+@cafeteria_bp.route(
+    "/cafeteria/api/editar",
+    methods=["POST"]
+)
+@login_required
+def editar_producto_ajax():
+
+    try:
+
+        actualizar_producto_cafeteria(
+
+            request.form["producto_id"],
+
+            request.form["nombre"],
+
+            request.form["precio"],
+
+            request.form["inventario"],
+
+            request.form["stock_minimo"],
+
+            request.form["estado"]
+
+        )
+
+        return jsonify({
+
+            "success": True
+
+        })
+
+    except ValueError as e:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": str(e)
+
+        }), 400
+
+    except Exception:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": "Error interno"
+
+        }), 500
+    
+# ==========================================
+# ELIMINAR PRODUCTO AJAX
+# ==========================================
+@cafeteria_bp.route(
+    "/cafeteria/api/eliminar/<int:producto_id>",
+    methods=["DELETE"]
+)
+@login_required
+def eliminar_producto_ajax(
+    producto_id
+):
+
+    try:
+
+        eliminar_producto_cafeteria(
+            producto_id
+        )
+
+        return jsonify({
+
+            "success": True
+
+        })
+
+    except Exception as e:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": str(e)
 
         }), 500

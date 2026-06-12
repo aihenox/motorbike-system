@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Configuración Cafetería
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+
+        body{
+            background:#f1f5f9;
+            font-family:'Segoe UI';
+        }
+
+        .card-custom{
+            border:none;
+            border-radius:20px;
+            box-shadow:0 10px 25px rgba(0,0,0,.08);
+        }
+
+        .titulo{
+            font-weight:700;
+            color:#0f172a;
+        }
+
+        .table td,
+        .table th{
+            vertical-align:middle;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+
+    <span class="navbar-brand fw-bold">
+
+        Configuración Cafetería
+
+    </span>
+
+    <a
+        href="/dashboard/cafeteria"
+        class="btn btn-outline-light"
+    >
+
+        Volver
+
+    </a>
+
+</nav>
+
+<div class="container py-4">
+
+    <div class="card card-custom">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h3 class="titulo mb-0">
+
+                    Productos
+
+                </h3>
+
+                <button
+                    class="btn btn-success"
+                    onclick="nuevoProducto()"
+                >
+
+                    <i class="bi bi-plus-circle"></i>
+
+                    Nuevo Producto
+
+                </button>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>
+                                Producto
+                            </th>
+
+                            <th>
+                                Precio
+                            </th>
+
+                            <th>
+                                Inventario
+                            </th>
+
+                            <th>
+                                Stock mínimo
+                            </th>
+
+                            <th>
+                                Estado
+                            </th>
+
+                            <th width="180">
+                                Acciones
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="tablaProductos">
+
+                        {% for item in productos %}
+
+                        <tr>
+
+                            <td>
+
+                                {{ item.nombre }}
+
+                            </td>
+
+                            <td>
+
+                                $ {{ "{:,}".format(item.precio) }}
+
+                            </td>
+
+                            <td>
+
+                                {{ item.inventario }}
+
+                            </td>
+
+                            <td>
+
+                                {{ item.stock_minimo }}
+
+                            </td>
+
+                            <td>
+
+                                {% if item.estado == "Activo" %}
+
+                                    <span class="badge bg-success">
+
+                                        Activo
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+
+                                        Inactivo
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <button
+                                    class="btn btn-warning btn-sm"
+                                    onclick="editarProducto('{{ item.id }}')"
+                                >
+
+                                    <i class="bi bi-pencil"></i>
+
+                                </button>
+
+                                <button
+                                    class="btn btn-danger btn-sm"
+                                    onclick="confirmarEliminar('{{ item.id }}','{{ item.nombre }}')"
+                                >
+                                    <i class="bi bi-trash"></i>
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- MODAL PRODUCTO -->
+
+<div
+    class="modal fade"
+    id="modalProducto"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-success text-white">
+
+                <h5
+                    class="modal-title"
+                    id="tituloModalProducto"
+                >
+
+                    Nuevo Producto
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <form id="formProducto">
+                <div id="alertaProducto"></div>
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        id="producto_id"
+                    >
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="nombre"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Precio
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="precio"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Inventario
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="inventario"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Stock mínimo
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="stock_minimo"
+                            value="5"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Estado
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="estado"
+                        >
+
+                            <option value="Activo">
+
+                                Activo
+
+                            </option>
+
+                            <option value="Inactivo">
+
+                                Inactivo
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                    >
+
+                        Guardar
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+document.getElementById(
+    "formProducto"
+).addEventListener(
+    "submit",
+    async function(e){
+
+        e.preventDefault();
+
+        const datos = new FormData();
+
+        datos.append(
+            "producto_id",
+            document.getElementById(
+                "producto_id"
+            ).value
+        );
+
+        datos.append(
+            "nombre",
+            document.getElementById(
+                "nombre"
+            ).value
+        );
+
+        datos.append(
+            "precio",
+            document.getElementById(
+                "precio"
+            ).value
+        );
+
+        datos.append(
+            "inventario",
+            document.getElementById(
+                "inventario"
+            ).value
+        );
+
+        datos.append(
+            "stock_minimo",
+            document.getElementById(
+                "stock_minimo"
+            ).value
+        );
+
+        datos.append(
+            "estado",
+            document.getElementById(
+                "estado"
+            ).value
+        );
+
+        const productoId = document.getElementById(
+            "producto_id"
+        ).value;
+
+        const url = productoId
+            ? "/cafeteria/api/editar"
+            : "/cafeteria/api/crear";
+
+        const respuesta = await fetch(
+
+            url,
+            {
+
+                method: "POST",
+
+                body: datos
+
+            }
+
+        );
+
+        const resultado =
+            await respuesta.json();
+
+        const alerta =
+            document.getElementById(
+                "alertaProducto"
+            );
+
+        if(resultado.success){
+
+            const mensaje = productoId
+
+                ? "Producto actualizado correctamente"
+
+                : "Producto creado correctamente";
+
+            alerta.innerHTML = `
+
+                <div class="alert alert-success m-3">
+
+                    ${mensaje}
+
+                </div>
+
+            `;
+
+            setTimeout(() => {
+
+                location.reload();
+
+            }, 1000);
+
+        }else{
+
+            alerta.innerHTML = `
+
+                <div class="alert alert-danger m-3">
+
+                    ${resultado.message}
+
+                </div>
+
+            `;
+        }
+
+    }
+);
+
+async function editarProducto(
+    productoId
+){
+
+    const respuesta = await fetch(
+
+        `/cafeteria/api/producto/${productoId}`
+
+    );
+
+    const resultado =
+        await respuesta.json();
+
+    if(!resultado.success){
+
+        return;
+    }
+
+    const producto =
+        resultado.producto;
+
+    document.getElementById(
+        "producto_id"
+    ).value = producto.id;
+
+    document.getElementById(
+        "nombre"
+    ).value = producto.nombre;
+
+    document.getElementById(
+        "precio"
+    ).value = producto.precio;
+
+    document.getElementById(
+        "inventario"
+    ).value = producto.inventario;
+
+    document.getElementById(
+        "stock_minimo"
+    ).value = producto.stock_minimo;
+
+    document.getElementById(
+        "estado"
+    ).value = producto.estado;
+
+    document.getElementById(
+        "tituloModalProducto"
+    ).innerHTML = "Editar Producto";
+
+    const modal = new bootstrap.Modal(
+
+        document.getElementById(
+            "modalProducto"
+        )
+
+    );
+
+    modal.show();
+
+}
+
+function nuevoProducto(){
+
+    document.getElementById(
+        "producto_id"
+    ).value = "";
+
+    document.getElementById(
+        "formProducto"
+    ).reset();
+
+    document.getElementById(
+        "tituloModalProducto"
+    ).innerHTML = "Nuevo Producto";
+
+    const modal = new bootstrap.Modal(
+
+        document.getElementById(
+            "modalProducto"
+        )
+
+    );
+
+    modal.show();
+}
+
+let productoEliminar = null;
+
+function confirmarEliminar(
+    id,
+    nombre
+){
+
+    productoEliminar = id;
+
+    document.getElementById(
+        "nombreProductoEliminar"
+    ).innerText = nombre;
+
+    const modal = new bootstrap.Modal(
+
+        document.getElementById(
+            "modalEliminar"
+        )
+
+    );
+
+    modal.show();
+}
+
+async function eliminarProducto(){
+
+    const respuesta = await fetch(
+
+        `/cafeteria/api/eliminar/${productoEliminar}`,
+
+        {
+            method: "DELETE"
+        }
+
+    );
+
+    const resultado =
+        await respuesta.json();
+
+    if(resultado.success){
+
+        location.reload();
+
+    }else{
+
+        alert(
+            resultado.message
+        );
+    }
+}
+
+</script>
+
+<!-- MODAL ELIMINAR -->
+
+<div
+    class="modal fade"
+    id="modalEliminar"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-danger text-white">
+
+                <h5 class="modal-title">
+
+                    Eliminar producto
+
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p class="mb-0">
+
+                    ¿Desea eliminar el producto:
+
+                    <strong id="nombreProductoEliminar"></strong>?
+
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    onclick="eliminarProducto()"
+                >
+
+                    Eliminar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

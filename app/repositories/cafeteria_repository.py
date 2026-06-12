@@ -1,5 +1,9 @@
 import os
 
+from datetime import datetime
+
+from zoneinfo import ZoneInfo
+
 from app.repositories.connection import conectar
 
 
@@ -612,3 +616,92 @@ def obtener_ultimas_ventas_cafeteria_db():
         """)
 
         return c.fetchall()
+
+# ==========================================
+# BUSCAR PRODUCTO POR NOMBRE
+# ==========================================
+def buscar_producto_por_nombre_db(
+    nombre
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT *
+
+                FROM productos_cafeteria
+
+                WHERE UPPER(nombre) = UPPER(%s)
+
+            """, (
+                nombre,
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT *
+
+                FROM productos_cafeteria
+
+                WHERE UPPER(nombre) = UPPER(?)
+
+            """, (
+                nombre,
+            ))
+
+        return c.fetchone()
+    
+# ==========================================
+# OBTENER SIGUIENTE CONSECUTIVO DEL DIA
+# ==========================================
+def obtener_consecutivo_venta_dia_db():
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        hoy = datetime.now(
+            ZoneInfo(
+                "America/Bogota"
+            )
+        ).strftime("%Y-%m-%d")
+
+        operador = (
+            "%s"
+            if POSTGRES
+            else "?"
+        )
+
+        c.execute(f"""
+
+            SELECT COUNT(*)
+
+            FROM ventas_cafeteria
+
+            WHERE fecha LIKE {operador}
+            AND placa LIKE 'VENTA #%'
+
+        """, (
+            f"{hoy}%",
+        ))
+
+        fila = c.fetchone()
+
+        if POSTGRES:
+
+            cantidad = list(
+                fila.values()
+            )[0]
+
+        else:
+
+            cantidad = fila[0]
+
+        return cantidad + 1
