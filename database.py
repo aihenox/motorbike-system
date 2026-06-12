@@ -56,6 +56,16 @@ def crear_bd():
             id_type
         )
 
+        crear_tabla_productos_cafeteria(
+            c,
+            id_type
+        )
+
+        crear_tabla_ventas_cafeteria(
+            c,
+            id_type
+        )
+
         actualizar_tabla_ingresos(c)
 
         crear_indices(c)
@@ -260,6 +270,67 @@ def crear_tabla_mensualidades(
 
     """)
 
+# ==========================================
+# PRODUCTOS CAFETERIA
+# ==========================================
+def crear_tabla_productos_cafeteria(
+    c,
+    id_type
+):
+
+    c.execute(f"""
+
+        CREATE TABLE IF NOT EXISTS productos_cafeteria(
+
+            id {id_type},
+
+            nombre TEXT NOT NULL,
+
+            precio INTEGER NOT NULL,
+
+            inventario INTEGER NOT NULL DEFAULT 0,
+
+            stock_minimo INTEGER NOT NULL DEFAULT 5,
+
+            estado TEXT NOT NULL DEFAULT 'Activo'
+
+        )
+
+    """)
+
+# ==========================================
+# VENTAS CAFETERIA
+# ==========================================
+def crear_tabla_ventas_cafeteria(
+    c,
+    id_type
+):
+
+    c.execute(f"""
+
+        CREATE TABLE IF NOT EXISTS ventas_cafeteria(
+
+            id {id_type},
+
+            fecha TEXT NOT NULL,
+
+            producto_id INTEGER NOT NULL,
+
+            producto TEXT NOT NULL,
+
+            cantidad INTEGER NOT NULL,
+
+            valor_unitario INTEGER NOT NULL,
+
+            total INTEGER NOT NULL,
+
+            placa TEXT,
+
+            usuario TEXT
+
+        )
+
+    """)
 
 # ==========================================
 # MIGRACION INGRESOS
