@@ -705,3 +705,104 @@ def obtener_consecutivo_venta_dia_db():
             cantidad = fila[0]
 
         return cantidad + 1
+
+# ==========================================
+# RESUMEN VENTAS DEL DIA
+# ==========================================
+def obtener_resumen_ventas_hoy_db():
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT
+
+                    placa,
+
+                    MIN(fecha) as fecha,
+
+                    SUM(total) as total
+
+                FROM ventas_cafeteria
+
+                WHERE DATE(fecha) = CURRENT_DATE
+
+                GROUP BY placa
+
+                ORDER BY MIN(fecha) DESC
+
+            """)
+
+        else:
+
+            c.execute("""
+
+                SELECT
+
+                    placa,
+
+                    MIN(fecha) as fecha,
+
+                    SUM(total) as total
+
+                FROM ventas_cafeteria
+
+                WHERE DATE(fecha)=DATE('now','localtime')
+
+                GROUP BY placa
+
+                ORDER BY MIN(fecha) DESC
+
+            """)
+
+        rows = c.fetchall()
+
+        resultado = []
+
+        for row in rows:
+
+            if POSTGRES:
+
+                fecha = row["fecha"]
+
+                resultado.append({
+
+                    "placa": row["placa"],
+
+                    "fecha": fecha.strftime(
+                        "%I:%M %p"
+                    ),
+
+                    "total": row["total"]
+
+                })
+
+            else:
+
+                fecha = row[1]
+
+                resultado.append({
+
+                    "placa": row[0],
+
+                    "fecha": datetime.strptime(
+
+                        str(fecha),
+
+                        "%Y-%m-%d %H:%M:%S"
+
+                    ).strftime(
+
+                        "%I:%M %p"
+
+                    ),
+
+                    "total": row[2]
+
+                })
+
+        return resultado

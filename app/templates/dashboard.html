@@ -677,7 +677,7 @@ async function verConsumos(
 
     const response = await fetch(
 
-        `/dashboard/consumos/${placa}`
+        `/dashboard/consumos/${encodeURIComponent(placa)}`
 
     );
 

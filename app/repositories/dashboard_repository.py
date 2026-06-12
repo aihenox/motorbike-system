@@ -389,7 +389,14 @@ def obtener_consumos_placas_db():
             f"{hoy}%",
         ))
 
-        for row in c.fetchall():
+        rows = c.fetchall()
+
+        print(
+            "VENTAS ENCONTRADAS:",
+            rows
+        )
+
+        for row in rows:
 
             placa = (
                 row["placa"]

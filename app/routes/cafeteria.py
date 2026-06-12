@@ -1,4 +1,5 @@
 from flask import jsonify
+import json
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -42,7 +43,9 @@ from app.services.cafeteria_service import (
 
     obtener_productos_vendidos_hoy,
 
-    registrar_venta_cafeteria
+    registrar_venta_cafeteria,
+
+    obtener_resumen_ventas_hoy
 
 )
 
@@ -72,6 +75,10 @@ def dashboard_cafeteria():
 
     productos = listar_productos_cafeteria()
 
+    ultimas_ventas = (
+        obtener_resumen_ventas_hoy()
+    )
+
     return render_template(
 
         "cafeteria.html",
@@ -82,7 +89,9 @@ def dashboard_cafeteria():
 
         total_ventas_hoy=total_ventas_hoy,
 
-        productos=productos
+        productos=productos,
+
+        ultimas_ventas=ultimas_ventas
 
     )
 
@@ -117,12 +126,15 @@ def registrar_venta_ajax():
 
     try:
 
-        producto_id = request.form.get(
-            "producto_id"
-        )
+        import json
 
-        cantidad = request.form.get(
-            "cantidad"
+        productos = json.loads(
+
+            request.form.get(
+                "productos",
+                "[]"
+            )
+
         )
 
         placa = request.form.get(
@@ -142,9 +154,7 @@ def registrar_venta_ajax():
 
         resultado = registrar_venta_cafeteria(
 
-            producto_id,
-
-            cantidad,
+            productos,
 
             placa,
 
@@ -157,18 +167,9 @@ def registrar_venta_ajax():
 
             "success": True,
 
-            "producto": resultado["producto"],
+            "message":
+                "Venta registrada correctamente"
 
-            "cantidad": resultado["cantidad"],
-
-            "valor_unitario": resultado["valor_unitario"],
-
-            "total": resultado["total"],
-
-            "inventario_restante":
-                resultado[
-                    "inventario_restante"
-                ]
         })
 
     except ValueError as e:

@@ -20,7 +20,9 @@ from app.repositories.cafeteria_repository import (
 
     buscar_producto_por_nombre_db,
 
-    obtener_consecutivo_venta_dia_db
+    obtener_consecutivo_venta_dia_db,
+
+    obtener_resumen_ventas_hoy_db
 )
 
 from app.utils.validators import (
@@ -270,13 +272,11 @@ def obtener_productos_vendidos_hoy():
     return obtener_productos_vendidos_hoy_db()
 
 # ==========================================
-# REGISTRAR VENTA
+# REGISTRAR VENTA CARRITO
 # ==========================================
 def registrar_venta_cafeteria(
 
-    producto_id,
-
-    cantidad,
+    productos,
 
     placa,
 
@@ -286,20 +286,10 @@ def registrar_venta_cafeteria(
 
 ):
 
-    producto_id = validar_id(
-        producto_id
-    )
-
-    cantidad = int(
-        validar_valor(
-            cantidad
-        )
-    )
-
-    if cantidad <= 0:
+    if not productos:
 
         raise ValueError(
-            "La cantidad debe ser mayor a cero"
+            "Debe agregar al menos un producto"
         )
 
     # ==========================================
@@ -315,64 +305,86 @@ def registrar_venta_cafeteria(
             f"VENTA #{consecutivo}"
         )
 
-    producto = obtener_producto_cafeteria_db(
-        producto_id
-    )
+    total_general = 0
 
-    if not producto:
+    for item in productos:
 
-        raise ValueError(
-            "Producto no encontrado"
+        producto_id = validar_id(
+            item["producto_id"]
         )
 
-    inventario = producto["inventario"]
-
-    if inventario < cantidad:
-
-        raise ValueError(
-
-            f"Inventario insuficiente. Disponible: {inventario}"
-
+        cantidad = int(
+            item["cantidad"]
         )
 
-    valor_unitario = producto["precio"]
+        producto = (
+            obtener_producto_cafeteria_db(
+                producto_id
+            )
+        )
 
-    total = valor_unitario * cantidad
+        if not producto:
 
-    registrar_venta_cafeteria_db(
+            raise ValueError(
+                "Producto no encontrado"
+            )
 
-        fecha,
+        inventario = (
+            producto["inventario"]
+        )
 
-        producto_id,
+        if inventario < cantidad:
 
-        producto["nombre"],
+            raise ValueError(
 
-        cantidad,
+                f"Inventario insuficiente para {producto['nombre']}"
 
-        valor_unitario,
+            )
 
-        total,
+        valor_unitario = (
+            producto["precio"]
+        )
 
-        placa,
+        total = (
+            valor_unitario *
+            cantidad
+        )
 
-        usuario
+        total_general += total
 
-    )
+        registrar_venta_cafeteria_db(
+
+            fecha,
+
+            producto_id,
+
+            producto["nombre"],
+
+            cantidad,
+
+            valor_unitario,
+
+            total,
+
+            placa,
+
+            usuario
+
+        )
 
     return {
 
-        "producto": producto["nombre"],
+        "success": True,
 
-        "cantidad": cantidad,
+        "placa": placa,
 
-        "valor_unitario": valor_unitario,
-
-        "total": total,
-
-        "inventario_restante": (
-
-            inventario - cantidad
-
-        )
+        "total": total_general
 
     }
+
+# ==========================================
+# RESUMEN VENTAS DEL DIA
+# ==========================================
+def obtener_resumen_ventas_hoy():
+
+    return obtener_resumen_ventas_hoy_db()

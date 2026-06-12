@@ -78,7 +78,7 @@ function generarEstilosTicket(){
 
                 margin:0;
 
-                padding:1mm;
+                padding:0.5mm;
 
                 font-family:'Courier New', monospace;
 
@@ -162,7 +162,7 @@ function generarEstilosTicket(){
 
                 font-size:10px;
 
-                word-wrap:break-word;
+                line-height:1.4;
             }
 
             .dato span{
@@ -172,9 +172,7 @@ function generarEstilosTicket(){
 
             .dato strong{
 
-                display:block;
-
-                margin-top:1px;
+                font-weight:normal;
             }
 
             .barcode{

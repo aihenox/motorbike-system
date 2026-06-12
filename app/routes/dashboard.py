@@ -89,7 +89,7 @@ def dashboard():
 # DETALLE CONSUMOS PLACA
 # ==========================================
 @dashboard_bp.route(
-    "/dashboard/consumos/<placa>"
+    "/dashboard/consumos/<path:placa>"
 )
 @login_required
 def detalle_consumos_placa(
