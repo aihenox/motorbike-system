@@ -46,6 +46,7 @@ def calcular_valor(
     # ==========================================
     tarifas = obtener_tarifa_activa()
 
+    
     minutos_gracia = tarifas.get(
         "minutos_gracia",
         10

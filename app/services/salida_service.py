@@ -134,14 +134,14 @@ def procesar_salida(ticket):
     # ==========================================
     # CERRAR TICKET
     # ==========================================
-    cerrar_ticket_db(
+    #cerrar_ticket_db(
 
-        ticket,
+        #ticket,
 
-        hora_salida.isoformat(),
+        #hora_salida.isoformat(),
 
-        valor
-    )
+        #valor
+    #)
 
     return {
 
@@ -163,5 +163,37 @@ def procesar_salida(ticket):
 
         "tiempo": tiempo,
 
-        "valor": valor
+        "valor": valor,
+
+        "hora_salida_iso":
+            hora_salida.isoformat()
+    }
+
+# ==========================================
+# CONFIRMAR SALIDA
+# ==========================================
+def confirmar_salida(
+
+    ticket,
+
+    valor,
+
+    hora_salida
+
+):
+
+    cerrar_ticket_db(
+
+        ticket,
+
+        hora_salida,
+
+        valor
+
+    )
+
+    return {
+
+        "success": True
+
     }
