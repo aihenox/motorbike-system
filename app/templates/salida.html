@@ -482,20 +482,74 @@ form.addEventListener(
 
         salidaPendiente = data;
 
+        let mensajeMensualidad = "";
+
+        if(data.valor == 0){
+
+            mensajeMensualidad = `
+
+                <div
+                    class="alert alert-info mt-2"
+                >
+
+                    <i class="bi bi-star-fill"></i>
+
+                    Vehículo con mensualidad activa
+
+                </div>
+
+            `;
+        }
+
         document.getElementById(
             "detalleSalida"
         ).innerHTML = `
 
-            <strong>Placa:</strong>
-            ${data.placa}
-            <br>
+            <div class="mb-2">
 
-            <strong>Tiempo:</strong>
-            ${data.tiempo}
-            <br>
+                <strong>Placa:</strong>
 
-            <strong>Valor calculado:</strong>
-            $ ${Number(data.valor).toLocaleString()}
+                ${data.placa}
+
+            </div>
+
+            <div class="mb-2">
+
+                <strong>Tiempo:</strong>
+
+                ${data.tiempo}
+
+            </div>
+
+            <div class="mb-2">
+
+                <strong>Ingreso:</strong>
+
+                ${data.hora_ingreso}
+
+            </div>
+
+            <div class="mb-2">
+
+                <strong>Salida:</strong>
+
+                ${data.hora_salida}
+
+            </div>
+
+            <div class="alert alert-success">
+
+                <strong>
+
+                    Valor calculado:
+
+                    $ ${Number(data.valor).toLocaleString()}
+
+                </strong>
+
+            </div>
+
+            ${mensajeMensualidad}
 
         `;
 
@@ -510,21 +564,6 @@ form.addEventListener(
             )
 
         ).show();
-
-        // LIMPIAR
-        form.reset();
-
-        ticketInput.focus();
-
-        // ALERTA
-        alerta.style.display = "block";
-
-        alerta.className =
-            "alert alert-success";
-
-            alerta.innerHTML =
-        "Salida registrada correctamente";
-
     }
 );
 
@@ -555,6 +594,8 @@ window.addEventListener(
                             "valorEspecial"
                           ).value
                         : salidaPendiente.valor;
+                        
+                salidaPendiente.valor = valorFinal;
 
                 const formData =
                     new FormData();
@@ -598,7 +639,36 @@ window.addEventListener(
                     return;
                 }
 
-                location.reload();
+                
+                // SONIDO
+                const audio = new Audio(
+                    "/static/audio/success.mp3"
+                );
+
+                audio.play();
+
+                // TICKET
+                const ticketHTML =
+                    generarTicketSalida(
+
+                        salidaPendiente
+
+                    );
+
+                abrirTicket(
+
+                    ticketHTML,
+
+                    salidaPendiente.ticket
+
+                );
+
+                // RECARGAR
+                setTimeout(() => {
+
+                    location.reload();
+
+                }, 1000);
 
             }
         );
