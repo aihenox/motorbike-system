@@ -686,10 +686,14 @@ def obtener_consecutivo_venta_dia_db():
             FROM ventas_cafeteria
 
             WHERE fecha LIKE {operador}
-            AND placa LIKE 'VENTA #%'
+            AND placa LIKE {operador}
 
         """, (
+
             f"{hoy}%",
+
+            "VENTA #%"
+
         ))
 
         fila = c.fetchone()
