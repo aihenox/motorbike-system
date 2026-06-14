@@ -67,43 +67,33 @@ cafeteria_bp = Blueprint(
 @login_required
 def dashboard_cafeteria():
 
-    try:
+    inventario = obtener_inventario_actual()
 
-        inventario = obtener_inventario_actual()
+    vendidos_hoy = obtener_productos_vendidos_hoy()
 
-        vendidos_hoy = obtener_productos_vendidos_hoy()
+    total_ventas_hoy = obtener_total_ventas_hoy()
 
-        total_ventas_hoy = obtener_total_ventas_hoy()
+    productos = listar_productos_cafeteria()
 
-        productos = listar_productos_cafeteria()
+    ultimas_ventas = (
+        obtener_resumen_ventas_hoy()
+    )
 
-        ultimas_ventas = (
-            obtener_resumen_ventas_hoy()
-        )
+    return render_template(
 
-        return render_template(
+        "cafeteria.html",
 
-            "cafeteria.html",
+        inventario=inventario,
 
-            inventario=inventario,
+        vendidos_hoy=vendidos_hoy,
 
-            vendidos_hoy=vendidos_hoy,
+        total_ventas_hoy=total_ventas_hoy,
 
-            total_ventas_hoy=total_ventas_hoy,
+        productos=productos,
 
-            productos=productos,
+        ultimas_ventas=ultimas_ventas
 
-            ultimas_ventas=ultimas_ventas
-
-        )
-
-    except Exception as e:
-
-        import traceback
-
-        traceback.print_exc()
-
-        return str(e), 500
+    )
 
 # ==========================================
 # LISTADO PRODUCTOS

@@ -773,15 +773,38 @@ def obtener_resumen_ventas_hoy_db():
 
                 fecha = row["fecha"]
 
+                if isinstance(
+                    fecha,
+                    str
+                ):
+
+                    try:
+
+                        fecha = datetime.fromisoformat(
+                            fecha
+                        )
+
+                    except Exception:
+
+                        fecha = None
+
                 resultado.append({
 
                     "placa": row["placa"],
 
-                    "fecha": fecha.strftime(
-                        "%I:%M %p"
+                    "fecha": (
+
+                        fecha.strftime(
+                            "%I:%M %p"
+                        )
+
+                        if fecha
+
+                        else "--:--"
+
                     ),
 
-                    "total": row["total"]
+                    "total": row["total"] or 0
 
                 })
 
