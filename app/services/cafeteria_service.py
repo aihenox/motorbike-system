@@ -22,7 +22,9 @@ from app.repositories.cafeteria_repository import (
 
     obtener_consecutivo_venta_dia_db,
 
-    obtener_resumen_ventas_hoy_db
+    obtener_resumen_ventas_hoy_db,
+
+    obtener_historial_ventas_cafeteria_db
 )
 
 from app.utils.validators import (
@@ -307,6 +309,17 @@ def registrar_venta_cafeteria(
 
     total_general = 0
 
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    venta_id = datetime.now(
+        ZoneInfo(
+            "America/Bogota"
+        )
+    ).strftime(
+        "%Y%m%d%H%M%S"
+    )
+
     for item in productos:
 
         producto_id = validar_id(
@@ -354,6 +367,8 @@ def registrar_venta_cafeteria(
 
         registrar_venta_cafeteria_db(
 
+            venta_id,
+
             fecha,
 
             producto_id,
@@ -388,3 +403,12 @@ def registrar_venta_cafeteria(
 def obtener_resumen_ventas_hoy():
 
     return obtener_resumen_ventas_hoy_db()
+
+# ==========================================
+# HISTORIAL VENTAS CAFETERIA
+# ==========================================
+def obtener_historial_ventas_cafeteria():
+
+    return (
+        obtener_historial_ventas_cafeteria_db()
+    )

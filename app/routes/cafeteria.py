@@ -45,7 +45,9 @@ from app.services.cafeteria_service import (
 
     registrar_venta_cafeteria,
 
-    obtener_resumen_ventas_hoy
+    obtener_resumen_ventas_hoy,
+
+    obtener_historial_ventas_cafeteria
 
 )
 
@@ -182,14 +184,15 @@ def registrar_venta_ajax():
 
         }), 400
 
-    except Exception:
+    except Exception as e:
+
+        print("ERROR CAFETERIA:", e)
 
         return jsonify({
 
             "success": False,
 
-            "message":
-                "Error interno del sistema"
+            "message": str(e)
 
         }), 500
     
@@ -374,3 +377,24 @@ def eliminar_producto_ajax(
             "message": str(e)
 
         }), 500
+    
+# ==========================================
+# HISTORIAL VENTAS CAFETERIA
+# ==========================================
+@cafeteria_bp.route(
+    "/cafeteria/historial"
+)
+@login_required
+def historial_cafeteria():
+
+    ventas = (
+        obtener_historial_ventas_cafeteria()
+    )
+
+    return render_template(
+
+        "cafeteria_historial.html",
+
+        ventas=ventas
+
+    )

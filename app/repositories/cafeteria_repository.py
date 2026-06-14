@@ -390,15 +390,25 @@ def obtener_productos_vendidos_hoy_db():
 # REGISTRAR VENTA
 # ==========================================
 def registrar_venta_cafeteria_db(
+
+    venta_id,
+
     fecha,
+
     producto_id,
+
     producto,
+
     cantidad,
+
     valor_unitario,
+
     total,
+
     placa,
+
     usuario
-):
+):  
 
     with conectar() as conn:
 
@@ -409,7 +419,7 @@ def registrar_venta_cafeteria_db(
             c.execute("""
 
                 INSERT INTO ventas_cafeteria(
-
+                    venta_id,
                     fecha,
                     producto_id,
                     producto,
@@ -423,12 +433,12 @@ def registrar_venta_cafeteria_db(
 
                 VALUES(
 
-                    %s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s
 
                 )
 
             """, (
-
+                venta_id,
                 fecha,
                 producto_id,
                 producto,
@@ -460,7 +470,7 @@ def registrar_venta_cafeteria_db(
             c.execute("""
 
                 INSERT INTO ventas_cafeteria(
-
+                    venta_id,
                     fecha,
                     producto_id,
                     producto,
@@ -472,10 +482,10 @@ def registrar_venta_cafeteria_db(
 
                 )
 
-                VALUES(?,?,?,?,?,?,?,?)
+                VALUES(?,?,?,?,?,?,?,?,?)
 
             """, (
-
+                venta_id,
                 fecha,
                 producto_id,
                 producto,
@@ -833,3 +843,68 @@ def obtener_resumen_ventas_hoy_db():
                 })
 
         return resultado
+
+# ==========================================
+# HISTORIAL VENTAS CAFETERIA
+# ==========================================
+def obtener_historial_ventas_cafeteria_db():
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT
+
+                    placa,
+
+                    MIN(fecha) AS fecha,
+
+                    COUNT(*) AS productos,
+
+                    SUM(total) AS total,
+
+                    usuario
+
+                FROM ventas_cafeteria
+
+                GROUP BY
+
+                    placa,
+                    usuario
+
+                ORDER BY MIN(fecha) DESC
+
+            """)
+
+        else:
+
+            c.execute("""
+
+                SELECT
+
+                    placa,
+
+                    MIN(fecha) AS fecha,
+
+                    COUNT(*) AS productos,
+
+                    SUM(total) AS total,
+
+                    usuario
+
+                FROM ventas_cafeteria
+
+                GROUP BY
+
+                    placa,
+                    usuario
+
+                ORDER BY MIN(fecha) DESC
+
+            """)
+
+        return c.fetchall()
