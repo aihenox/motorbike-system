@@ -131,11 +131,24 @@
             border-radius:10px;
         }
 
+        .venta-item{
+
+            transition:.2s;
+        }
+
         .venta-item:hover{
 
             background:#f8fafc;
 
-            transform:translateX(3px);
+            transform:translateY(-2px);
+
+            box-shadow:
+                0 10px 25px rgba(
+                    0,
+                    0,
+                    0,
+                    .08
+                );
 
         }
 
@@ -436,49 +449,69 @@
                 {% for venta in ultimas_ventas %}
 
                 <div
-                    class="border rounded p-3 mb-2 venta-item"
+                    class="card border-0 shadow-sm mb-3 venta-item"
                     style="
                         cursor:pointer;
-                        transition:.2s;
+                        border-radius:18px;
                     "
                     onclick="verDetalleVenta('{{ venta.placa }}')"
                 >
 
-                    <div
-                        class="d-flex justify-content-between align-items-center"
-                    >
+                    <div class="card-body">
 
-                        <div>
+                        <div
+                            class="d-flex justify-content-between align-items-center"
+                        >
 
-                            <div
-                                class="fw-bold"
-                            >
+                            <div>
 
-                                {{ venta.placa }}
+                                <div
+                                    class="fw-bold fs-5"
+                                >
+
+                                    {% if venta.placa and "VENTA #" in venta.placa %}
+
+                                        <i
+                                            class="bi bi-receipt-cutoff text-warning me-2"
+                                        ></i>
+
+                                    {% else %}
+
+                                        <i
+                                            class="bi bi-car-front-fill text-primary me-2"
+                                        ></i>
+
+                                    {% endif %}
+
+                                    {{ venta.placa }}
+
+                                </div>
+
+                                <div
+                                    class="text-muted mt-1"
+                                >
+
+                                    <i class="bi bi-clock-history"></i>
+
+                                    {{ venta.fecha }}
+
+                                </div>
 
                             </div>
 
-                            <pre style="font-size:11px;">
-                            {{ venta }}
-                            </pre>
+                            <div class="text-end">
 
-                            <small
-                                class="text-danger fw-bold"
-                            >
+                                <div
+                                    class="badge bg-success px-3 py-2 fs-6"
+                                >
 
-                                FECHA: {{ venta.fecha }}
+                                    $ {{ "{:,}".format(venta.total) }}
 
-                            </small>
+                                </div>
+
+                            </div>
 
                         </div>
-
-                        <span
-                            class="badge bg-success fs-6"
-                        >
-
-                            $ {{ "{:,}".format(venta.total) }}
-
-                        </span>
 
                     </div>
 

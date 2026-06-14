@@ -74,7 +74,7 @@ function generarEstilosTicket(){
             html,
             body{
 
-                width:48mm;
+                width:50mm;
 
                 margin:0;
 
@@ -92,30 +92,34 @@ function generarEstilosTicket(){
 
             .logo{
 
-                width:55px;
+                width:60px;
 
-                margin-bottom:8px;
+                margin-bottom:6px;
             }
 
             .empresa{
 
-                font-size:13px;
+                font-size:14px;
 
                 font-weight:bold;
 
-                margin-bottom:2px;
+                margin-bottom:1px;
             }
 
             .subtitulo{
 
-                font-size:9px;
+                font-size:11px;
 
-                margin-bottom:4px;
+                font-weight:bold;
+
+                margin-bottom:8px;
             }
 
             .direccion{
 
                 font-size:11px;
+
+                font-weight:bold;
 
                 margin-bottom:2px;
             }
@@ -124,6 +128,8 @@ function generarEstilosTicket(){
 
                 font-size:9px;
 
+                font-weight:bold;
+
                 margin-bottom:10px;
             }
 
@@ -131,7 +137,7 @@ function generarEstilosTicket(){
 
                 border-top:1px dashed #000;
 
-                margin:10px 0;
+                margin:5px 0;
             }
 
             .titulo{
@@ -140,7 +146,7 @@ function generarEstilosTicket(){
 
                 font-weight:bold;
 
-                margin-bottom:12px;
+                margin-bottom:8px;
 
                 text-align:center;
             }
@@ -153,40 +159,35 @@ function generarEstilosTicket(){
 
                 text-align:center;
 
-                margin:16px 0;
+                margin:8px 0;
             }
 
             .dato{
 
                 margin:4px 0;
 
-                font-size:10px;
+                font-size:11px;
 
-                line-height:1.4;
+                line-height:1;
             }
 
             .dato span{
 
                 font-weight:bold;
             }
-
-            .dato strong{
-
-                font-weight:normal;
-            }
-
+            
             .barcode{
 
                 text-align:center;
 
-                margin-top:18px;
+                margin-top:10px;
             }
 
             .mensaje{
 
                 text-align:center;
 
-                margin-top:15px;
+                margin-top:10px;
 
                 font-size:12px;
 
@@ -195,7 +196,7 @@ function generarEstilosTicket(){
 
             .terminos{
 
-                margin-top:18px;
+                margin-top:10px;
 
                 font-size:10px;
 

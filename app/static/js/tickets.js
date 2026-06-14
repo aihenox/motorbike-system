@@ -75,34 +75,45 @@ function generarTerminos(){
         <div class="terminos">
 
             <p>
-                El ingreso del vehículo implica aceptación de los presentes términos y condiciones.
+                <strong>
+                    El ingreso del vehículo implica aceptación de los presentes términos y condiciones.
+                </strong>
             </p>
 
             <p>
-                El vehículo será entregado únicamente al portador del comprobante de ingreso.
+                <strong>
+                    El vehículo será entregado únicamente al portador del comprobante de ingreso.
+                </strong>
             </p>
 
             <p>
-                No se aceptan reclamaciones posteriores al retiro del vehículo.
+                <strong>
+                    No se aceptan reclamaciones posteriores al retiro del vehículo.
+                </strong>
             </p>
 
             <p>
-                El establecimiento no responde por objetos, dinero o documentos dejados dentro del vehículo.
+                <strong>
+                    El establecimiento no responde por objetos, dinero o documentos dejados dentro del vehículo.
+                </strong>
             </p>
 
             <p>
-                El parqueadero no asume responsabilidad por hurto, incendio, daños causados por terceros o fuerza mayor.
+                <strong>
+                    El parqueadero no asume responsabilidad por hurto, incendio, daños causados por terceros o fuerza mayor.
+                </strong>
             </p>
 
             <p>
-                En caso de pérdida del comprobante, la entrega del vehículo solo se realizará con la tarjeta de propiedad.
+                <strong>
+                    En caso de pérdida del comprobante, la entrega del vehículo solo se realizará con la tarjeta de propiedad.
+                </strong>
             </p>
 
         </div>
 
     `;
 }
-
 
 
 
@@ -149,7 +160,7 @@ function generarTicketIngreso(data){
 
             <strong>PLACA:</strong>
 
-            ${data.placa}
+            <strong>${data.placa}</strong>
 
         </div>
 
@@ -157,7 +168,7 @@ function generarTicketIngreso(data){
 
             <strong>VEHÍCULO:</strong>
 
-            ${data.tipo}
+            <strong>${data.tipo}</strong>
 
         </div>
 
@@ -165,7 +176,7 @@ function generarTicketIngreso(data){
 
             <strong>INGRESO:</strong>
 
-            ${data.hora}
+            <Strong>${data.hora}</strong>
 
         </div>
 
