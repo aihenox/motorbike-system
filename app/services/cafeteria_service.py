@@ -24,7 +24,9 @@ from app.repositories.cafeteria_repository import (
 
     obtener_resumen_ventas_hoy_db,
 
-    obtener_historial_ventas_cafeteria_db
+    obtener_historial_ventas_cafeteria_db,
+
+    obtener_detalle_venta_cafeteria_db
 )
 
 from app.utils.validators import (
@@ -411,4 +413,17 @@ def obtener_historial_ventas_cafeteria():
 
     return (
         obtener_historial_ventas_cafeteria_db()
+    )
+
+# ==========================================
+# DETALLE VENTA CAFETERIA
+# ==========================================
+def obtener_detalle_venta_cafeteria(
+    venta_id
+):
+
+    return (
+        obtener_detalle_venta_cafeteria_db(
+            venta_id
+        )
     )

@@ -857,28 +857,31 @@ def obtener_historial_ventas_cafeteria_db():
 
             c.execute("""
 
-                SELECT
+            SELECT
 
-                    placa,
+                venta_id,
 
-                    MIN(fecha) AS fecha,
+                placa,
 
-                    COUNT(*) AS productos,
+                MIN(fecha) AS fecha,
 
-                    SUM(total) AS total,
+                COUNT(*) AS productos,
 
-                    usuario
+                SUM(total) AS total,
 
-                FROM ventas_cafeteria
+                usuario
 
-                GROUP BY
+            FROM ventas_cafeteria
 
-                    placa,
-                    usuario
+            GROUP BY
 
-                ORDER BY MIN(fecha) DESC
+                venta_id,
+                placa,
+                usuario
 
-            """)
+            ORDER BY MIN(fecha) DESC
+
+        """)
 
         else:
 
@@ -908,3 +911,70 @@ def obtener_historial_ventas_cafeteria_db():
             """)
 
         return c.fetchall()
+    
+# ==========================================
+# DETALLE VENTA CAFETERIA
+# ==========================================
+def obtener_detalle_venta_cafeteria_db(
+    venta_id
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT
+
+                    producto,
+
+                    cantidad,
+
+                    valor_unitario,
+
+                    total
+
+                FROM ventas_cafeteria
+
+                WHERE venta_id = %s
+
+                ORDER BY id
+
+            """, (
+
+                venta_id,
+
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT
+
+                    venta_id,
+
+                    placa,
+
+                    MIN(fecha) AS fecha,
+
+                    COUNT(*) AS productos,
+
+                    SUM(total) AS total,
+
+                    usuario
+
+                FROM ventas_cafeteria
+
+                GROUP BY
+
+                    venta_id,
+                    placa,
+                    usuario
+
+                ORDER BY MIN(fecha) DESC
+
+            """)

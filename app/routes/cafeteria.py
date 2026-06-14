@@ -47,7 +47,9 @@ from app.services.cafeteria_service import (
 
     obtener_resumen_ventas_hoy,
 
-    obtener_historial_ventas_cafeteria
+    obtener_historial_ventas_cafeteria,
+
+    obtener_detalle_venta_cafeteria
 
 )
 
@@ -398,3 +400,28 @@ def historial_cafeteria():
         ventas=ventas
 
     )
+
+# ==========================================
+# DETALLE VENTA CAFETERIA
+# ==========================================
+@cafeteria_bp.route(
+    "/cafeteria/api/detalle_venta/<venta_id>"
+)
+@login_required
+def detalle_venta_cafeteria(
+    venta_id
+):
+
+    detalle = (
+        obtener_detalle_venta_cafeteria(
+            venta_id
+        )
+    )
+
+    return jsonify({
+
+        "success": True,
+
+        "detalle": detalle
+
+    })
