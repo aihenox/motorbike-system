@@ -182,14 +182,23 @@ def registrar_venta_ajax():
 
         }), 400
 
-    except Exception:
+    except Exception as e:
+
+        print(
+            "ERROR REGISTRAR VENTA:",
+            str(e)
+        )
+
+        import traceback
+
+        traceback.print_exc()
 
         return jsonify({
 
             "success": False,
 
             "message":
-                "Error interno del sistema"
+                str(e)
 
         }), 500
     
