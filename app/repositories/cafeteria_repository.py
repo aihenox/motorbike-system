@@ -880,7 +880,7 @@ def obtener_historial_ventas_cafeteria_db():
                 usuario
 
             ORDER BY MIN(fecha) DESC
-
+            LIMIT 10
         """)
 
         else:
@@ -910,6 +910,8 @@ def obtener_historial_ventas_cafeteria_db():
                     usuario
 
                 ORDER BY MIN(fecha) DESC
+                LIMIT 10      
+                
 
             """)
 
@@ -977,4 +979,99 @@ def obtener_detalle_venta_cafeteria_db(
                 venta_id,
 
             ))
+        return c.fetchall()
+    
+# ==========================================
+# HISTORIAL POR FECHAS
+# ==========================================
+def obtener_historial_cafeteria_fechas_db(
+
+    fecha_inicio,
+
+    fecha_fin
+
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        if POSTGRES:
+
+            c.execute("""
+
+                SELECT
+
+                    venta_id,
+
+                    placa,
+
+                    MIN(fecha) AS fecha,
+
+                    COUNT(*) AS productos,
+
+                    SUM(total) AS total,
+
+                    usuario
+
+                FROM ventas_cafeteria
+
+                WHERE DATE(fecha)
+                BETWEEN %s AND %s
+
+                GROUP BY
+
+                    venta_id,
+                    placa,
+                    usuario
+
+                ORDER BY MIN(fecha) DESC
+
+            """, (
+
+                fecha_inicio,
+
+                fecha_fin
+
+            ))
+
+        else:
+
+            c.execute("""
+
+                SELECT
+
+                    venta_id,
+
+                    placa,
+
+                    MIN(fecha) AS fecha,
+
+                    COUNT(*) AS productos,
+
+                    SUM(total) AS total,
+
+                    usuario
+
+                FROM ventas_cafeteria
+
+                WHERE DATE(fecha)
+                BETWEEN ? AND ?
+
+                GROUP BY
+
+                    venta_id,
+                    placa,
+                    usuario
+
+                ORDER BY MIN(fecha) DESC
+
+            """, (
+
+                fecha_inicio,
+
+                fecha_fin
+
+            ))
+
         return c.fetchall()

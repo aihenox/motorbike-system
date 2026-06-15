@@ -2,6 +2,9 @@ from flask import jsonify
 import json
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from flask import send_file
+from openpyxl import Workbook
+from io import BytesIO
 
 from flask_login import current_user
 
@@ -49,7 +52,9 @@ from app.services.cafeteria_service import (
 
     obtener_historial_ventas_cafeteria,
 
-    obtener_detalle_venta_cafeteria
+    obtener_detalle_venta_cafeteria,
+
+    obtener_historial_cafeteria_fechas
 
 )
 
@@ -402,6 +407,43 @@ def historial_cafeteria():
     )
 
 # ==========================================
+# BUSCAR HISTORIAL CAFETERIA
+# ==========================================
+@cafeteria_bp.route(
+    "/cafeteria/buscar"
+)
+@login_required
+def buscar_historial_cafeteria():
+
+    fecha_inicio = request.args.get(
+        "fecha_inicio"
+    )
+
+    fecha_fin = request.args.get(
+        "fecha_fin"
+    )
+
+    ventas = (
+
+        obtener_historial_cafeteria_fechas(
+
+            fecha_inicio,
+
+            fecha_fin
+
+        )
+
+    )
+
+    return render_template(
+
+        "cafeteria_historial.html",
+
+        ventas=ventas
+
+    )
+
+# ==========================================
 # DETALLE VENTA CAFETERIA
 # ==========================================
 @cafeteria_bp.route(
@@ -459,3 +501,82 @@ def detalle_venta_cafeteria(
             "message": str(e)
 
         }), 500
+    
+# ==========================================
+# EXPORTAR EXCEL CAFETERIA
+# ==========================================
+@cafeteria_bp.route(
+    "/cafeteria/exportar_excel"
+)
+@login_required
+def exportar_excel_cafeteria():
+
+    ventas = (
+        obtener_historial_ventas_cafeteria()
+    )
+
+    wb = Workbook()
+
+    ws = wb.active
+
+    ws.title = "Historial Cafeteria"
+
+    # ======================================
+    # ENCABEZADOS
+    # ======================================
+    ws.append([
+
+        "Fecha",
+
+        "Venta",
+
+        "Productos",
+
+        "Total",
+
+        "Usuario"
+
+    ])
+
+    # ======================================
+    # DATOS
+    # ======================================
+    for venta in ventas:
+
+        ws.append([
+
+            venta["fecha"],
+
+            venta["placa"],
+
+            venta["productos"],
+
+            venta["total"],
+
+            venta["usuario"]
+
+        ])
+
+    archivo = BytesIO()
+
+    wb.save(
+        archivo
+    )
+
+    archivo.seek(
+        0
+    )
+
+    return send_file(
+
+        archivo,
+
+        as_attachment=True,
+
+        download_name=
+            "Historial_Cafeteria.xlsx",
+
+        mimetype=
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+    )

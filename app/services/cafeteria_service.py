@@ -26,7 +26,9 @@ from app.repositories.cafeteria_repository import (
 
     obtener_historial_ventas_cafeteria_db,
 
-    obtener_detalle_venta_cafeteria_db
+    obtener_detalle_venta_cafeteria_db,
+
+    obtener_historial_cafeteria_fechas_db
 )
 
 from app.utils.validators import (
@@ -426,4 +428,27 @@ def obtener_detalle_venta_cafeteria(
         obtener_detalle_venta_cafeteria_db(
             venta_id
         )
+    )
+
+# ==========================================
+# HISTORIAL CAFETERIA POR FECHAS
+# ==========================================
+def obtener_historial_cafeteria_fechas(
+
+    fecha_inicio,
+
+    fecha_fin
+
+):
+
+    return (
+
+        obtener_historial_cafeteria_fechas_db(
+
+            fecha_inicio,
+
+            fecha_fin
+
+        )
+
     )

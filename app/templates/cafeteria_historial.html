@@ -126,7 +126,17 @@
             </div>
 
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a
+                    href="/cafeteria/exportar_excel"
+                    class="btn btn-success"
+                >
 
+                    <i class="bi bi-file-earmark-excel"></i>
+
+                    Excel
+
+                </a>
+                
                 <a
                     href="/dashboard/cafeteria"
                     class="btn btn-light"
@@ -139,6 +149,64 @@
                 </a>
 
             </div>
+
+        </div>
+
+    </div>
+
+    <div class="row mb-3">
+
+        <div class="col-md-3">
+
+            <label>Fecha Inicial</label>
+
+            <input
+                type="date"
+                id="fechaInicio"
+                class="form-control"
+            >
+
+        </div>
+
+        <div class="col-md-3">
+
+            <label>Fecha Final</label>
+
+            <input
+                type="date"
+                id="fechaFinal"
+                class="form-control"
+            >
+
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+
+            <button
+                class="btn btn-primary w-100"
+                onclick="buscarVentas()"
+            >
+
+                <i class="bi bi-search"></i>
+
+                Buscar
+
+            </button>
+
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+
+            <button
+                class="btn btn-success w-100"
+                onclick="mostrarCorte()"
+            >
+
+                <i class="bi bi-cash-stack"></i>
+
+                Corte
+
+            </button>
 
         </div>
 
@@ -536,7 +604,35 @@ document.getElementById(
     }
 );
 
+function buscarVentas(){
+
+    const inicio = document.getElementById(
+        "fechaInicio"
+    ).value;
+
+    const fin = document.getElementById(
+        "fechaFinal"
+    ).value;
+
+    if(
+        !inicio ||
+        !fin
+    ){
+
+        alert(
+            "Seleccione ambas fechas"
+        );
+
+        return;
+    }
+
+    window.location.href =
+
+        `/cafeteria/buscar?fecha_inicio=${inicio}&fecha_fin=${fin}`;
+}
+
 </script>
+
 
 </body>
 
