@@ -312,6 +312,8 @@ def crear_tabla_ventas_cafeteria(
 
             id {id_type},
 
+            venta_id TEXT,
+
             fecha TEXT NOT NULL,
 
             producto_id INTEGER NOT NULL,

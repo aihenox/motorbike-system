@@ -76,6 +76,11 @@ class Config:
 
     TIMEZONE = "America/Bogota"
 
+    ADMIN_PASSWORD = os.getenv(
+        "ADMIN_PASSWORD",
+        "change-me"
+    )
+
 
 class DevelopmentConfig(Config):
 
