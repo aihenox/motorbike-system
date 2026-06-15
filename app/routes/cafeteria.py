@@ -412,16 +412,50 @@ def detalle_venta_cafeteria(
     venta_id
 ):
 
-    detalle = (
-        obtener_detalle_venta_cafeteria(
-            venta_id
+    try:
+
+        detalle = (
+            obtener_detalle_venta_cafeteria(
+                venta_id
+            )
         )
-    )
 
-    return jsonify({
+        print("VENTA ID:", venta_id)
 
-        "success": True,
+        print("DETALLE:", detalle)
 
-        "detalle": detalle
+        detalle_json = []
 
-    })
+        for item in detalle:
+
+            detalle_json.append({
+
+                "producto": item["producto"],
+
+                "cantidad": item["cantidad"],
+
+                "valor_unitario": item["valor_unitario"],
+
+                "total": item["total"]
+
+            })
+
+        return jsonify({
+
+            "success": True,
+
+            "detalle": detalle_json
+
+        })
+
+    except Exception as e:
+
+        print("ERROR DETALLE:", e)
+
+        return jsonify({
+
+            "success": False,
+
+            "message": str(e)
+
+        }), 500

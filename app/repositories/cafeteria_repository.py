@@ -889,6 +889,8 @@ def obtener_historial_ventas_cafeteria_db():
 
                 SELECT
 
+                    venta_id,
+
                     placa,
 
                     MIN(fecha) AS fecha,
@@ -903,6 +905,7 @@ def obtener_historial_ventas_cafeteria_db():
 
                 GROUP BY
 
+                    venta_id,
                     placa,
                     usuario
 
@@ -955,26 +958,23 @@ def obtener_detalle_venta_cafeteria_db(
 
                 SELECT
 
-                    venta_id,
+                    producto,
 
-                    placa,
+                    cantidad,
 
-                    MIN(fecha) AS fecha,
+                    valor_unitario,
 
-                    COUNT(*) AS productos,
-
-                    SUM(total) AS total,
-
-                    usuario
+                    total
 
                 FROM ventas_cafeteria
 
-                GROUP BY
+                WHERE venta_id = ?
 
-                    venta_id,
-                    placa,
-                    usuario
+                ORDER BY id
 
-                ORDER BY MIN(fecha) DESC
+            """, (
 
-            """)
+                venta_id,
+
+            ))
+        return c.fetchall()

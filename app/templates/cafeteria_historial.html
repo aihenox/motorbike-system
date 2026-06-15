@@ -1,94 +1,100 @@
 <!DOCTYPE html>
-
 <html lang="es">
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<title>
-    Historial Cafetería
-</title>
+    <title>
+        Historial Cafetería
+    </title>
 
-<link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
 
-<link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
 
-<style>
+    <style>
 
-    body{
+        body{
 
-        background:#f8fafc;
+            background:#f8fafc;
 
-    }
+        }
 
-    .header-card{
+        .header-card{
 
-        background:linear-gradient(
-            135deg,
-            #0f172a,
-            #1e293b
-        );
+            background:linear-gradient(
+                135deg,
+                #0f172a,
+                #1e293b
+            );
 
-        color:white;
+            color:white;
 
-        border-radius:20px;
+            border-radius:20px;
 
-        padding:25px;
+            padding:25px;
 
-        margin-bottom:25px;
-    }
+            margin-bottom:25px;
+        }
 
-    .table-card{
+        .table-card{
 
-        border:none;
+            border:none;
 
-        border-radius:20px;
+            border-radius:20px;
 
-        overflow:hidden;
+            overflow:hidden;
 
-        box-shadow:0 10px 30px rgba(0,0,0,.08);
-    }
+            box-shadow:0 10px 30px rgba(0,0,0,.08);
+        }
 
-    .table tbody tr:hover{
+        .table tbody tr:hover{
 
-        background:#f1f5f9;
+            background:#f1f5f9;
 
-    }
+        }
 
-    .badge-total{
+        .badge-total{
 
-        font-size:15px;
+            font-size:15px;
 
-        padding:8px 12px;
-    }
+            padding:8px 12px;
+        }
 
-    .btn-detalle{
+        .btn-detalle{
 
-        border-radius:10px;
-    }
+            border-radius:10px;
+        }
 
-    .resumen-card{
+        .resumen-card{
 
-        border:none;
+            border:none;
 
-        border-radius:18px;
+            border-radius:18px;
 
-        box-shadow:0 6px 18px rgba(0,0,0,.08);
-    }
+            box-shadow:0 6px 18px rgba(0,0,0,.08);
+        }
 
-</style>
+        .buscador{
+
+            border-radius:12px;
+
+            padding:12px;
+        }
+
+    </style>
 
 </head>
 
@@ -96,68 +102,41 @@
 
 <div class="container py-4">
 
-<!-- HEADER -->
-<div class="header-card">
+    <!-- HEADER -->
+    <div class="header-card">
 
-    <div class="row align-items-center">
+        <div class="row align-items-center">
 
-        <div class="col-md-8">
+            <div class="col-md-8">
 
-            <h2 class="fw-bold mb-1">
+                <h2 class="fw-bold mb-1">
 
-                <i class="bi bi-cup-hot-fill"></i>
+                    <i class="bi bi-cup-hot-fill"></i>
 
-                Historial Cafetería
+                    Historial Cafetería
 
-            </h2>
+                </h2>
 
-            <p class="mb-0 opacity-75">
+                <p class="mb-0 opacity-75">
 
-                Consulta de ventas registradas
+                    Consulta de ventas registradas
 
-            </p>
+                </p>
 
-        </div>
+            </div>
 
-        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
 
-            <a
-                href="/dashboard/cafeteria"
-                class="btn btn-light"
-            >
+                <a
+                    href="/dashboard/cafeteria"
+                    class="btn btn-light"
+                >
 
-                <i class="bi bi-arrow-left"></i>
+                    <i class="bi bi-arrow-left"></i>
 
-                Volver
+                    Volver
 
-            </a>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- RESUMEN -->
-<div class="row mb-4">
-
-    <div class="col-md-6">
-
-        <div class="card resumen-card">
-
-            <div class="card-body">
-
-                <h6 class="text-muted">
-
-                    Cantidad de Ventas
-
-                </h6>
-
-                <h3 class="fw-bold">
-
-                    {{ ventas|length }}
-
-                </h3>
+                </a>
 
             </div>
 
@@ -165,25 +144,54 @@
 
     </div>
 
-    <div class="col-md-6">
+    <!-- RESUMEN -->
+    <div class="row mb-4">
 
-        <div class="card resumen-card">
+        <div class="col-md-6">
 
-            <div class="card-body">
+            <div class="card resumen-card">
 
-                <h6 class="text-muted">
+                <div class="card-body">
 
-                    Total Registrado
+                    <h6 class="text-muted">
 
-                </h6>
+                        Cantidad de Ventas
 
-                <h3 class="fw-bold text-success">
+                    </h6>
 
-                    $ {{ "{:,}".format(
-                        ventas|sum(attribute='total')
-                    ) }}
+                    <h3 class="fw-bold">
 
-                </h3>
+                        {{ ventas|length }}
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card resumen-card">
+
+                <div class="card-body">
+
+                    <h6 class="text-muted">
+
+                        Total Registrado
+
+                    </h6>
+
+                    <h3 class="fw-bold text-success">
+
+                        $ {{ "{:,}".format(
+                            ventas|sum(attribute='total')
+                        ) }}
+
+                    </h3>
+
+                </div>
 
             </div>
 
@@ -191,160 +199,191 @@
 
     </div>
 
-</div>
+    <!-- BUSCADOR -->
+    <div class="mb-3">
 
-<!-- TABLA -->
-<div class="card table-card">
+        <input
+            type="text"
+            id="buscarVenta"
+            class="form-control buscador"
+            placeholder="🔍 Buscar placa o venta..."
+        >
 
-    <div class="card-body">
+    </div>
 
-        <div class="table-responsive">
+    <!-- TABLA -->
+    <div class="card table-card">
 
-            <table
-                class="table table-hover align-middle"
-            >
+        <div class="card-body">
 
-                <thead class="table-dark">
+            <div class="table-responsive">
 
-                    <tr>
+                <table
+                    id="tablaVentas"
+                    class="table table-hover align-middle"
+                >
 
-                        <th>Fecha</th>
+                    <thead class="table-dark">
 
-                        <th>Placa / Venta</th>
+                        <tr>
 
-                        <th>Productos</th>
+                            <th>Fecha</th>
 
-                        <th>Total</th>
+                            <th>Placa / Venta</th>
 
-                        <th>Acción</th>
+                            <th>Productos</th>
 
-                    </tr>
+                            <th>Total</th>
 
-                </thead>
+                            <th>Acción</th>
 
-                <tbody>
+                        </tr>
 
-                    {% for venta in ventas %}
+                    </thead>
 
-                    <tr>
+                    <tbody>
 
-                        <td>
+                        {% if ventas %}
 
-                            {{ venta.fecha }}
+                            {% for venta in ventas %}
 
-                        </td>
+                            <tr>
 
-                        <td
-                            class="fw-bold text-uppercase"
-                        >
+                                <td>
 
-                            {{ venta.placa }}
+                                    {{ venta.fecha }}
 
-                        </td>
+                                </td>
 
-                        <br>
+                                <td>
 
-                        <small class="text-danger">
+                                    <span
+                                        class="badge bg-primary"
+                                    >
 
-                            ID: {{ venta.venta_id }}
+                                        {{ venta.placa }}
 
-                        </small>
+                                    </span>
 
-                        <td>
+                                </td>
 
-                            {{ venta.productos }}
+                                <td>
 
-                        </td>
+                                    <span
+                                        class="badge bg-secondary"
+                                    >
 
-                        <td>
+                                        {{ venta.productos }}
 
-                            <span
-                                class="badge bg-success badge-total"
-                            >
+                                        productos
 
-                                $ {{ "{:,}".format(
-                                    venta.total or 0
-                                ) }}
+                                    </span>
 
-                            </span>
+                                </td>
 
-                        </td>
+                                <td>
 
-                        <td>
+                                    <span
+                                        class="badge bg-success badge-total"
+                                    >
 
-                            <button
-                                class="btn btn-primary btn-sm btn-detalle"
-                                onclick="verDetalle('{{ venta.venta_id }}')"
-                            >
+                                        $ {{ "{:,}".format(
+                                            venta.total or 0
+                                        ) }}
 
-                                <i class="bi bi-eye"></i>
+                                    </span>
 
-                                Ver
+                                </td>
 
-                            </button>
+                                <td>
 
-                        </td>
+                                    <button
+                                        class="btn btn-primary btn-sm btn-detalle"
+                                        onclick="verDetalle('{{ venta.venta_id }}')"
+                                    >
 
-                    </tr>
+                                        <i class="bi bi-receipt"></i>
 
-                    {% endfor %}
+                                        Detalle
 
-                </tbody>
+                                    </button>
 
-            </table>
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        {% else %}
+
+                            <tr>
+
+                                <td
+                                    colspan="5"
+                                    class="text-center text-muted py-5"
+                                >
+
+                                    No existen ventas registradas
+
+                                </td>
+
+                            </tr>
+
+                        {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
 
     </div>
-
-</div>
-
 
 </div>
 
 <!-- MODAL -->
-
 <div
     class="modal fade"
     id="modalDetalleVenta"
     tabindex="-1"
 >
 
+    <div class="modal-dialog modal-lg">
 
-<div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-    <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
 
-        <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">
 
-            <h5 class="modal-title">
+                    <i class="bi bi-receipt"></i>
 
-                <i class="bi bi-receipt"></i>
+                    Detalle de Venta
 
-                Detalle de Venta
+                </h5>
 
-            </h5>
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
 
-            <button
-                type="button"
-                class="btn-close btn-close-white"
-                data-bs-dismiss="modal"
-            ></button>
+            </div>
 
-        </div>
+            <div
+                class="modal-body"
+                id="detalleVenta"
+            >
 
-        <div
-            class="modal-body"
-            id="detalleVenta"
-        >
+                Cargando...
 
-            Cargando...
+            </div>
 
         </div>
 
     </div>
-
-</div>
 
 </div>
 
@@ -365,7 +404,7 @@ async function verDetalle(
         );
 
         const data = await response.json();
-
+        console.log(data);
         let html = `
 
             <table class="table table-striped">
@@ -404,9 +443,21 @@ async function verDetalle(
 
                     <td>${item.cantidad}</td>
 
-                    <td>$ ${Number(item.valor_unitario).toLocaleString()}</td>
+                    <td>
 
-                    <td>$ ${Number(item.total).toLocaleString()}</td>
+                        $ ${Number(
+                            item.valor_unitario
+                        ).toLocaleString()}
+
+                    </td>
+
+                    <td>
+
+                        $ ${Number(
+                            item.total
+                        ).toLocaleString()}
+
+                    </td>
 
                 </tr>
 
@@ -457,6 +508,33 @@ async function verDetalle(
     }
 
 }
+
+document.getElementById(
+    "buscarVenta"
+).addEventListener(
+    "keyup",
+    function(){
+
+        let filtro = this.value.toLowerCase();
+
+        document.querySelectorAll(
+            "#tablaVentas tbody tr"
+        ).forEach(row => {
+
+            row.style.display =
+
+                row.innerText
+                .toLowerCase()
+                .includes(filtro)
+
+                ? ""
+
+                : "none";
+
+        });
+
+    }
+);
 
 </script>
 
