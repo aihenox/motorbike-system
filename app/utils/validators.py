@@ -185,7 +185,7 @@ def validar_responsable(responsable):
     responsables_validos = {
         "Angela",
         "Angelica",
-        "Diva",
+        "Angie",
         "Karime"
     }
 
