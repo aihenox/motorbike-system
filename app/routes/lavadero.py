@@ -39,6 +39,8 @@ from app.services.lavadero_service import (
 
     listar_lavados,
 
+    obtener_historial_lavados,
+
     obtener_metricas_lavadero,
 
     obtener_estadisticas_responsables,
@@ -270,8 +272,13 @@ def historial_lavadero():
         ""
     )
 
-    fecha = request.args.get(
-        "fecha",
+    fecha_inicio = request.args.get(
+        "fecha_inicio",
+        ""
+    )
+
+    fecha_fin = request.args.get(
+        "fecha_fin",
         ""
     )
 
@@ -284,7 +291,9 @@ def historial_lavadero():
 
         placa,
 
-        fecha,
+        fecha_inicio,
+
+        fecha_fin,
 
         responsable
     )
@@ -293,7 +302,9 @@ def historial_lavadero():
 
         placa,
 
-        fecha,
+        fecha_inicio,
+
+        fecha_fin,
 
         responsable
     )
@@ -308,7 +319,9 @@ def historial_lavadero():
 
         placa=placa,
 
-        fecha=fecha,
+        fecha_inicio=fecha_inicio,
+
+        fecha_fin=fecha_fin,
 
         responsable=responsable
     )
@@ -328,8 +341,13 @@ def exportar_excel_lavadero():
         ""
     )
 
-    fecha = request.args.get(
-        "fecha",
+    fecha_inicio = request.args.get(
+        "fecha_inicio",
+        ""
+    )
+
+    fecha_fin = request.args.get(
+        "fecha_fin",
         ""
     )
 
@@ -338,11 +356,13 @@ def exportar_excel_lavadero():
         ""
     )
 
-    historial = listar_historial_lavadero(
+    historial = obtener_historial_lavados(
 
         placa,
 
-        fecha,
+        fecha_inicio,
+
+        fecha_fin,
 
         responsable
     )

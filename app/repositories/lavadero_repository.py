@@ -175,7 +175,9 @@ def obtener_historial_lavados_db(
 
     placa="",
 
-    fecha="",
+    fecha_inicio="",
+
+    fecha_fin="",
 
     responsable=""
 ):
@@ -204,24 +206,27 @@ def obtener_historial_lavados_db(
             )
 
         # ==========================================
-        # FILTRO FECHA
+        # FECHA INICIAL Y FINAL
         # ==========================================
-        if fecha:
+        if fecha_inicio and fecha_fin:
 
             condiciones.append(
-                f"fecha LIKE {operador}"
+                f"DATE(fecha) BETWEEN {operador} AND {operador}"
             )
-            
-            fecha_iso = datetime.strptime(
 
-                fecha,
+            valores.extend([
+                fecha_inicio,
+                fecha_fin
+            ])
 
-                "%Y-%m-%d"
+        elif fecha_inicio:
 
-            ).strftime("%Y-%m-%d")
+            condiciones.append(
+                f"DATE(fecha) = {operador}"
+            )
 
             valores.append(
-                f"{fecha_iso}%"
+                fecha_inicio
             )
 
         # ==========================================

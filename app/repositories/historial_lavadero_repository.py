@@ -18,7 +18,9 @@ def obtener_historial_lavadero_db(
 
     placa="",
 
-    fecha="",
+    fecha_inicio="",
+
+    fecha_fin="",
 
     responsable=""
 ):
@@ -81,16 +83,35 @@ def obtener_historial_lavadero_db(
         # ==========================================
         # FECHA
         # ==========================================
-        if fecha:
+        if fecha_inicio and fecha_fin:
 
             query += f"""
 
-                AND fecha LIKE {operador}
+                AND DATE(fecha)
+                BETWEEN {operador}
+                AND {operador}
+
+            """
+
+            parametros.extend([
+
+                fecha_inicio,
+
+                fecha_fin
+            ])
+
+        elif fecha_inicio:
+
+            query += f"""
+
+                AND DATE(fecha)
+                = {operador}
 
             """
 
             parametros.append(
-                f"{fecha}%"
+
+                fecha_inicio
             )
 
         query += """
@@ -114,7 +135,9 @@ def obtener_total_lavadero_db(
 
     placa="",
 
-    fecha="",
+    fecha_inicio="",
+
+    fecha_fin="",
 
     responsable=""
 ):
@@ -175,16 +198,54 @@ def obtener_total_lavadero_db(
         # ==========================================
         # FECHA
         # ==========================================
-        if fecha:
+        if fecha_inicio and fecha_fin:
 
             query += f"""
 
-                AND fecha LIKE {operador}
+                AND DATE(fecha)
+                BETWEEN {operador}
+                AND {operador}
+
+            """
+
+            parametros.extend([
+
+                fecha_inicio,
+
+                fecha_fin
+            ])
+
+        elif fecha_inicio:
+
+            query += f"""
+
+                AND DATE(fecha)
+                = {operador}
 
             """
 
             parametros.append(
-                f"{fecha}%"
+
+                fecha_inicio
+            )
+
+        # ==========================================
+        # SIN FILTRO FECHA
+        # ==========================================
+        elif not placa and not responsable:
+
+            query += f"""
+
+                AND DATE(fecha)
+                = {operador}
+
+            """
+
+            from datetime import date
+
+            parametros.append(
+
+                date.today().isoformat()
             )
 
         c.execute(

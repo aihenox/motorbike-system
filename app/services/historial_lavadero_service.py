@@ -13,7 +13,9 @@ def listar_historial_lavadero(
 
     placa="",
 
-    fecha="",
+    fecha_inicio="",
+
+    fecha_fin="",
 
     responsable=""
 ):
@@ -22,7 +24,9 @@ def listar_historial_lavadero(
 
         placa,
 
-        fecha,
+        fecha_inicio,
+
+        fecha_fin,
 
         responsable
     )
@@ -85,7 +89,9 @@ def obtener_total_lavadero(
 
     placa="",
 
-    fecha="",
+    fecha_inicio="",
+
+    fecha_fin="",
 
     responsable=""
 ):
@@ -94,7 +100,9 @@ def obtener_total_lavadero(
 
         placa,
 
-        fecha,
+        fecha_inicio,
+
+        fecha_fin,
 
         responsable
     )

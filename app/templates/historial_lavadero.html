@@ -211,14 +211,28 @@
 
                     </div>
 
-                    <!-- FECHA -->
+                    <!-- FECHA INICIAL -->
                     <div class="col-md-2">
 
                         <input
                             type="date"
-                            name="fecha"
+                            name="fecha_inicio"
                             class="form-control"
-                            value="{{ fecha }}"
+                            value="{{ fecha_inicio }}"
+                            title="Fecha inicial"
+                        >
+
+                    </div>
+
+                    <!-- FECHA FINAL -->
+                    <div class="col-md-2">
+
+                        <input
+                            type="date"
+                            name="fecha_fin"
+                            class="form-control"
+                            value="{{ fecha_fin }}"
+                            title="Fecha final"
                         >
 
                     </div>
@@ -228,6 +242,7 @@
 
                         <button
                             class="btn btn-dark w-100"
+                            type="submit"
                         >
 
                             <i class="bi bi-search"></i>
@@ -270,7 +285,7 @@
 
             <strong>
 
-                Total generado:
+                Total:
 
             </strong>
 
@@ -280,7 +295,7 @@
 
         <!-- EXCEL -->
         <a
-            href="/historial/lavadero/excel?placa={{ placa }}&fecha={{ fecha }}&responsable={{ responsable }}"
+            href="/historial/lavadero/excel?placa={{ placa }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}&responsable={{ responsable }}"
             class="btn btn-success"
         >
 

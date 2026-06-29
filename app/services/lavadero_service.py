@@ -127,7 +127,9 @@ def obtener_historial_lavados(
 
     placa="",
 
-    fecha="",
+    fecha_inicio="",
+
+    fecha_fin="",
 
     responsable=""
 ):
@@ -136,11 +138,12 @@ def obtener_historial_lavados(
 
         placa,
 
-        fecha,
+        fecha_inicio,
+
+        fecha_fin,
 
         responsable
     )
-
 
 # ==========================================
 # METRICAS LAVADERO
