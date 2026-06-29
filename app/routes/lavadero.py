@@ -709,6 +709,11 @@ def validar_admin():
             "admin"
         )
 
+        print("\n========== ADMIN ==========")
+        print(admin)
+        print(type(admin))
+        print("===========================\n")
+
         if not admin:
 
             return jsonify({
@@ -720,7 +725,20 @@ def validar_admin():
 
             }), 404
 
-        password_hash = admin[2]
+
+        # PostgreSQL
+        if isinstance(admin, dict):
+
+            password_hash = (
+                admin["password"]
+            )
+
+        # SQLite
+        else:
+
+            password_hash = (
+                admin[2]
+            )
 
         if check_password_hash(
             password_hash,
