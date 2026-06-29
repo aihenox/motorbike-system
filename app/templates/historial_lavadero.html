@@ -672,32 +672,252 @@ async function validarAdmin(){
         "registroId"
     ).value;
 
-    if(password !== "7823"){
+    try{
 
-        document.getElementById(
-            "passwordAdmin"
-        ).value = "";
+        const response = await fetch(
 
-        alert(
-            "Contraseña incorrecta"
+            "/lavadero/validar_admin",
+
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    password: password
+                })
+            }
         );
 
-        return;
+        const data = await response.json();
+
+        if(!data.success){
+
+            document.getElementById(
+                "passwordAdmin"
+            ).value = "";
+
+            alert(
+
+                data.message ||
+
+                "Contraseña incorrecta"
+            );
+
+            return;
+        }
+
+        const modal =
+            bootstrap.Modal.getInstance(
+
+                document.getElementById(
+                    "modalAdmin"
+                )
+            );
+
+        if(modal){
+
+            modal.hide();
+        }
+
+        if(accion === "editar"){
+
+            abrirEditar(id);
+
+            return;
+        }
+
+        if(accion === "eliminar"){
+
+            eliminarLavado(id);
+        }
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Error validando administrador"
+        );
     }
+}
 
-    if(accion === "editar"){
+async function abrirEditar(id){
 
-        window.location.href =
+    try{
 
-            `/editar-lavado/${id}`;
+        const response = await fetch(
 
-        return;
+            `/lavadero/obtener/${id}`
+        );
+
+        const data =
+            await response.json();
+
+        if(!data.success){
+
+            alert(
+                data.message
+            );
+
+            return;
+        }
+
+        const lavado =
+            data.lavado;
+
+        document.getElementById(
+            "edit_id"
+        ).value =
+            lavado.id;
+
+        document.getElementById(
+            "edit_placa"
+        ).value =
+            lavado.placa;
+
+        document.getElementById(
+            "edit_vehiculo"
+        ).value =
+            lavado.vehiculo;
+
+        document.getElementById(
+            "edit_tipo"
+        ).value =
+            lavado.tipo_lavado;
+
+        document.getElementById(
+            "edit_valor"
+        ).value =
+            lavado.valor;
+
+        document.getElementById(
+            "edit_responsable"
+        ).value =
+            lavado.responsable;
+
+        const modal = new bootstrap.Modal(
+
+            document.getElementById(
+                "modalEditar"
+            )
+        );
+
+        modal.show();
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Error cargando lavado"
+        );
     }
+}
 
-    if(accion === "eliminar"){
+async function guardarEdicion(){
 
-        eliminarLavado(id);
+    const id = document.getElementById(
+        "edit_id"
+    ).value;
 
+    const datos = {
+
+        placa:
+
+            document.getElementById(
+                "edit_placa"
+            ).value,
+
+        vehiculo:
+
+            document.getElementById(
+                "edit_vehiculo"
+            ).value,
+
+        tipo_lavado:
+
+            document.getElementById(
+                "edit_tipo"
+            ).value,
+
+        valor:
+
+            document.getElementById(
+                "edit_valor"
+            ).value,
+
+        responsable:
+
+            document.getElementById(
+                "edit_responsable"
+            ).value
+    };
+
+    try{
+
+        const response = await fetch(
+
+            `/lavadero/actualizar/${id}`,
+
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(
+                        datos
+                    )
+            }
+        );
+
+        const data =
+            await response.json();
+
+        if(!data.success){
+
+            alert(
+                data.message
+            );
+
+            return;
+        }
+
+        alert(
+            "Lavado actualizado"
+        );
+
+        bootstrap.Modal
+            .getInstance(
+
+                document.getElementById(
+                    "modalEditar"
+                )
+
+            )
+            .hide();
+
+        location.reload();
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        alert(
+            "Error actualizando"
+        );
     }
 }
 
@@ -770,6 +990,157 @@ async function validarAdmin(){
                 >
 
                     Continuar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================== -->
+<!-- MODAL EDITAR LAVADO -->
+<!-- ===================================== -->
+
+<div
+    class="modal fade"
+    id="modalEditar"
+    tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+
+                    Editar lavado
+
+                </h5>
+
+                <button
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input
+                    type="hidden"
+                    id="edit_id">
+
+                <div class="mb-3">
+
+                    <label>
+                        Placa
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit_placa"
+                        class="form-control">
+                </div>
+
+                <div class="mb-3">
+
+                    <label>
+                        Vehículo
+                    </label>
+
+                    <select
+                        id="edit_vehiculo"
+                        class="form-select">
+
+                        <option>
+                            Moto
+                        </option>
+
+                        <option>
+                            Carro
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>
+                        Tipo lavado
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit_tipo"
+                        class="form-control">
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>
+                        Valor
+                    </label>
+
+                    <input
+                        type="number"
+                        id="edit_valor"
+                        class="form-control">
+                </div>
+
+                <div class="mb-3">
+
+                    <label>
+                        Responsable
+                    </label>
+
+                    <select
+                        id="edit_responsable"
+                        class="form-select">
+
+                        <option value="Angela">
+                            Angela
+                        </option>
+
+                        <option value="Angelica">
+                            Angelica
+                        </option>
+
+                        <option value="Angie">
+                            Angie
+                        </option>
+
+                        <option value="Karime">
+                            Karime
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    onclick="guardarEdicion()">
+
+                    Guardar
 
                 </button>
 

@@ -59,6 +59,14 @@ from app.services.historial_lavadero_service import (
     obtener_total_lavadero
 )
 
+from werkzeug.security import (
+    check_password_hash
+)
+
+from app.repositories.auth_repository import (
+    obtener_usuario_por_username
+)
+
 from app.utils.validators import (
     validar_placa,
     validar_tipo_vehiculo,
@@ -426,110 +434,193 @@ def exportar_excel_lavadero():
 
 
 # ==========================================
-# EDITAR LAVADO
+# OBTENER LAVADO AJAX
 # ==========================================
 @lavadero_bp.route(
-
-    "/editar-lavado/<int:lavado_id>",
-
-    methods=["GET", "POST"]
+    "/lavadero/obtener/<int:lavado_id>"
 )
 @login_required
-@admin_required
-def editar_lavado(
-
+def obtener_lavado_ajax(
     lavado_id
 ):
 
-    lavado = obtener_lavado_por_id(
-        lavado_id
-    )
+    try:
 
-    if request.method == "POST":
+        lavado = obtener_lavado_por_id(
+            lavado_id
+        )
 
-        try:
+        if not lavado:
 
-            placa = validar_placa(
-                request.form.get("placa")
-            )
+            return jsonify({
 
-            vehiculo = validar_tipo_vehiculo(
-                request.form.get("vehiculo")
-            )
+                "success": False,
 
-            tipo_lavado = validar_tipo_lavado(
-                request.form.get("tipo_lavado")
-            )
+                "message":
+                    "Lavado no encontrado"
 
-            valor = validar_valor(
-                request.form.get("valor")
-            )
+            }), 404
 
-            responsable = validar_responsable(
-                request.form.get("responsable")
-            )
+        # PostgreSQL
+        if isinstance(
+            lavado,
+            dict
+        ):
 
-            actualizar_lavado(
+            datos = {
 
-                lavado_id,
+                "id":
+                    lavado["id"],
 
-                placa,
+                "placa":
+                    lavado["placa"],
 
-                vehiculo,
+                "vehiculo":
+                    lavado["vehiculo"],
 
-                tipo_lavado,
+                "tipo_lavado":
+                    lavado["tipo_lavado"],
 
-                valor,
+                "valor":
+                    lavado["valor"],
 
-                responsable
-            )
+                "responsable":
+                    lavado["responsable"]
+            }
 
-            return redirect(
-                url_for(
-                    "lavadero.historial_lavadero"
-                )
-            )
+        # SQLite
+        else:
 
-        except ValueError as e:
+            datos = {
 
-            lavado.update({
+                "id":
+                    lavado[0],
 
-                "placa": request.form.get(
-                    "placa"
-                ),
+                "placa":
+                    lavado[1],
 
-                "vehiculo": request.form.get(
-                    "vehiculo"
-                ),
+                "vehiculo":
+                    lavado[2],
 
-                "tipo_lavado": request.form.get(
-                    "tipo_lavado"
-                ),
+                "tipo_lavado":
+                    lavado[3],
 
-                "valor": request.form.get(
-                    "valor"
-                ),
+                "valor":
+                    lavado[4],
 
-                "responsable": request.form.get(
-                    "responsable"
-                )
-            })
+                "responsable":
+                    lavado[5]
+            }
 
-            return render_template(
+        return jsonify({
 
-                "editar_lavado.html",
+            "success": True,
 
-                lavado=lavado,
+            "lavado": datos
+        })
 
-                error=str(e)
-            )
+    except Exception:
 
-    return render_template(
+        current_app.logger.exception(
+            "Error obteniendo lavado"
+        )
 
-        "editar_lavado.html",
+        return jsonify({
 
-        lavado=lavado
-    )
+            "success": False,
+
+            "message":
+                "Error interno"
+
+        }), 500
+    
+# ==========================================
+# ACTUALIZAR LAVADO AJAX
+# ==========================================
+@lavadero_bp.route(
+    "/lavadero/actualizar/<int:lavado_id>",
+    methods=["POST"]
+)
+@login_required
+@admin_required
+def actualizar_lavado_ajax(
+    lavado_id
+):
+
+    try:
+
+        datos = request.get_json()
+
+        placa = validar_placa(
+            datos.get("placa")
+        )
+
+        vehiculo = validar_tipo_vehiculo(
+            datos.get("vehiculo")
+        )
+
+        tipo_lavado = validar_tipo_lavado(
+            datos.get("tipo_lavado")
+        )
+
+        valor = validar_valor(
+            datos.get("valor")
+        )
+
+        responsable = validar_responsable(
+            datos.get("responsable")
+        )
+
+        actualizar_lavado(
+
+            lavado_id,
+
+            placa,
+
+            vehiculo,
+
+            tipo_lavado,
+
+            valor,
+
+            responsable
+        )
+
+        return jsonify({
+
+            "success": True,
+
+            "message":
+                "Lavado actualizado"
+
+        })
+
+    except ValueError as e:
+
+        return jsonify({
+
+            "success": False,
+
+            "message": str(e)
+
+        }), 400
+
+    except Exception:
+
+        current_app.logger.exception(
+            "Error actualizando lavado"
+        )
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+                "Error interno"
+
+        }), 500
+    
+
 
 # ==========================================
 # ELIMINAR LAVADO
@@ -594,3 +685,75 @@ def consultar_lavado_gratis(
         )
 
     })
+
+# ==========================================
+# VALIDAR ADMINISTRADOR
+# ==========================================
+@lavadero_bp.route(
+    "/lavadero/validar_admin",
+    methods=["POST"]
+)
+@login_required
+def validar_admin():
+
+    try:
+
+        datos = request.get_json()
+
+        password = datos.get(
+            "password",
+            ""
+        )
+
+        admin = obtener_usuario_por_username(
+            "admin"
+        )
+
+        if not admin:
+
+            return jsonify({
+
+                "success": False,
+
+                "message":
+                "Administrador no encontrado"
+
+            }), 404
+
+        password_hash = admin[2]
+
+        if check_password_hash(
+            password_hash,
+            password
+        ):
+
+            return jsonify({
+
+                "success": True
+
+            })
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+            "Contraseña incorrecta"
+
+        }), 401
+
+    except Exception:
+
+        current_app.logger.exception(
+            "Error validando administrador"
+        )
+
+        return jsonify({
+
+            "success": False,
+
+            "message":
+            "Error interno"
+
+        }), 500
+    
