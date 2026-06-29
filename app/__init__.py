@@ -8,11 +8,13 @@ from config import config
 
 from database import crear_bd
 
-from app.services.auth_service import User
+from app.services.auth_service import cargar_usuario
 
 from app.errors import (
     register_error_handlers
 )
+
+from app.security import init_security
 
 
 # ==========================================
@@ -33,7 +35,7 @@ login_manager.login_message = (
 @login_manager.user_loader
 def load_user(user_id):
 
-    return User(user_id)
+    return cargar_usuario(user_id)
 
 
 # ==========================================
@@ -58,10 +60,24 @@ def create_app():
         )
     )
 
+    if env == "production" and app.config["SECRET_KEY"] in {
+        None,
+        "",
+        "dev-only-change-me",
+        "motorbike-secret-key",
+        "change-me"
+    }:
+
+        raise RuntimeError(
+            "SECRET_KEY debe configurarse con un valor seguro en producción."
+        )
+
     # ==========================================
     # LOGIN
     # ==========================================
     login_manager.init_app(app)
+
+    init_security(app)
 
     # ==========================================
     # CREAR BASE DE DATOS

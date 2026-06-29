@@ -213,6 +213,9 @@
 
     </style>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src="{{ url_for('static', filename='js/csrf.js') }}" defer></script>
+
 </head>
 
 <body>
@@ -400,30 +403,6 @@ const ticketInput = document.getElementById(
 
 let salidaPendiente = null;
 
-window.addEventListener(
-    "load",
-    function(){
-
-        document.getElementById(
-            "cobroEspecial"
-        ).addEventListener(
-            "change",
-            function(){
-
-                document.getElementById(
-                    "contenedorValorEspecial"
-                ).style.display =
-                    this.checked
-                        ? "block"
-                        : "none";
-
-            }
-        );
-
-    }
-);
-
-
 // ==========================================
 // ENTER REGISTRAR
 // ==========================================
@@ -553,10 +532,6 @@ form.addEventListener(
 
         `;
 
-        document.getElementById(
-            "valorEspecial"
-        ).value = data.valor;
-
         new bootstrap.Modal(
 
             document.getElementById(
@@ -586,33 +561,12 @@ window.addEventListener(
             "click",
             async function(){
 
-                let valorFinal =
-                    document.getElementById(
-                        "cobroEspecial"
-                    ).checked
-                        ? document.getElementById(
-                            "valorEspecial"
-                          ).value
-                        : salidaPendiente.valor;
-                        
-                salidaPendiente.valor = valorFinal;
-
                 const formData =
                     new FormData();
 
                 formData.append(
                     "ticket",
                     salidaPendiente.ticket
-                );
-
-                formData.append(
-                    "valor",
-                    valorFinal
-                );
-
-                formData.append(
-                    "hora_salida",
-                    salidaPendiente.hora_salida_iso
                 );
 
                 const response =
@@ -708,43 +662,6 @@ window.addEventListener(
             <div class="modal-body">
 
                 <div id="detalleSalida"></div>
-
-                <hr>
-
-                <div class="form-check mb-3">
-
-                    <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id="cobroEspecial"
-                    >
-
-                    <label class="form-check-label">
-
-                        Cobro especial
-
-                    </label>
-
-                </div>
-
-                <div
-                    id="contenedorValorEspecial"
-                    style="display:none;"
-                >
-
-                    <label class="form-label">
-
-                        Valor a cobrar
-
-                    </label>
-
-                    <input
-                        type="number"
-                        id="valorEspecial"
-                        class="form-control"
-                    >
-
-                </div>
 
             </div>
 

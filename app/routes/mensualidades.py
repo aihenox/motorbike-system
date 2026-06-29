@@ -12,13 +12,11 @@ from app.services.mensualidades_service import (
     buscar_mensualidad_activa
 )
 
-from app.services.mensualidades_service import (
-    actualizar_mensualidades_vencidas
-)
-
 from flask_login import (
     login_required
 )
+
+from app.security import admin_required
 
 from app.services.mensualidades_service import (
     listar_mensualidades,
@@ -61,26 +59,40 @@ def mensualidades():
     methods=["GET", "POST"]
 )
 @login_required
+@admin_required
 def nueva_mensualidad():
 
     if request.method == "POST":
 
-        crear_mensualidad(
+        try:
 
-            request.form["placa"],
+            crear_mensualidad(
 
-            request.form["tipo"],
+                request.form["placa"],
 
-            request.form["propietario"],
+                request.form["tipo"],
 
-            request.form["telefono"],
+                request.form["propietario"],
 
-            request.form["fecha_inicio"],
+                request.form["telefono"],
 
-            request.form["fecha_fin"],
+                request.form["fecha_inicio"],
 
-            request.form["estado"]
-        )
+                request.form["fecha_fin"],
+
+                request.form["estado"]
+            )
+
+        except (KeyError, ValueError) as error:
+
+            flash(
+                str(error),
+                "danger"
+            )
+
+            return redirect(
+                url_for("mensualidades.nueva_mensualidad")
+            )
 
         flash(
             "Mensualidad registrada correctamente"
@@ -104,6 +116,7 @@ def nueva_mensualidad():
     methods=["GET", "POST"]
 )
 @login_required
+@admin_required
 def editar_mensualidad(id):
 
     mensualidad = obtener_mensualidad(
@@ -112,24 +125,40 @@ def editar_mensualidad(id):
 
     if request.method == "POST":
 
-        actualizar_mensualidad(
+        try:
 
-            id,
+            actualizar_mensualidad(
 
-            request.form["placa"],
+                id,
 
-            request.form["tipo"],
+                request.form["placa"],
 
-            request.form["propietario"],
+                request.form["tipo"],
 
-            request.form["telefono"],
+                request.form["propietario"],
 
-            request.form["fecha_inicio"],
+                request.form["telefono"],
 
-            request.form["fecha_fin"],
+                request.form["fecha_inicio"],
 
-            request.form["estado"]
-        )
+                request.form["fecha_fin"],
+
+                request.form["estado"]
+            )
+
+        except (KeyError, ValueError) as error:
+
+            flash(
+                str(error),
+                "danger"
+            )
+
+            return redirect(
+                url_for(
+                    "mensualidades.editar_mensualidad",
+                    id=id
+                )
+            )
 
         flash(
             "Mensualidad actualizada correctamente"
@@ -152,9 +181,11 @@ def editar_mensualidad(id):
 # ELIMINAR MENSUALIDAD
 # ==========================================
 @mensualidades_bp.route(
-    "/mensualidades/eliminar/<int:id>"
+    "/mensualidades/eliminar/<int:id>",
+    methods=["POST"]
 )
 @login_required
+@admin_required
 def eliminar_mensualidad_route(id):
 
     eliminar_mensualidad(

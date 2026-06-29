@@ -174,26 +174,40 @@ def procesar_salida(ticket):
 # ==========================================
 def confirmar_salida(
 
-    ticket,
-
-    valor,
-
-    hora_salida
+    ticket
 
 ):
 
-    cerrar_ticket_db(
+    salida = procesar_salida(
+        ticket
+    )
+
+    if not salida["success"]:
+
+        return salida
+
+    actualizado = cerrar_ticket_db(
 
         ticket,
 
-        hora_salida,
+        salida["hora_salida_iso"],
 
-        valor
+        salida["valor"]
 
     )
 
+    if not actualizado:
+
+        raise ValueError(
+            "El ticket ya fue procesado o no está activo"
+        )
+
     return {
 
-        "success": True
+        "success": True,
+
+        "valor": salida["valor"],
+
+        "hora_salida": salida["hora_salida"]
 
     }

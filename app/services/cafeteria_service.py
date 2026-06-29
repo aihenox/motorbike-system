@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from app.repositories.cafeteria_repository import (
 
     obtener_productos_cafeteria_db,
@@ -16,7 +18,7 @@ from app.repositories.cafeteria_repository import (
 
     obtener_productos_vendidos_hoy_db,
 
-    registrar_venta_cafeteria_db,
+    registrar_venta_cafeteria_lote_db,
 
     buscar_producto_por_nombre_db,
 
@@ -298,6 +300,12 @@ def registrar_venta_cafeteria(
             "Debe agregar al menos un producto"
         )
 
+    if not isinstance(productos, list):
+
+        raise ValueError(
+            "La lista de productos no es válida"
+        )
+
     # ==========================================
     # GENERAR CONSECUTIVO SI NO HAY PLACA
     # ==========================================
@@ -313,18 +321,23 @@ def registrar_venta_cafeteria(
 
     total_general = 0
 
-    from datetime import datetime
-    from zoneinfo import ZoneInfo
+    detalles = []
 
-    venta_id = datetime.now(
-        ZoneInfo(
-            "America/Bogota"
-        )
-    ).strftime(
-        "%Y%m%d%H%M%S"
-    )
+    venta_id = uuid4().hex
 
     for item in productos:
+
+        if not isinstance(item, dict):
+
+            raise ValueError(
+                "Producto inválido en la venta"
+            )
+
+        if "producto_id" not in item or "cantidad" not in item:
+
+            raise ValueError(
+                "Faltan datos del producto"
+            )
 
         producto_id = validar_id(
             item["producto_id"]
@@ -333,6 +346,12 @@ def registrar_venta_cafeteria(
         cantidad = int(
             item["cantidad"]
         )
+
+        if cantidad <= 0:
+
+            raise ValueError(
+                "La cantidad debe ser mayor que cero"
+            )
 
         producto = (
             obtener_producto_cafeteria_db(
@@ -369,27 +388,21 @@ def registrar_venta_cafeteria(
 
         total_general += total
 
-        registrar_venta_cafeteria_db(
+        detalles.append({
+            "producto_id": producto_id,
+            "producto": producto["nombre"],
+            "cantidad": cantidad,
+            "valor_unitario": valor_unitario,
+            "total": total
+        })
 
-            venta_id,
-
-            fecha,
-
-            producto_id,
-
-            producto["nombre"],
-
-            cantidad,
-
-            valor_unitario,
-
-            total,
-
-            placa,
-
-            usuario
-
-        )
+    registrar_venta_cafeteria_lote_db(
+        venta_id,
+        fecha,
+        detalles,
+        placa,
+        usuario
+    )
 
     return {
 

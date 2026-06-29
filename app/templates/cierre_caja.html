@@ -104,6 +104,9 @@
 
     </style>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src="{{ url_for('static', filename='js/csrf.js') }}" defer></script>
+
 </head>
 
 <body>
@@ -253,13 +256,13 @@
         <div class="card-body p-4">
 
             <!-- ALERTAS -->
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
 
                 {% if messages %}
 
-                    {% for message in messages %}
+                    {% for category, message in messages %}
 
-                        <div class="alert alert-success alert-dismissible fade show">
+                        <div class="alert alert-{{ category }} alert-dismissible fade show">
 
                             <i class="bi bi-check-circle-fill"></i>
 

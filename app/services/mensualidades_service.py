@@ -7,7 +7,51 @@ from app.repositories.mensualidades_repository import (
     buscar_mensualidad_activa_db
 )
 
-from datetime import date, datetime
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+from app.utils.validators import (
+    validar_placa,
+    validar_rango_fechas,
+    validar_tipo_vehiculo
+)
+
+
+def _hoy_colombia():
+
+    return datetime.now(
+        ZoneInfo("America/Bogota")
+    ).date()
+
+
+def _validar_datos_mensualidad(
+    placa,
+    tipo,
+    fecha_inicio,
+    fecha_fin,
+    estado
+):
+
+    placa = validar_placa(
+        placa
+    )
+
+    tipo = validar_tipo_vehiculo(
+        tipo
+    )
+
+    fecha_inicio, fecha_fin = validar_rango_fechas(
+        fecha_inicio,
+        fecha_fin
+    )
+
+    if estado not in {"Activa", "Inactiva"}:
+
+        raise ValueError(
+            "Estado de mensualidad inválido"
+        )
+
+    return placa, tipo, fecha_inicio, fecha_fin, estado
 
 
 # ==========================================
@@ -17,7 +61,7 @@ def listar_mensualidades():
 
     registros = obtener_mensualidades_db()
 
-    hoy = date.today()
+    hoy = _hoy_colombia()
 
     resultado = []
 
@@ -99,6 +143,16 @@ def crear_mensualidad(
     estado
 ):
 
+    placa, tipo, fecha_inicio, fecha_fin, estado = (
+        _validar_datos_mensualidad(
+            placa,
+            tipo,
+            fecha_inicio,
+            fecha_fin,
+            estado
+        )
+    )
+
     crear_mensualidad_db(
 
         placa,
@@ -148,6 +202,16 @@ def actualizar_mensualidad(
     estado
 ):
 
+    placa, tipo, fecha_inicio, fecha_fin, estado = (
+        _validar_datos_mensualidad(
+            placa,
+            tipo,
+            fecha_inicio,
+            fecha_fin,
+            estado
+        )
+    )
+
     actualizar_mensualidad_db(
 
         id,
@@ -183,8 +247,13 @@ def buscar_mensualidad_activa(
     placa
 ):
 
-    return buscar_mensualidad_activa_db(
+    placa = validar_placa(
         placa
+    )
+
+    return buscar_mensualidad_activa_db(
+        placa,
+        _hoy_colombia().isoformat()
     )
 
 # ==========================================
@@ -194,7 +263,7 @@ def actualizar_mensualidades_vencidas():
 
     registros = obtener_mensualidades_db()
 
-    hoy = date.today()
+    hoy = _hoy_colombia()
 
     for item in registros:
 

@@ -16,8 +16,11 @@ from flask import (
 )
 
 from flask_login import (
+    current_user,
     login_required
 )
+
+from app.security import admin_required
 
 from datetime import datetime
 from io import BytesIO
@@ -53,6 +56,7 @@ cierre_bp = Blueprint(
     methods=["GET", "POST"]
 )
 @login_required
+@admin_required
 def cierre_caja():
 
     metricas = obtener_metricas_cierre()
@@ -74,38 +78,52 @@ def cierre_caja():
         )
 
         fecha = ahora.strftime(
-            "%d/%m/%Y"
+            "%Y-%m-%d"
         )
 
         hora_cierre = ahora.strftime(
             "%H:%M:%S"
         )
 
-        guardar_cierre(
+        try:
 
-            fecha,
+            guardar_cierre(
 
-            metricas[
-                "total_parqueadero"
-            ],
+                fecha,
 
-            metricas[
-                "total_lavadero"
-            ],
+                metricas[
+                    "total_parqueadero"
+                ],
 
-            metricas[
-                "total_general"
-            ],
+                metricas[
+                    "total_lavadero"
+                ],
 
-            observaciones,
+                metricas[
+                    "total_general"
+                ],
 
-            "admin",
+                observaciones,
 
-            hora_cierre
-        )
+                current_user.usuario or current_user.id,
+
+                hora_cierre
+            )
+
+        except ValueError as error:
+
+            flash(
+                str(error),
+                "danger"
+            )
+
+            return redirect(
+                url_for("cierre.cierre_caja")
+            )
 
         flash(
-            "Cierre de caja guardado correctamente."
+            "Cierre de caja guardado correctamente.",
+            "success"
         )
 
         return redirect(

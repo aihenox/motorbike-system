@@ -9,12 +9,15 @@ from flask_login import login_required
 
 from app.services.parqueadero_service import editar_vehiculo
 
+from app.security import admin_required
+
 
 editar_bp = Blueprint("editar", __name__)
 
 
 @editar_bp.route("/editar/<int:id>", methods=["POST"])
 @login_required
+@admin_required
 def editar(id):
 
     placa = request.form["placa"]

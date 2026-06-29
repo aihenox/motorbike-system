@@ -1,4 +1,5 @@
 from flask import jsonify
+from flask import current_app
 import json
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -27,6 +28,8 @@ from flask import (
 from flask_login import (
     login_required
 )
+
+from app.security import admin_required
 
 from app.services.cafeteria_service import (
 
@@ -111,6 +114,7 @@ def dashboard_cafeteria():
     "/cafeteria/configuracion"
 )
 @login_required
+@admin_required
 def configuracion_cafeteria():
 
     productos = listar_productos_cafeteria()
@@ -193,13 +197,15 @@ def registrar_venta_ajax():
 
     except Exception as e:
 
-        print("ERROR CAFETERIA:", e)
+        current_app.logger.exception(
+            "Error registrando venta de cafetería"
+        )
 
         return jsonify({
 
             "success": False,
 
-            "message": str(e)
+            "message": "Error interno del sistema"
 
         }), 500
     
@@ -211,6 +217,7 @@ def registrar_venta_ajax():
     methods=["POST"]
 )
 @login_required
+@admin_required
 def crear_producto_ajax():
 
     try:
@@ -305,6 +312,7 @@ def obtener_producto_ajax(
     methods=["POST"]
 )
 @login_required
+@admin_required
 def editar_producto_ajax():
 
     try:
@@ -359,6 +367,7 @@ def editar_producto_ajax():
     methods=["DELETE"]
 )
 @login_required
+@admin_required
 def eliminar_producto_ajax(
     producto_id
 ):
@@ -377,11 +386,15 @@ def eliminar_producto_ajax(
 
     except Exception as e:
 
+        current_app.logger.exception(
+            "Error eliminando producto de cafetería"
+        )
+
         return jsonify({
 
             "success": False,
 
-            "message": str(e)
+            "message": "Error interno del sistema"
 
         }), 500
     
@@ -492,13 +505,15 @@ def detalle_venta_cafeteria(
 
     except Exception as e:
 
-        print("ERROR DETALLE:", e)
+        current_app.logger.exception(
+            "Error consultando detalle de venta"
+        )
 
         return jsonify({
 
             "success": False,
 
-            "message": str(e)
+            "message": "Error interno del sistema"
 
         }), 500
     

@@ -16,7 +16,8 @@ from app.services.tarifas_service import (
 # ==========================================
 def calcular_valor(
     tipo,
-    hora_ingreso
+    hora_ingreso,
+    ahora=None
 ):
 
     hora_ingreso = asegurar_zona_colombia(
@@ -25,8 +26,14 @@ def calcular_valor(
         )
     )
 
-    ahora = datetime.now(
-        ZoneInfo("America/Bogota")
+    if ahora is None:
+
+        ahora = datetime.now(
+            ZoneInfo("America/Bogota")
+        )
+
+    ahora = asegurar_zona_colombia(
+        ahora
     )
 
     diferencia = ahora - hora_ingreso
@@ -34,6 +41,12 @@ def calcular_valor(
     total_segundos = int(
         diferencia.total_seconds()
     )
+
+    if total_segundos < 0:
+
+        raise ValueError(
+            "La hora de ingreso no puede estar en el futuro"
+        )
 
     total_minutos = total_segundos // 60
 
@@ -46,6 +59,12 @@ def calcular_valor(
     # ==========================================
     tarifas = obtener_tarifa_activa()
 
+    if not tarifas:
+
+        raise RuntimeError(
+            "No existe una configuración de tarifas activa"
+        )
+
     
     minutos_gracia = tarifas.get(
         "minutos_gracia",
@@ -54,7 +73,7 @@ def calcular_valor(
 
     horas_cobro = horas
 
-    if minutos >= minutos_gracia:
+    if minutos > minutos_gracia:
 
         horas_cobro += 1
 
@@ -72,11 +91,17 @@ def calcular_valor(
             1500
         )
 
-    else:
+    elif tipo == "Carro":
 
         tarifa = tarifas.get(
             "hora_carro",
             3000
+        )
+
+    else:
+
+        raise ValueError(
+            "Tipo de vehículo inválido"
         )
 
     total = horas_cobro * tarifa

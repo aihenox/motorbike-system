@@ -32,6 +32,36 @@ def actualizar_tarifas(
     minutos_gracia
 ):
 
+    valores = {
+        "hora_moto": hora_moto,
+        "hora_carro": hora_carro,
+        "dia_moto": dia_moto,
+        "dia_carro": dia_carro,
+        "noche_moto": noche_moto,
+        "noche_carro": noche_carro,
+        "mensualidad_moto": mensualidad_moto,
+        "mensualidad_carro": mensualidad_carro
+    }
+
+    if any(
+        not isinstance(valor, int) or valor <= 0
+        for valor in valores.values()
+    ):
+
+        raise ValueError(
+            "Todas las tarifas deben ser números enteros mayores que cero"
+        )
+
+    if (
+        not isinstance(minutos_gracia, int)
+        or minutos_gracia < 0
+        or minutos_gracia > 59
+    ):
+
+        raise ValueError(
+            "Los minutos de gracia deben estar entre 0 y 59"
+        )
+
     actualizar_tarifas_db(
 
         hora_moto,

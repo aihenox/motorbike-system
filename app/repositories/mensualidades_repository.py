@@ -316,7 +316,8 @@ def eliminar_mensualidad_db(id):
 # BUSCAR MENSUALIDAD ACTIVA
 # ==========================================
 def buscar_mensualidad_activa_db(
-    placa
+    placa,
+    hoy
 ):
 
     with conectar() as conn:
@@ -333,11 +334,16 @@ def buscar_mensualidad_activa_db(
 
                 WHERE placa = %s
                 AND estado = 'Activa'
+                AND fecha_inicio <= %s
+                AND fecha_fin >= %s
 
+                ORDER BY fecha_fin DESC
                 LIMIT 1
 
             """, (
                 placa.upper(),
+                hoy,
+                hoy
             ))
 
         else:
@@ -350,11 +356,16 @@ def buscar_mensualidad_activa_db(
 
                 WHERE placa = ?
                 AND estado = 'Activa'
+                AND fecha_inicio <= ?
+                AND fecha_fin >= ?
 
+                ORDER BY fecha_fin DESC
                 LIMIT 1
 
             """, (
                 placa.upper(),
+                hoy,
+                hoy
             ))
 
         return c.fetchone()

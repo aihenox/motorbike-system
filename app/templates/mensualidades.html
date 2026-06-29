@@ -26,6 +26,9 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     >
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src="{{ url_for('static', filename='js/csrf.js') }}" defer></script>
+
 </head>
 
 <body class="bg-light">
@@ -225,17 +228,25 @@
 
                                 </a>
 
-                                <a
-                                    href="/mensualidades/eliminar/{{ item.id }}"
+                                <form
+                                    method="POST"
+                                    action="/mensualidades/eliminar/{{ item.id }}"
+                                    class="d-inline"
+                                    onsubmit="return confirm('¿Desea eliminar esta mensualidad?')"
+                                >
+
+                                <button
+                                    type="submit"
                                     class="btn btn-sm btn-danger"
-                                    onclick="return confirm('¿Desea eliminar esta mensualidad?')"
                                 >
 
                                     <i class="bi bi-trash"></i>
 
                                     Eliminar
 
-                                </a>
+                                </button>
+
+                                </form>
 
                             </td>
 

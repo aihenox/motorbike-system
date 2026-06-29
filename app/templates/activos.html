@@ -201,6 +201,9 @@
 
     </style>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src="{{ url_for('static', filename='js/csrf.js') }}" defer></script>
+
 </head>
 
 <body>
@@ -446,17 +449,24 @@
                                     </button>
 
                                     <!-- ELIMINAR -->
-                                    <a
-                                        href="/eliminar/{{ vehiculo.id }}"
+                                    <form
+                                        method="POST"
+                                        action="/eliminar/{{ vehiculo.id }}"
+                                        onsubmit="return confirm('¿Eliminar vehículo?')"
+                                    >
+
+                                    <button
+                                        type="submit"
                                         class="btn btn-danger btn-sm btn-action"
-                                        onclick="return confirm('¿Eliminar vehículo?')"
                                     >
 
                                         <i class="bi bi-trash"></i>
 
                                         Eliminar
 
-                                    </a>
+                                    </button>
+
+                                    </form>
 
                                 </div>
 

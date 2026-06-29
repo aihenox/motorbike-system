@@ -5,6 +5,8 @@ from flask import (
     jsonify
 )
 
+from flask import current_app
+
 from flask_login import login_required
 
 from app.services.salida_service import (
@@ -99,23 +101,9 @@ def confirmar_salida_ajax():
             )
         )
 
-        valor = int(
-            request.form.get(
-                "valor"
-            )
-        )
-
-        hora_salida = request.form.get(
-            "hora_salida"
-        )
-
         resultado = confirmar_salida(
 
-            ticket,
-
-            valor,
-
-            hora_salida
+            ticket
 
         )
 
@@ -135,10 +123,14 @@ def confirmar_salida_ajax():
 
     except Exception as e:
 
+        current_app.logger.exception(
+            "Error confirmando salida"
+        )
+
         return jsonify({
 
             "success": False,
 
-            "message": str(e)
+            "message": "Error interno del sistema"
 
         }), 500

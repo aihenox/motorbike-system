@@ -1,6 +1,8 @@
 import os
 import sqlite3
 
+from contextlib import contextmanager
+
 import psycopg2
 
 from flask import current_app
@@ -13,6 +15,7 @@ from psycopg2.extras import (
 # ==========================================
 # CONEXIÓN DATABASE
 # ==========================================
+@contextmanager
 def conectar():
 
     database_url = os.getenv(
@@ -21,11 +24,23 @@ def conectar():
 
     if database_url:
 
-        return conectar_postgres(
+        conn = conectar_postgres(
             database_url
         )
 
-    return conectar_sqlite()
+    else:
+
+        conn = conectar_sqlite()
+
+    try:
+
+        with conn:
+
+            yield conn
+
+    finally:
+
+        conn.close()
 
 
 # ==========================================

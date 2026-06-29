@@ -34,6 +34,35 @@ def guardar_cierre(
     hora_cierre
 ):
 
+    total_parqueadero = int(
+        total_parqueadero
+    )
+
+    total_lavadero = int(
+        total_lavadero
+    )
+
+    if total_parqueadero < 0 or total_lavadero < 0:
+
+        raise ValueError(
+            "Los totales del cierre no pueden ser negativos"
+        )
+
+    total_general = (
+        total_parqueadero
+        + total_lavadero
+    )
+
+    observaciones = (
+        observaciones or ""
+    ).strip()
+
+    if len(observaciones) > 500:
+
+        raise ValueError(
+            "Las observaciones no pueden superar 500 caracteres"
+        )
+
     guardar_cierre_db(
 
         fecha,

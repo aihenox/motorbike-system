@@ -151,6 +151,9 @@
 
     </style>
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<script src="{{ url_for('static', filename='js/csrf.js') }}" defer></script>
+
 </head>
 
 <body>
@@ -164,12 +167,16 @@
 
     </span>
 
-    <a href="/logout"
-       class="btn btn-outline-light">
+    <form method="POST" action="/logout">
+
+    <button type="submit"
+            class="btn btn-outline-light">
 
         Cerrar sesión
 
-    </a>
+    </button>
+
+    </form>
 
 </nav>
 

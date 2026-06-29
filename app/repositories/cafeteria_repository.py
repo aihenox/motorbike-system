@@ -513,6 +513,98 @@ def registrar_venta_cafeteria_db(
             ))
 
         conn.commit()
+
+
+# ==========================================
+# REGISTRAR VENTA COMPLETA EN UNA TRANSACCION
+# ==========================================
+def registrar_venta_cafeteria_lote_db(
+    venta_id,
+    fecha,
+    detalles,
+    placa,
+    usuario
+):
+
+    with conectar() as conn:
+
+        c = conn.cursor()
+
+        for detalle in detalles:
+
+            if POSTGRES:
+
+                c.execute("""
+                    UPDATE productos_cafeteria
+                    SET inventario = inventario - %s
+                    WHERE id = %s
+                    AND inventario >= %s
+                """, (
+                    detalle["cantidad"],
+                    detalle["producto_id"],
+                    detalle["cantidad"]
+                ))
+
+            else:
+
+                c.execute("""
+                    UPDATE productos_cafeteria
+                    SET inventario = inventario - ?
+                    WHERE id = ?
+                    AND inventario >= ?
+                """, (
+                    detalle["cantidad"],
+                    detalle["producto_id"],
+                    detalle["cantidad"]
+                ))
+
+            if c.rowcount != 1:
+
+                raise ValueError(
+                    f"Inventario insuficiente para {detalle['producto']}"
+                )
+
+            if POSTGRES:
+
+                c.execute("""
+                    INSERT INTO ventas_cafeteria(
+                        venta_id, fecha, producto_id, producto,
+                        cantidad, valor_unitario, total, placa, usuario
+                    )
+                    VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                """, (
+                    venta_id,
+                    fecha,
+                    detalle["producto_id"],
+                    detalle["producto"],
+                    detalle["cantidad"],
+                    detalle["valor_unitario"],
+                    detalle["total"],
+                    placa,
+                    usuario
+                ))
+
+            else:
+
+                c.execute("""
+                    INSERT INTO ventas_cafeteria(
+                        venta_id, fecha, producto_id, producto,
+                        cantidad, valor_unitario, total, placa, usuario
+                    )
+                    VALUES(?,?,?,?,?,?,?,?,?)
+                """, (
+                    venta_id,
+                    fecha,
+                    detalle["producto_id"],
+                    detalle["producto"],
+                    detalle["cantidad"],
+                    detalle["valor_unitario"],
+                    detalle["total"],
+                    placa,
+                    usuario
+                ))
+
+        conn.commit()
     
 # ==========================================
 # VENTAS HOY

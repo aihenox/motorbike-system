@@ -29,6 +29,10 @@ from flask_login import (
     login_required
 )
 
+from flask import current_app
+
+from app.security import admin_required
+
 from app.services.lavadero_service import (
 
     registrar_lavado,
@@ -431,6 +435,7 @@ def exportar_excel_lavadero():
     methods=["GET", "POST"]
 )
 @login_required
+@admin_required
 def editar_lavado(
 
     lavado_id
@@ -534,6 +539,7 @@ def editar_lavado(
     methods=["POST"]
 )
 @login_required
+@admin_required
 def eliminar_lavado_route(
     lavado_id
 ):
@@ -551,11 +557,15 @@ def eliminar_lavado_route(
 
     except Exception as e:
 
+        current_app.logger.exception(
+            "Error eliminando registro de lavadero"
+        )
+
         return jsonify({
 
             "success": False,
 
-            "message": str(e)
+            "message": "Error interno del sistema"
         }), 500
     
 # ==========================================

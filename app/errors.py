@@ -4,11 +4,31 @@ from flask import (
     request
 )
 
+from werkzeug.exceptions import HTTPException
+
 
 # ==========================================
 # REGISTRAR ERRORES
 # ==========================================
 def register_error_handlers(app):
+
+
+    # ==========================================
+    # ERROR 403
+    # ==========================================
+    @app.errorhandler(403)
+    def forbidden(error):
+
+        if request.path.startswith("/api"):
+
+            return jsonify({
+                "success": False,
+                "message": "No tiene permisos para realizar esta acción"
+            }), 403
+
+        return render_template(
+            "errors/403.html"
+        ), 403
 
 
     # ==========================================
@@ -59,13 +79,29 @@ def register_error_handlers(app):
     @app.errorhandler(Exception)
     def general_error(error):
 
+        if isinstance(error, HTTPException):
+
+            if request.path.startswith("/api"):
+
+                return jsonify({
+                    "success": False,
+                    "message": error.description
+                }), error.code
+
+            return error
+
+        app.logger.exception(
+            "Error no controlado durante la solicitud",
+            exc_info=error
+        )
+
         if request.path.startswith("/api"):
 
             return jsonify({
 
                 "success": False,
 
-                "message": str(error)
+                "message": "Error interno del servidor"
 
             }), 500
 

@@ -1,4 +1,4 @@
-import os
+from flask import current_app
 
 from flask_login import UserMixin
 
@@ -9,6 +9,7 @@ from werkzeug.security import (
 
 from app.repositories.auth_repository import (
     obtener_usuario_por_username,
+    obtener_usuario_por_id,
     crear_usuario
 )
 
@@ -18,9 +19,35 @@ from app.repositories.auth_repository import (
 # ==========================================
 class User(UserMixin):
 
-    def __init__(self, user_id):
+    def __init__(
+        self,
+        user_id,
+        usuario=None,
+        rol=None
+    ):
 
         self.id = str(user_id)
+
+        self.usuario = usuario
+
+        self.rol = rol
+
+
+def cargar_usuario(user_id):
+
+    user = obtener_usuario_por_id(
+        user_id
+    )
+
+    if not user:
+
+        return None
+
+    return User(
+        user["id"],
+        user["usuario"],
+        user["rol"]
+    )
 
 
 # ==========================================
@@ -76,10 +103,15 @@ def crear_admin_default():
 
         return
 
-    password_admin = os.getenv(
-        "ADMIN_PASSWORD",
-        "7823"
+    password_admin = current_app.config.get(
+        "ADMIN_PASSWORD"
     )
+
+    if not password_admin or password_admin == "change-me":
+
+        raise RuntimeError(
+            "ADMIN_PASSWORD debe configurarse antes de crear el administrador."
+        )
 
     password_hash = generar_hash_password(
         password_admin

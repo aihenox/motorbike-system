@@ -240,6 +240,37 @@ def guardar_cierre_db(
 
         c = conn.cursor()
 
+        fecha_legacy = datetime.strptime(
+            fecha,
+            "%Y-%m-%d"
+        ).strftime(
+            "%d/%m/%Y"
+        )
+
+        if POSTGRES:
+
+            c.execute("""
+                SELECT 1
+                FROM cierres_caja
+                WHERE fecha IN (%s, %s)
+                LIMIT 1
+            """, (fecha, fecha_legacy))
+
+        else:
+
+            c.execute("""
+                SELECT 1
+                FROM cierres_caja
+                WHERE fecha IN (?, ?)
+                LIMIT 1
+            """, (fecha, fecha_legacy))
+
+        if c.fetchone():
+
+            raise ValueError(
+                "Ya existe un cierre de caja para esta fecha"
+            )
+
         if POSTGRES:
 
             c.execute("""

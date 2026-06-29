@@ -71,7 +71,9 @@ def login():
         if user_db:
 
             user = User(
-                user_db["id"]
+                user_db["id"],
+                user_db["usuario"],
+                user_db["rol"]
             )
 
             login_user(user)
@@ -95,7 +97,10 @@ def login():
 # ==========================================
 # LOGOUT
 # ==========================================
-@auth_bp.route("/logout")
+@auth_bp.route(
+    "/logout",
+    methods=["POST"]
+)
 @login_required
 def logout():
 

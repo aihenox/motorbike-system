@@ -291,6 +291,7 @@ def cerrar_ticket_db(
                     estado = 'Fuera'
 
                 WHERE id = %s
+                AND estado = 'Dentro'
 
             """, (
                 hora_salida,
@@ -311,6 +312,7 @@ def cerrar_ticket_db(
                     estado = 'Fuera'
 
                 WHERE id = ?
+                AND estado = 'Dentro'
 
             """, (
                 hora_salida,
@@ -318,4 +320,8 @@ def cerrar_ticket_db(
                 ticket
             ))
 
+        actualizado = c.rowcount == 1
+
         conn.commit()
+
+        return actualizado

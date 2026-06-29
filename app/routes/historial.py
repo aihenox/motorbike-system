@@ -10,6 +10,8 @@ from flask import (
 
 from flask_login import login_required
 
+from app.security import admin_required
+
 from app.services.historial_service import (
 
     listar_historial,
@@ -111,6 +113,7 @@ def historial():
     methods=["POST"]
 )
 @login_required
+@admin_required
 def eliminar_registro(registro_id):
 
     placa = request.form.get(
